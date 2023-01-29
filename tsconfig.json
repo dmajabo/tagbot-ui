@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "strict": true,
+    "jsx": "preserve",
+    "sourceMap": true,
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+    "plugins": [
+      {
+        "name": "@vuedx/typescript-plugin-vue"
+      },
+      {
+        "name": "typescript-plugin-css-modules"
+      }
+    ],
+    "resolveJsonModule": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue"
+  ]
+}

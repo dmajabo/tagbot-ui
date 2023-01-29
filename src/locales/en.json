@@ -1,0 +1,14 @@
+{
+  "site": {
+    "slogan": "Control your tags",
+    "welcome": "Welcome to",
+    "tagline": "Configure your tagging standard or we can suggest a template if you don’t have one"
+  },
+  "common": {
+    "password": "Password",
+    "forgot": "Forgot password",
+    "alt_signin": "Or sign in with:",
+    "no_account": "Do not have an account?",
+    "signup": "Sign Up"
+  }
+}
