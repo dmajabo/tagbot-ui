@@ -29,8 +29,8 @@
         </tbody>
         </PuSkeleton>
       </table>
-    <table class="table-dashboard" v-if="!loading && data.tags.length === 0">
-      <div class="no-tags-block">
+
+      <div class="no-tags-block" v-if="!loading && data.tags.length === 0">
       <svg width="299" height="190" viewBox="0 0 299 190" fill="none"
            xmlns="http://www.w3.org/2000/svg">
         <g clip-path="url(#clip0_845_4495)">
@@ -80,10 +80,8 @@
           </clipPath>
         </defs>
       </svg>
-      <h2>You don’t have any tag here yet</h2><span>Create your tags to start</span><a href="#"
-                                                                                       class="add-tag-button modal-toggle">Add
-        tag</a></div>
-    </table>
+      <h2>You don’t have any tag here yet</h2><span>Create your tags to start</span>
+        <a href="#" class="add-tag-button modal-toggle">Add tag</a></div>
 
     <hr /><br /><br /><br />
 
@@ -95,7 +93,7 @@ export default {
   props: ['data', 'loading'],
   data() {
     return {
-      tags: undefined
+
     }
   }
 }

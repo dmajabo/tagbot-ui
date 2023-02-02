@@ -11,13 +11,15 @@
     <div class="flex-dashboard">
       <div class="left-dashboard">
         <div class="title-table-dashboard">
-          <div v-for="item in nav" :class="item.name + isActive(item)" @click.prevent="$goTo(item.route)">{{ $t('nav.' + item.name) }}</div>
+          <div v-for="item in nav" :class="item.name + isActive(item)" @click.prevent="goto(item.route)">{{ $t('nav.' + item.name) }}</div>
         </div>
-        <router-view v-slot="{ Component, route}">
-          <Transition name="fade-x">
-            <component :is="Component" :key="route.path" :data="analytics" :loading="loading" />
-          </transition>
-        </router-view>
+        <div>
+          <router-view v-slot="{ Component, route}">
+            <Transition name="fade-x">
+              <component :is="Component" :key="route.path" :data="analytics" :loading="loading" />
+            </transition>
+          </router-view>
+        </div>
       </div>
       <div class="right-dashboard">
         <div class="top-10-block" style="display: block;">
@@ -41,7 +43,7 @@
           </div>
           <div class="frame-connect">
             <div class="info-title">{{ $t('dashboard.tags_standard_percent') }}</div>
-            <div class="info-number">N/A</div>
+            <div class="info-number"><PuSkeleton :loading="loading">N/A</PuSkeleton></div>
           </div>
         </div>
       </div>
@@ -57,6 +59,7 @@ export default {
     return {
       polling: null,
       loading: true,
+      loaded: false,
       nav: [
         {name: 'top10', 'route': 'statistics'},
         {name: 'resources', 'route': 'resources'},
@@ -73,9 +76,14 @@ export default {
     }
   },
   methods: {
+    goto(route_name) {
+      this.$router.push({name: route_name})
+    },
     loadStatistics() {
-      // /api/v1/tenants/<tenant_id>/analytics/statistics
       var self = this
+      if(self.loaded === true) {
+        return true
+      }
       const userData = userStore().getData()
       this.$api.post('tenants/' + userData.tenantId + '/analytics/statistics').then((response) => {
         self.analytics = response.data
@@ -83,6 +91,7 @@ export default {
       }).catch((error) => {
         console.log(error)
         self.loading = false
+        self.loaded = true
       })
     },
     isActive(item) {
