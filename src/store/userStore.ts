@@ -2,14 +2,16 @@ import {defineStore} from 'pinia'
 import {ref} from 'vue'
 
 export const userStore = defineStore('user', () => {
-    const user = ref({
+    let user = ref({
         id: '',
         name: '',
         email: '',
         tenantId: '',
     })
-    const profile_loaded = ref(false)
-    const accounts = ref({})
+    let accounts = ref({})
+    let profile_loaded = ref(false)
+    let accounts_loaded = ref(false)
+
 
     function getData() {
         return user.value
@@ -19,19 +21,22 @@ export const userStore = defineStore('user', () => {
         return accounts.value
     }
 
-    function setUserInfo(data: any) {
+    function setAccounts(data: any) {
+        accounts.value = data
+        accounts_loaded.value = true
+    }
+
+    function setUser(data: any) {
         user.value.id = data.id
         user.value.name = data.name
         user.value.email = data.email
         user.value.tenantId = data.tenantId
+        profile_loaded.value = true
     }
-    function setProfileLoaded(val: boolean) {
+    function setProfileloaded(val: boolean) {
         profile_loaded.value = val
     }
-    function setUserAccounts(data: any) {
-        accounts.value = data
-    }
 
-    return {user, accounts, profile_loaded, setProfileLoaded, getData, getAccounts, setUserInfo, setUserAccounts}
+    return {user, accounts, profile_loaded, accounts_loaded, getData, getAccounts, setUser, setAccounts}
 })
 

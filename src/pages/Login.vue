@@ -66,6 +66,7 @@
 <script>
 import authService from "../services/auth"
 import {googleTokenLogin} from "vue3-google-login"
+import {userStore} from "../store/userStore";
 
 export default {
   data() {
@@ -85,13 +86,13 @@ export default {
     },
     verifyGoogleLogin(response) {
       var self = this
+      var u = userStore()
       this.$api.post('login/google', {
         token: response.access_token
       }).then((response) => {
         // console.log(response)
         authService.login(self.$pinia, response, this.remember_me)
-        // toast.success("Login successful.")
-        self.loadProfile()
+        self.loadProfile(u)
         self.$goTo('dashboard')
       }).catch(function (error) {
         // console.log(error)
@@ -115,17 +116,26 @@ export default {
         self.$toast.error(error.response.data)
       })
     },
-    loadProfile() {
+    loadProfile(ustore) {
       var self = this
+      var u = ustore
       this.$api.get('profile').then((response) => {
-        // console.log(response)
-        authService.setUser(this.$pinia, response.data)
+        u.setUser(response.data)
+        self.loadAccounts(u)
         self.$mitt.emit('profile-loaded', {})
       }).catch((error) => {
         // console.log(error)
         self.$toast.error(error.response.data)
       })
-    }
+    },
+    loadAccounts(ustore) {
+      var u = ustore
+      console.log("Loading accounts now...")
+      this.$api.get('users/' + ustore.getData().id + '/accounts').then((response) => {
+        u.setAccounts(response.data)
+      }).catch((error) => {
+      })
+    },
   }
 }
 </script>

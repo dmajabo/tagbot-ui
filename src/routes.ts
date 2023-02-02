@@ -83,7 +83,7 @@ export const routes = [
     {
         path: '/get-started',
         component: Start,
-        name: 'start',
+        name: 'get-started',
         meta: {title: 'Onboard', description: 'Onboard your first account.', requiresAuth: true},
     },
     {

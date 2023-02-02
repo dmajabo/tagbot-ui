@@ -1,8 +1,8 @@
 <template>
-  <div class="content-right">
+  <div class="content" style="margin: 0px;">
     <!-- {{ resources }} -->
     <div class="title-block">
-      <h1 class="page-title">Dashboard</h1>
+      <div class="flex-title"><h1 class="title-dashboard">Dashboard</h1></div>
       <div class="title-buttons">
         <a href="#" class="refresh-button">
           <img src="/img/Icon/download-icon.svg" alt="">
@@ -92,33 +92,17 @@ export default {
       const userData = userStore()
       var self = this
       this.polling = setInterval(() => {
-        if(userData.profile_loaded===true){
+        if(userData.profile_loaded===true && userData.accounts_loaded){
           self.stopPolling()
           console.log("Profile ready.")
           self.user = userData.getData()
-          self.loadAccounts()
           self.loadResources()
         }
       }, 3000)
     },
-    loadAccounts() {
-      console.log("Loading accounts...")
-      var self = this
-      const ustore = userStore()
-      const userData = ustore.getData()
-      this.$api.get('users/' + userData.id + '/accounts').then((response) => {
-        ustore.setUserAccounts(response.data)
-        self.$mitt.emit('accounts-loaded', {})
-      }).catch((error) => {
-        // console.log(error)
-        this.$toast.error(error.message)
-      })
-    },
     loadResources() {
       var self = this
-      const ustore = userStore()
-      const userData = ustore.getData()
-      this.$api.post('tenants/' + userData.tenantId + '/analytics/resourcesPerUser').then((response) => {
+      this.$api.post('tenants/' + this.user.tenantId + '/analytics/resourcesPerUser').then((response) => {
         // console.log(response)
         self.resources = response.data
       }).catch((error) => {

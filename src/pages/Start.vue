@@ -258,7 +258,7 @@
                 </label></div>
               </div>
               <div>
-                <button class="step-submit" @click.prevent="goto('dashboard')">{{ $t('onboard.finish') }}</button>
+                <button class="step-submit" @click.prevent="goto('cloud-accounts')">{{ $t('onboard.finish') }}</button>
               </div>
             </div>
           </div>
