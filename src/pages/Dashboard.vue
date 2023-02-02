@@ -43,7 +43,7 @@
               <div class="info-email">{{ item.created_by }}</div>
               <div class="info-services">
 
-                <div class="service-block modal-toggle tooltip bottom" tooltip-text="CloudWatch" v-for="resource in item.resources.slice(0, 3)">
+                <div class="service-block modal-toggle tooltip bottom" :tooltip-text="resource.type.replaceAll('::', ' ')" v-for="resource in item.resources.slice(0, 3)">
                   <img :src="'/AWS_Icon_Svg/' + resource.image_url" alt="">
                   <span>{{ resource.count }}</span>
                 </div>
