@@ -13,8 +13,11 @@ import {pageMetaStore} from './store/pageMetaStore'
 import authService from './services/auth'
 import * as en from './locales/en.json'
 import vue3GoogleLogin from 'vue3-google-login'
+import {useToast} from 'vue-toastification'
+import {Modal, Input} from 'ant-design-vue'
 
 import './assets/css/style.css'
+import 'ant-design-vue/dist/antd.css';
 
 const i18n = createI18n({
     locale: 'en',
@@ -25,7 +28,7 @@ const i18n = createI18n({
 })
 
 const router = createRouter({
-    end: undefined, sensitive: undefined, strict: undefined,
+    end: undefined, sensitive: true, strict: true,
     history: createWebHistory(),
     routes: routes,
 })
@@ -73,6 +76,8 @@ app.use(i18n)
 app.use(pinia)
 app.use(api)
 app.use(router)
+app.use(Modal)
+app.use(Input)
 
 // @ts-ignore
 const googleClientId = import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID
@@ -80,12 +85,16 @@ app.use(vue3GoogleLogin, {
     clientId: googleClientId,
 })
 
-const eventbus = mitt()
-app.config.globalProperties.$mitt = eventbus
+app.config.globalProperties.$mitt = mitt()
 app.config.globalProperties.$goTo = function (route_name: any) {
     this.$router.push({name: route_name})
 }
 
 import {stores} from './store'
+import {userStore} from "./store/userStore";
+
+userStore()
 app.config.globalProperties.$stores = stores
+let toaster = useToast()
+app.config.globalProperties.$toast = toaster
 app.mount('#app')

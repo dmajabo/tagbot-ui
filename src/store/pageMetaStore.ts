@@ -13,3 +13,4 @@ export const pageMetaStore = defineStore('pagemeta', () => {
     }
     return {title, description, setPageMeta}
 })
+

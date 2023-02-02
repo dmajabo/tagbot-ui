@@ -26,11 +26,14 @@
               </a></div>
               <p class="text-form">{{ $t("site.tagline") }}</p>
               <form autocomplete="off" class="main-form">
-                <div><input type="text" class="input-form" name="email" placeholder="Your email" value=""></div>
+                <div><input type="text" class="input-form" name="email" placeholder="Your email" value=""
+                            autocomplete=""></div>
                 <div class="block-pswrd">
                   <div class="placeholder-container"><input type="password" name="password" class="focus-input"
                                                             placeholder=" "
-                                                            value=""><label>{{ $t("common.password") }}</label><a
+                                                            value="" autocomplete=""><label>{{
+                      $t("common.password")
+                    }}</label><a
                       href="#"
                       class="show-password"><img
                       src="/img/eye.svg" alt=""></a>
@@ -62,10 +65,7 @@
 
 <script>
 import authService from "../services/auth"
-import {useToast} from 'vue-toastification'
 import {googleTokenLogin} from "vue3-google-login"
-
-const toast = useToast()
 
 export default {
   data() {
@@ -77,43 +77,53 @@ export default {
   },
   methods: {
     loginWithGoogle() {
+      var self = this
       googleTokenLogin().then((response) => {
         // console.log("Handle the response", response)
-        this.verifyGoogleLogin(response)
+        self.verifyGoogleLogin(response)
       })
     },
     verifyGoogleLogin(response) {
-      // For test only!!!
-      if(import.meta.env.VITE_SKIP_LOGIN === "true") {
-        authService.login(this.$pinia, {data: {token: response.access_token}}, this.remember_me)
-        this.$router.push({name: 'dashboard'})
-      }
-      this.$api.post('auth/token/google', {
-        token: response.access_token,
-        remember_me: this.remember_me
+      var self = this
+      this.$api.post('login/google', {
+        token: response.access_token
       }).then((response) => {
         // console.log(response)
-        authService.login(this.$pinia, response, this.remember_me)
+        authService.login(self.$pinia, response, this.remember_me)
         // toast.success("Login successful.")
-        this.$router.push({name: 'dashboard'})
+        self.loadProfile()
+        self.$goTo('dashboard')
       }).catch(function (error) {
-        console.log(error)
-        toast.error(error.response.data.message)
+        // console.log(error)
+        self.$toast.error(error.response.data)
       })
     },
     login() {
+      var self = this
       this.$api.post('auth/token', {
         'email': this.email,
         password: this.password,
         remember_me: this.remember_me
       }).then((response) => {
-        console.log(response)
+        // console.log(response)
         authService.login(this.$pinia, response, this.remember_me)
         // toast.success("Login successful.")
-        this.$router.push({name: 'dashboard'})
+        self.loadProfile()
+        self.$goTo('dashboard')
       }).catch(function (error) {
-        console.log(error)
-        toast.error(error.response.data.message)
+        // console.log(error)
+        self.$toast.error(error.response.data)
+      })
+    },
+    loadProfile() {
+      var self = this
+      this.$api.get('profile').then((response) => {
+        // console.log(response)
+        authService.setUser(this.$pinia, response.data)
+        self.$mitt.emit('profile-loaded', {})
+      }).catch((error) => {
+        // console.log(error)
+        self.$toast.error(error.response.data)
       })
     }
   }
