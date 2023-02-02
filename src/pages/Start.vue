@@ -369,7 +369,13 @@ export default {
       const userData = userStore().getData()
       var self = this
       var success = 0
+      var retries = 20
       this.polling = setInterval(() => {
+        retries = retries - 1
+        if(retries === 0 || success === 1) {
+          self.stopPolling()
+          return false
+        }
         this.$api.get('tenants/' + userData.tenantId + '/accounts/' + this.account_id + '/verifyOnboard').then((response) => {
           success = success + 1
           if(success === 1) {

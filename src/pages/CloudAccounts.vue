@@ -10,11 +10,13 @@
     <div class="table-block">
       <table class="main-table" cellspacing="5">
         <tbody>
+        <PuSkeleton :loading="loading" :count="5" :width="5">
         <tr class="title-row">
           <td>{{ $t('common.account_id') }}</td>
           <td>{{ $t('common.status') }}</td>
           <td style="width: 100px;"></td>
         </tr>
+
         <tr v-for="account in accounts" class="text-row">
           <td>{{ account.accountNumber }}</td>
           <td>
@@ -41,6 +43,7 @@
             </div>
           </td>
         </tr>
+        </PuSkeleton>
         </tbody>
       </table>
     </div>
@@ -65,6 +68,7 @@ export default {
       onboardAccountId: null,
       onboardingModal: false,
       onboardLoading: false,
+      loading: true,
     }
   },
   methods: {
@@ -82,36 +86,38 @@ export default {
     stopPollingOnboarded() {
       this.stop_polling_onboarded = this.stop_polling_onboarded + 1
       clearInterval(this.polling_onboarded)
-      if(this.stop_polling_onboarded === 1) {
-        this.triggerCollection()
-      }
     },
     pollVerify () {
       const userData = userStore().getData()
       var self = this
       var success = 0
+      var retries = 20
       this.polling_onboarded = setInterval(() => {
+        retries = retries - 1
+        if(retries === 0 || success === 1) {
+          self.stopPollingOnboarded()
+          return false
+        }
         this.$api.get('tenants/' + userData.tenantId + '/accounts/' + this.onboardAccountId + '/verifyOnboard').then((response) => {
           success = success + 1
           if(success === 1) {
             self.$toast.success("Account onboarded!")
+            self.stopPollingOnboarded()
+            self.finishOnboarding()
           }
-          self.stopPollingOnboarded()
         }).catch((error) => {
-          console.log("Verification unsuccessful.")
-          self.$toast.error("Account cannot be onboarded.")
-          self.finishOnboarding()
-          self.stopPollingOnboarded()
+          console.log("Not onboarded yet...")
         })
-      }, 3000)
+      }, 5000)
     },
     finishOnboarding() {
       this.onboardingModal = false
       this.onboardLoading = false
-      this.onboardAccountId = null
       this.polling_onboarded = null
       this.stop_polling_onboarded = 0
       this.loadAccounts()
+      this.triggerCollection()
+      this.onboardAccountId = null
     },
     createAccount() {
       var self = this
@@ -165,11 +171,14 @@ export default {
     loadAccounts() {
       console.log("Loading accounts...")
       var self = this
+      self.loading = true
       this.$api.get('users/' + this.user.id + '/accounts').then((response) => {
         // console.log(response)
         self.accounts = response.data
+        self.loading = false
       }).catch((error) => {
         // console.log(error)
+        self.loading = false
         this.$toast.error(error.message)
       })
     },
@@ -204,7 +213,7 @@ export default {
   border-radius: 6px;
   box-sizing: border-box;
   cursor: pointer;
-  display: flex;
+  display: flex !important;
   font-family: Montserrat,sans-serif;
   line-height: 1;
   margin: 0;

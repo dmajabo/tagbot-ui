@@ -119,7 +119,7 @@ export default {
       const ustore = userStore()
       const userData = ustore.getData()
       this.$api.post('tenants/' + userData.tenantId + '/analytics/resourcesPerUser').then((response) => {
-        console.log(response)
+        // console.log(response)
         self.resources = response.data
       }).catch((error) => {
         this.$toast.error(error.message)
