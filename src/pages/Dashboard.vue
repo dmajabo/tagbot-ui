@@ -44,8 +44,14 @@
 
 
       <div class="main-info">
-        <PuSkeleton :loading="loading" :count="5" tag="div">
-        <div class="info-block" v-for="item in resources" v-if="resources.length > 0">
+
+        <div class="flex items-center justify-center space-x-2">
+          <div class="w-4 h-4 rounded-full animate-pulse dark:bg-violet-400"></div>
+          <div class="w-4 h-4 rounded-full animate-pulse dark:bg-violet-400"></div>
+          <div class="w-4 h-4 rounded-full animate-pulse dark:bg-violet-400"></div>
+        </div>
+
+        <div v-if="!loading && resources.length > 0" class="info-block" v-for="item in resources">
             <div class="content-info-block">
               <div class="info-email">{{ item.created_by }}</div>
               <div class="info-services">
@@ -73,7 +79,7 @@
 
         </div>
 
-        <div v-else class="no-tags-block"><svg width="299" height="190" viewBox="0 0 299 190" fill="none"
+        <div v-if="accounts.length === 0" class="no-tags-block"><svg width="299" height="190" viewBox="0 0 299 190" fill="none"
                                                xmlns="http://www.w3.org/2000/svg">
           <g clip-path="url(#clip0_845_4495)">
             <path
@@ -126,7 +132,6 @@
           <a href="#" @click.prevent="$goTo('get-started')" class="add-tag-button modal-toggle">Onboard Account</a>
         </div>
 
-        </PuSkeleton>
       </div>
 
 

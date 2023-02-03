@@ -2,10 +2,12 @@
   <div id="root">
     <header class="header-section">
       <div class="content flex-header">
-        <div class="left-header"><a class="logotype" href="/dashboard">
-          <div class="tag-logo">Tag</div>
-          <div class="bot-logo">Bot</div>
-        </a></div>
+        <div class="left-header">
+          <a href="#" class="logotype">
+            <div class="tag-logo">Tag</div>
+            <div class="bot-logo">[Bot]</div>
+          </a>
+        </div>
         <div class="burger-menu">
           <div class="bar"><span class="bar-1"></span><span class="bar-2"></span><span class="bar-3"></span></div>
         </div>

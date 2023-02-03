@@ -14,12 +14,10 @@ import authService from './services/auth'
 import * as en from './locales/en.json'
 import vue3GoogleLogin from 'vue3-google-login'
 import {useToast} from 'vue-toastification'
-import {Modal, Input} from 'ant-design-vue'
-import Skeleton from 'vue-loading-skeleton'
-
-import "vue-loading-skeleton/dist/style.css"
 import './assets/css/style.css'
-import 'ant-design-vue/dist/antd.css';
+import './assets/css/tailwind.css'
+import './assets/css/normalize.css'
+import './assets/css/reset.css'
 
 const i18n = createI18n({
     locale: 'en',
@@ -78,9 +76,6 @@ app.use(i18n)
 app.use(pinia)
 app.use(api)
 app.use(router)
-app.use(Modal)
-app.use(Input)
-app.use(Skeleton)
 
 // @ts-ignore
 const googleClientId = import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID
