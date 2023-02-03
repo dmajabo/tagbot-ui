@@ -54,12 +54,11 @@ export const routes = [
             },
             {
                 path: '/statistics',
-                name: 'statistics',
                 component: Statistics,
                 meta: {title: 'Statistics', description: 'Statistics', requiresAuth: true},
                 children: [
                     {
-                        path: '/statistics',
+                        path: '',
                         name: 'statistics',
                         component: Top10,
                         meta: {title: 'Top 10 Tags', description: 'Statistics', requiresAuth: true},
@@ -83,7 +82,7 @@ export const routes = [
     {
         path: '/get-started',
         component: Start,
-        name: 'start',
+        name: 'get-started',
         meta: {title: 'Onboard', description: 'Onboard your first account.', requiresAuth: true},
     },
     {

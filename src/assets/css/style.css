@@ -9,6 +9,50 @@ body {
     margin: 0 auto;
     font-family: 'Montserrat', sans-serif;
 }
+
+/* VUE Transitions */
+/* slide fade */
+.slide-fade-enter-active {
+    transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+    transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+    transform: translateX(20px);
+    opacity: 0;
+}
+
+/* scalle in animation */
+.scale-in-enter,
+.scale-in-leave-to{
+    transform: scale(0.88);
+    opacity: 0;
+}
+
+.scale-in-enter-active,
+.scale-in-leave-active{
+    transition:  transform 0.3s, opacity 0.5s ;
+}
+
+/* fade horizontally */
+
+.fade-x-enter,
+.fade-x-leave-to {
+    opacity: 0;
+    transform: translateX(20px);
+}
+
+.fade-x-enter-active,
+.fade-x-leave-to {
+    transition: opacity 0.3s, transform 0.5s;
+}
+
+/* VUE TRANSITION END */
+
 .main-container {
     width: 100%;
     max-width: 1920px;
@@ -172,6 +216,7 @@ input {
 .main-right {
     width: 100%;
     margin-right: 6%;
+    margin-left: 60px;
 }
 
 .content-right {
@@ -1697,7 +1742,7 @@ button.send-invite-button[disabled]{
     line-height: 10px;
     color: #FFFFFF;
     height: 38px;
-    max-width: 200px;
+    max-width: 270px;
     width: 100%;
     background: #4876EB;
     padding: 14px 38px;
@@ -2237,18 +2282,6 @@ button.send-invite-button[disabled]{
 
 .orange {
     color: #FF8585;
-}
-
-.top-10-block {
-    display: block;
-}
-
-.created-resoures-block {
-    display: none;
-}
-
-.tag-coverage-block {
-    display: none;
 }
 
 .view-more {

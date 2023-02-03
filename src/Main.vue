@@ -17,21 +17,33 @@ export default {
     return {}
   },
   methods: {
-    loadProfile() {
+    loadProfile(ustore) {
+      console.log("Loading profile..")
       var self = this
+      var u = ustore
       this.$api.get('profile').then((response) => {
-        // console.log(response)
-        authService.setUser(this.$pinia, response.data)
+        // console.log(response.data)
+        u.setUser(response.data)
+        self.loadAccounts(ustore)
         self.$mitt.emit('profile-loaded', {})
       }).catch((error) => {
         // console.log(error)
-        self.$toast.error(error.response.data)
+      })
+    },
+    loadAccounts(ustore) {
+      var u = ustore
+      console.log("Loading accounts now...")
+      this.$api.get('users/' + ustore.getData().id + '/accounts').then((response) => {
+        u.setAccounts(response.data)
+        self.$mitt.emit('accounts-loaded', {})
+      }).catch((error) => {
       })
     },
     initialize() {
-      let userData = userStore().getData()
+      let ustore = userStore()
+      let userData = ustore.getData()
       if(userData.id === '') {
-        this.loadProfile()
+        this.loadProfile(ustore)
       }
     }
   },

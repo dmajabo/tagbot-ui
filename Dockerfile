@@ -1,5 +1,5 @@
 FROM nginx:1.23.3-alpine
-RUN apk add --no-cache --update-cache --update nodejs-current npm
+RUN apk add --no-cache --update-cache --update nodejs-current npm unzip aws-cli
 WORKDIR /app
 COPY . .
 RUN npm install
