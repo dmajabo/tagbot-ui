@@ -19,6 +19,8 @@ body {
 
 .main-flow {
     display: flex;
+    max-width: 1920px;
+    width: 100%;
 }
 
 
@@ -28,7 +30,8 @@ body {
     margin: 0 auto;
 }
 .statistics-content {
-    margin: 0;
+    margin: 0 60px;
+
 }
 a {
     cursor: pointer;
@@ -71,6 +74,8 @@ input {
     flex-direction: column;
     justify-content: space-between;
     height: 100%;
+    width: 100%;
+    max-width: 256px;
 }
 
 .logo-link {
@@ -170,7 +175,10 @@ input {
 }
 
 .content-right {
-    padding: 40px 60px 0px 60px;
+    padding: 40px 40px 0 60px;
+    width: 100%;
+    overflow: hidden;
+    min-width: 1050px;
 }
 
 .page-title {
@@ -429,7 +437,7 @@ input {
 }
 
 .info-services {
-    /*width: 62%;*/
+    width: auto;
     display: grid;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -2453,6 +2461,9 @@ button.send-invite-button[disabled]{
     .ls-content, .rs-content {
         width: 90%;
     }
+    .info-services {
+        grid-template-columns: repeat(7, 70px);
+    }
 }
 
 @media screen and (max-width:1500px) {
@@ -2461,7 +2472,7 @@ button.send-invite-button[disabled]{
     }
 
     .info-services {
-        grid-template-columns: repeat(8, 70px);
+        grid-template-columns: repeat(6, 70px);
     }
 }
 

@@ -17,20 +17,27 @@
     <div class="main-dashboard">
       <div class="dropdown-blocks">
         <div class="flex-dropdown">
-          <div class="checkbox-dropdown">
-            <div class="dropdown-acc">Accounts</div>
-            <div class="dropdown-all-acc">All accounts</div>
+          <div class='select-accounts-layout'>
+            <span class='dropdown-acc'>Accounts</span>
+            <select class="checkbox-dropdown">
+              <option value="default" hidden class='default-user-dropdown'>
+                All accounts
+              </option>
+            </select>
           </div>
-          <div class="checkbox-dropdown">
-            <div class="dropdown-acc">Users</div>
-            <div class="dropdown-all-acc">All users</div>
+          <div class='select-accounts-layout'>
+            <span class='dropdown-acc'>Users</span>
+            <div class="checkbox-dropdown">
+              All users
+            </div>
           </div>
           <a href="#" class="apply">Apply</a>
         </div>
-        <div>
-          <div class="sort-dropdown">
-            <div class="dropdown-all-acc">Sort: A - Z</div>
-          </div>
+        <div class='sort-dropdown-block'>
+          <select class="sort-dropdown" >
+            <option class="dropdown-all-acc">Sort: A - Z</option>
+            <option class="dropdown-all-acc">Sort: Z - A</option>
+          </select>
         </div>
       </div>
       <div class="main-info">
