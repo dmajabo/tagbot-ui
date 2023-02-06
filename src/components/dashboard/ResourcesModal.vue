@@ -6,23 +6,30 @@
       </TransitionChild>
 
       <div class="fixed inset-0 z-10 overflow-y-auto">
-        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+        <div class="flex min-h-full w-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
           <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200" leave-from="opacity-100 translate-y-0 sm:scale-100" leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-            <DialogPanel class="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
-              <div>
-                <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                  <CheckIcon class="h-6 w-6 text-green-600" aria-hidden="true" />
-                </div>
-                <div class="mt-3 text-center sm:mt-5">
-                  <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900">Payment successful</DialogTitle>
-                  <div class="mt-2">
-                    <p class="text-sm text-gray-500">Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur amet labore.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="mt-5 sm:mt-6">
-                <button type="button" class="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm" @click="open = false">Go back to dashboard</button>
-              </div>
+            <DialogPanel class="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-2 sm:w-full sm:p-6">
+              <table class="min-w-full divide-y divide-gray-300">
+                <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Account ID</th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Resource Name</th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Resource ID</th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Region</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 bg-white" v-if="!loading">
+                  <tr v-for="item in resources" :key="item.resource_id">
+                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ item.account_id }}</td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ item.name }}</td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ item.resource_id }}</td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ item.region }}</td>
+                  </tr>
+                </tbody>
+                <tbody v-else>
+                  <BulletListLoader></BulletListLoader>
+                </tbody>
+              </table>
             </DialogPanel>
           </TransitionChild>
         </div>
@@ -31,10 +38,59 @@
   </TransitionRoot>
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script>
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { CheckIcon } from '@heroicons/vue/24/outline'
+import {
+  BulletListLoader,
+} from 'vue-content-loader'
 
-const open = ref(true)
+export default {
+  data() {
+    return {
+      loading: true,
+      open: false,
+      type: null,
+      tenant: null,
+      user: null,
+      resources: []
+    }
+  },
+  computed: {
+
+  },
+  methods: {
+    loadResources() {
+      var self = this
+      this.$api.post('tenants/' + this.tenant + '/analytics/resourceTypePerUser', { userName: this.user, resourceType: this.type }).then((response) => {
+        // console.log(response)
+        self.resources = response.data
+        self.loading = false
+      }).catch((error) => {
+        this.$toast.error(error.message)
+      })
+    }
+  },
+  mounted() {
+    var self = this
+    this.$mitt.on('open-resource-modal', (evt) => {
+      self.tenant = evt.tenant
+      self.type = evt.type
+      self.user = evt.user
+      self.resources = []
+      self.loading = true
+      console.log(self.tenant)
+      console.log(self.type)
+      self.open = true
+      self.loadResources()
+    })
+  },
+  created() {
+  },
+  components: {
+    BulletListLoader,
+    CheckIcon,
+    Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot
+  }
+}
 </script>

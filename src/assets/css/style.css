@@ -4,7 +4,7 @@
 
 body {
     width: 100%;
-    max-width: 1920px;
+    /* max-width: 1920px; */
     margin: 0 auto;
     font-family: 'Montserrat', sans-serif;
 }
@@ -168,10 +168,10 @@ input {
 /* HEADER STYLES */
 
 .main-section {
-    background: url(../img/main-bg.svg) center center ;
+    background: url(/img/main-bg.svg) center center ;
     background-repeat: no-repeat;
     background-size: cover;
-    height: 926px;
+    height: 1080px;
 }
 
 .title {

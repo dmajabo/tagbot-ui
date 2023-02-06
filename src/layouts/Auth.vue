@@ -1,11 +1,9 @@
 <template>
-  <div>
     <router-view v-slot="{ Component, route}">
       <Transition name="fade-x">
         <component :is="Component" :key="route.path" />
       </transition>
     </router-view>
-  </div>
 </template>
 
 <script>

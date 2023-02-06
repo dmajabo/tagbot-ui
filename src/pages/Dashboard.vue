@@ -1,38 +1,76 @@
 <template>
-  <div class="content" style="margin: 0px;">
-
+  <div>
     <div class="title-block">
       <div class="flex-title"><h1 class="title-dashboard">Dashboard</h1></div>
       <div class="title-buttons">
         <a href="#" class="refresh-button">
-          <img src="/img/Icon/download-icon.svg" alt="">
+          <img src="/img/icon/download-icon.svg" alt="">
           <span>Download all</span>
         </a>
         <a href="#" class="refresh-button">
-          <img src="/img/Icon/refresh-icon.svg" alt="">
+          <img src="/img/icon/refresh-icon.svg" alt="">
           <span>Refresh</span>
         </a>
       </div>
     </div>
     <div class="main-dashboard">
 
-      <div class="dropdown-blocks" style="display: none">
+      <div class="dropdown-blocks">
+
         <div class="flex-dropdown">
-          <div class='select-accounts-layout'>
-            <span class='dropdown-acc'>Accounts</span>
-            <select class="checkbox-dropdown">
-              <option value="default" hidden class='default-user-dropdown'>
-                All accounts
-              </option>
-            </select>
-          </div>
-          <div class='select-accounts-layout'>
-            <span class='dropdown-acc'>Users</span>
-            <div class="checkbox-dropdown">
-              All users
+          <div class="pr-10">
+          <Combobox as="div" v-model="selectedUser" nullable>
+            <ComboboxLabel class="block text-sm font-medium text-gray-700">Users</ComboboxLabel>
+            <div class="relative mt-1">
+              <ComboboxInput class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm" @change="query = $event.target.value" :display-value="(user) => user?.email" />
+              <ComboboxButton class="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
+                <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+              </ComboboxButton>
+
+              <ComboboxOptions v-if="filteredUser.length > 0" class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                <ComboboxOption v-for="user in filteredUser" :key="user.email" :value="user" as="template" v-slot="{ active, selected }">
+                  <li :class="['relative cursor-default select-none py-2 pl-3 pr-9', active ? 'bg-indigo-600 text-white' : 'text-gray-900']">
+                  <span :class="['block truncate', selected && 'font-semibold']">
+                    {{ user.email }}
+                  </span>
+
+                    <span v-if="selected" :class="['absolute inset-y-0 right-0 flex items-center pr-4', active ? 'text-white' : 'text-indigo-600']">
+              <CheckIcon class="h-5 w-5" aria-hidden="true" />
+            </span>
+                  </li>
+                </ComboboxOption>
+              </ComboboxOptions>
             </div>
+          </Combobox>
           </div>
-          <a href="#" class="apply">Apply</a>
+
+          <div class="pr-10">
+          <Combobox as="div" v-model="selectedAccount" nullable>
+            <ComboboxLabel class="block text-sm font-medium text-gray-700">Accounts</ComboboxLabel>
+            <div class="relative mt-1">
+              <ComboboxInput class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm" @change="query = $event.target.value" :display-value="(account) => account?.accountNumber" />
+              <ComboboxButton class="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
+                <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+              </ComboboxButton>
+
+              <ComboboxOptions v-if="filteredAccount.length > 0" class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                <ComboboxOption v-for="account in filteredAccount" :key="account.accountNumber" :value="account" as="template" v-slot="{ active, selected }">
+                  <li :class="['relative cursor-default select-none py-2 pl-3 pr-9', active ? 'bg-indigo-600 text-white' : 'text-gray-900']">
+            <span :class="['block truncate', selected && 'font-semibold']">
+              {{ account.accountNumber }}
+            </span>
+
+                    <span v-if="selected" :class="['absolute inset-y-0 right-0 flex items-center pr-4', active ? 'text-white' : 'text-indigo-600']">
+              <CheckIcon class="h-5 w-5" aria-hidden="true" />
+            </span>
+                  </li>
+                </ComboboxOption>
+              </ComboboxOptions>
+            </div>
+          </Combobox>
+          </div>
+
+          <button @click="queryResources" type="button" class="mt-5 inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Apply</button>
         </div>
         <div class='sort-dropdown-block'>
           <select class="sort-dropdown" >
@@ -42,8 +80,8 @@
         </div>
       </div>
 
-
-      <div class="main-info">
+      <BulletListLoader v-if="loading"></BulletListLoader>
+      <div v-else class="main-info">
 
         <div class="flex items-center justify-center space-x-2">
           <div class="w-4 h-4 rounded-full animate-pulse dark:bg-violet-400"></div>
@@ -51,13 +89,13 @@
           <div class="w-4 h-4 rounded-full animate-pulse dark:bg-violet-400"></div>
         </div>
 
-        <div v-if="!loading && resources.length > 0" class="info-block" v-for="item in resources">
+        <div v-if="!loading && resources.length > 0" class="info-block" v-for="item in filteredResources">
             <div class="content-info-block">
               <div class="info-email">{{ item.created_by }}</div>
               <div class="info-services">
 
-                <div class="service-block modal-toggle tooltip bottom" :tooltip-text="resource.type.replaceAll('::', ' ')" v-for="resource in item.resources.slice(0, 3)">
-                  <img :src="'/AWS_Icon_Svg/' + resource.image_url" alt="">
+                <div @click.prevent="openModal(resource)" class="service-block modal-toggle tooltip bottom" :tooltip-text="resource.type.replaceAll('::', ' ')" v-for="resource in item.resources.slice(0, 3)">
+                  <img :src="'/AWS_Icon_Svg/' + resource.image_url" alt="" class="service-img">
                   <span>{{ resource.count }}</span>
                 </div>
 
@@ -67,7 +105,7 @@
 
           <div class="button-info-block">
             <a href="#" class="download-info">
-              <img src="/img/Icon/download-info.svg" alt="">
+              <img src="/img/icon/download-info.svg" alt="">
             </a>
 
             <a href="#" class="open-info">
@@ -79,7 +117,9 @@
 
         </div>
 
-        <div v-if="accounts.length === 0" class="no-tags-block"><svg width="299" height="190" viewBox="0 0 299 190" fill="none"
+
+        <div v-if="accounts.length === 0 && !loading" class="no-tags-block" style="width: 100%; margin: 0 auto;" >
+          <svg width="299" height="190" viewBox="0 0 299 190" fill="none"
                                                xmlns="http://www.w3.org/2000/svg">
           <g clip-path="url(#clip0_845_4495)">
             <path
@@ -135,34 +175,83 @@
       </div>
 
 
-      <div class="pagination-block" style="display: none">
+      <div class="pagination-block" >
         <a href="#" class="prev-button">
-          <img src="/img/Icon/prev-button.svg" alt="">
+          <img src="/img/icon/prev-button.svg" alt="">
           <span class="pagination-button">Previous</span>
         </a>
         <a href="#" class="pagination-number">1 2 3 4 5 6</a>
         <a href="#" class="next-button">
           <span class="pagination-button">Next</span>
-          <img src="/img/Icon/next-button.svg" alt="">
+          <img src="/img/icon/next-button.svg" alt="">
         </a>
       </div>
+
     </div>
+
+    <ResourcesModal></ResourcesModal>
   </div>
 </template>
 
 <script>
 import {userStore} from "../store/userStore"
+import _ from 'lodash'
+
+import {CheckIcon, ChevronUpDownIcon} from '@heroicons/vue/20/solid'
+import {Combobox, ComboboxButton, ComboboxInput, ComboboxLabel, ComboboxOption, ComboboxOptions,} from '@headlessui/vue'
+import {
+  BulletListLoader,
+} from 'vue-content-loader'
+import ResourcesModal from "../components/dashboard/ResourcesModal.vue";
 
 export default {
   data() {
     return {
-      accounts: {},
+      userQuery: "",
+      accountQuery: "",
+      selectedUser: null,
+      selectedAccount: null,
+      selectedResourceType: null,
+      accounts: [],
       resources: [],
+      filteredResources: [],
       polling: null,
-      loading: true
+      loading: true,
+      open: false,
     }
   },
+  computed: {
+    users() {
+      return _.map(this.resources, function square(n) {
+        return { email: n.created_by }
+      })
+    },
+    filteredUser () {
+      return this.userQuery === ""
+          ? this.users
+          : this.users.filter((user) => {
+            return user.email.includes(this.userQuery.email)
+          })
+    },
+    filteredAccount () {
+      return this.accountQuery === ""
+          ? this.accounts
+          : this.accounts.filter((account) => {
+            return account.id.includes(this.accountQuery.accountNumber)
+          })
+    },
+  },
   methods: {
+    openModal(resource) {
+      console.log("Opening...")
+      this.$mitt.emit('open-resource-modal', { user: resource.created_by, tenant: resource.tenant_id, type: resource.type})
+    },
+    queryResources() {
+      console.log('filetering results...')
+      this.filteredResources =  this.selectedUser === null ? this.resources : this.resources.filter((resource) => {
+        return resource.created_by === this.selectedUser.email
+      })
+    },
     stopPolling() {
       clearInterval(this.polling)
     },
@@ -174,6 +263,7 @@ export default {
           self.stopPolling()
           console.log("Profile ready.")
           self.user = userData.getData()
+          self.accounts = userData.getAccounts()
           self.loadResources()
         }
       }, 3000)
@@ -183,6 +273,7 @@ export default {
       this.$api.post('tenants/' + this.user.tenantId + '/analytics/resourcesPerUser').then((response) => {
         // console.log(response)
         self.resources = response.data
+        self.filteredResources = response.data
         self.loading = false
       }).catch((error) => {
         this.$toast.error(error.message)
@@ -192,6 +283,23 @@ export default {
   created() {
     this.pollProfileReady()
   },
-  components: {}
+  components: {
+    ResourcesModal,
+    BulletListLoader,
+    CheckIcon, ChevronUpDownIcon,
+    Combobox,
+    ComboboxButton,
+    ComboboxInput,
+    ComboboxLabel,
+    ComboboxOption,
+    ComboboxOptions,
+  }
 }
 </script>
+
+<style lang="css">
+.data-headlessui-state {
+  padding-right: 20px;
+}
+</style>
+

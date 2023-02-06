@@ -1,6 +1,5 @@
 <template>
-  <div id="root">
-    <main class="main-flow">
+  <div id="main-container">
       <div class="main-left">
         <div class="left-menu">
           <div class="upper-menu"><a class="logotype" href="#" @click.prevent="$goTo('dashboard')">
@@ -32,14 +31,17 @@
           </div>
         </div>
       </div>
-      <div class="main-right">
-        <router-view v-slot="{ Component, route}">
-          <Transition>
-            <component :is="Component" :key="route.path" />
-          </transition>
-        </router-view>
-      </div>
-    </main>
+      <main>
+        <div class="main-right">
+          <div class="content-right">
+            <router-view v-slot="{ Component, route}">
+              <Transition>
+                <component :is="Component" :key="route.path" />
+              </transition>
+            </router-view>
+          </div>
+        </div>
+      </main>
   </div>
 </template>
 

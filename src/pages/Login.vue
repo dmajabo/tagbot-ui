@@ -141,3 +141,19 @@ export default {
   }
 }
 </script>
+
+<style lang="css">
+.form-submit {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+  color: #FFFFFF;
+  background: #4876EB !important;
+  border: none;
+  width: 100%;
+  margin-top: 40px;
+  padding: 14px;
+  cursor: pointer;
+}
+</style>

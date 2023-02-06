@@ -14,10 +14,13 @@ import authService from './services/auth'
 import * as en from './locales/en.json'
 import vue3GoogleLogin from 'vue3-google-login'
 import {useToast} from 'vue-toastification'
-import './assets/css/style.css'
-import './assets/css/tailwind.css'
+
 import './assets/css/normalize.css'
 import './assets/css/reset.css'
+import './assets/css/main.css'
+import './assets/css/style.css'
+import './assets/css/tailwind.css'
+
 
 const i18n = createI18n({
     locale: 'en',
