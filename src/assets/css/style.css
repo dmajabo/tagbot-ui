@@ -1139,6 +1139,380 @@ input {
     }
 }
 
+/* Steps */
+
+/* step-section */
+
+.step-section {
+    width: 100%;
+    max-width: 1920px;
+    margin: 0 auto;
+}
+
+.flex-step {
+    display: flex;
+    justify-content: space-between;
+}
+
+.left-step {
+    width: 47%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.right-step {
+    background: url(../img/step-bg.svg) center center;
+    background-repeat: no-repeat;
+    width: 53%;
+    height: 1016px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.title-ls {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 36px;
+    line-height: 44px;
+    color: #4F4F4F;
+    padding-bottom: 20px;
+}
+
+.step-content {
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    display: flex;
+    align-items: center;
+    margin-top: 40px;
+    padding: 24px;
+}
+
+.step-content > div:nth-child(2) {
+    padding-left: 15px;
+}
+
+.step-checkbox {
+    width: 24px;
+    height: 24px;
+}
+
+.number-step {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 29px;
+    color: #4876EB;
+    padding-bottom: 15px;
+}
+
+.ask-step {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 29px;
+    color: #4F4F4F;
+}
+
+.ls-content {
+    width: 76%;
+}
+
+.disabled {
+    opacity: 0.6;
+}
+
+.disabled .number-step {
+    color: #4F4F4F;
+}
+
+.step-content.active {
+    border: 2px solid #4876EB;
+}
+
+.step-radio-block {
+    background: #fff;
+    margin-bottom: 32px;
+}
+
+.rs-content {
+    width: 63%;
+}
+
+.step-label {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    width: 100%;
+    padding-left: 80px!important;
+}
+
+.step4-label {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    width: 100%;
+    padding-left: 80px!important;
+}
+
+.step-label::before {
+    top: 55px!important;
+    left: 37px!important;
+}
+
+.step-label::after{
+    top: 59px!important;
+    left: 41px!important;
+}
+
+.step4-label::before {
+    top: 38px!important;
+    left: 37px!important;
+}
+
+.step4-label::after{
+    top: 42px!important;
+    left: 41px!important;
+}
+
+.step-label-img {
+    position: relative;
+    display: inline-block;
+}
+
+.coming-soon {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    color: #4F4F4F;
+    position: absolute;
+    right: 0;
+    bottom: -10px;
+}
+
+.step-submit {
+    background: #F7F7F8;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    border: transparent;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
+    color: #4F4F4F;
+    padding: 24px;
+    cursor: pointer;
+}
+
+.step-submit::after {
+    content: ' ';
+    position: absolute;
+    background: url(../img/step-icon.svg) center center;
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
+    right: 40px;
+    top: 26px;
+}
+
+.step-2, .step-3_1, .step-3_2, .step-3_3, .step-4 {
+    display: none;
+}
+
+.step-bg {
+    background: #fff;
+    padding: 40px 60px;
+    margin-bottom: 32px;
+}
+
+.mobile-step {
+    display: none;
+}
+
+@media screen and (max-width:1700px) {
+    .ls-content, .rs-content {
+        width: 90%;
+    }
+}
+
+@media screen and (max-width:1340px) {
+    .content {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .gcloud {
+        width: 300px;
+    }
+}
+
+@media screen and (max-width:992px) {
+    .flex-dashboard {
+        flex-direction: column;
+    }
+
+    .left-dashboard, .right-dashboard {
+        width: 100%;
+    }
+
+    .left-dashboard {
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+
+    .refresh-text {
+        padding-right: 20px;
+    }
+
+    .main-table tr td:nth-child(1) {
+        width: 34%;
+    }
+
+    .text-row {
+        font-size: 14px;
+    }
+
+    main {
+        overflow: hidden;
+    }
+
+    .table-block {
+        overflow-x: scroll;
+    }
+
+    .main-table {
+        width: 992px;
+    }
+
+    .left-dashboard {
+        order: 2;
+        margin-bottom: 50px;
+    }
+
+    .right-dashboard {
+        order: 1;
+    }
+
+    .mobile-step {
+        display: flex;
+    }
+
+    .left-step .steps-block {
+        display: none;
+    }
+
+    .flex-step {
+        flex-direction: column;
+    }
+
+    .left-step {
+        width: 100%;
+    }
+
+    .right-step {
+        width: 100%;
+        height: auto;
+    }
+
+    .right-step {
+        background: none;
+    }
+
+    .step-section {
+        background: url(../img/step-bg.svg) center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+
+    .title-ls {
+        color: #fff;
+    }
+
+    .number-step {
+        padding-bottom: 7px;
+    }
+
+    .step-content > div:nth-child(2) {
+        padding-left: 20px;
+    }
+
+    .mobile-step {
+        margin-bottom: 32px;
+    }
+
+    .step-label {
+        padding-top: 30px!important;
+        padding-bottom: 30px!important;
+    }
+
+    .step-1 {
+        border: 2px solid #fff;
+        border-radius: 10px;
+        padding: 15px;
+    }
+
+    .step-radio-block, .step-bg {
+        margin-top: 20px;
+        margin-bottom: 0px;
+    }
+
+    .mobile-step {
+        margin: 0px;
+    }
+
+    .step-line {
+        border-bottom: 2px solid #fff;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    .flex-step {
+        justify-content: flex-start;
+    }
+
+    .right-step {
+        margin-top: 20px;
+    }
+
+    .step-submit {
+        margin-top: 20px;
+    }
+
+    .step-1, .step-2, .step-3_1, .step-3_2, .step-3_3, .step-4 {
+        display: block;
+        margin-top: 20px;
+        border: 2px solid #fff;
+        border-radius: 10px;
+        padding: 15px;
+    }
+
+    .aws, .azure, .gcloud {
+        height: 45px;
+    }
+
+    .step-label::before {
+        top: 42px!important;
+        left: 37px!important;
+    }
+
+    .step-label::after{
+        top: 46px!important;
+        left: 41px!important;
+    }
+
+    .step-2, .step-3_1, .step-3_2, .step-3_3, .step-4 {
+        opacity: 0.6;
+    }
+
+    .disabled {
+        opacity: 1;
+    }
+}
+
 @media screen and (max-width:768px) {
     .right-header {
         display: none;
