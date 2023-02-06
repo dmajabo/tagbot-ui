@@ -103,3 +103,60 @@ export default {
 }
 </script>
 
+<style lang="css">
+.username {
+  display: block;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px!important;
+  color: #4f4f4f!important;
+  padding-right: 8px!important;
+}
+
+.hover-menu-new {
+  display: none;
+  background: #FFF;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  color: #4f4f4f;
+  position: absolute;
+  right: 0;
+  left: 55px;
+  width: 110%;
+  top: -37px;
+  min-width: 184px;
+  padding: 10px 8px;
+  gap: 4px;
+  text-align: left;
+}
+
+.user-info:hover .hover-menu,.user-info:hover .hover-menu-new{display:block}
+
+.hover-menu a, .hover-menu-new a {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  color: #4f4f4f;
+  display: block;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.hover-menu-new * {
+  display: inline-block;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  padding: 8px 16px;
+  white-space: nowrap;
+  border-radius: 6px;
+  width: 100%;
+  z-index: 10;
+}
+</style>
+

@@ -2,8 +2,7 @@
   <div class="table-scroll top-10-block" style="display: block;">
 
       <table class="table-dashboard">
-        <PuSkeleton :loading="loading" :count="10" height="50" tag="div">
-        <tbody>
+        <tbody v-if="!loading">
           <tr class="table-dashboard-t">
             <td colspan="3">{{ $t('common.tags') }}</td>
             <td>{{ $t('common.used') }}</td>
@@ -27,7 +26,9 @@
           </tr>
 
         </tbody>
-        </PuSkeleton>
+        <tbody v-if="loading">
+        <BulletListLoader></BulletListLoader>
+        </tbody>
       </table>
 
       <div class="no-tags-block" v-if="!loading && data.tags.length === 0">
@@ -88,6 +89,9 @@
   </div>
 </template>
 <script>
+import {
+  BulletListLoader,
+} from 'vue-content-loader'
 
 export default {
   props: ['data', 'loading'],
@@ -95,6 +99,9 @@ export default {
     return {
 
     }
+  },
+  components: {
+    BulletListLoader
   }
 }
 </script>

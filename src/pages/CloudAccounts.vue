@@ -8,9 +8,8 @@
     </div>
 
     <div class="table-block">
-      <PuSkeleton :loading="loading" :count="5" :width="100">
       <table class="main-table" v-if="accounts.length > 0">
-        <tbody>
+        <tbody v-if="!loading">
         <tr class="title-row">
           <td>{{ $t('common.account_id') }}</td>
           <td>{{ $t('common.status') }}</td>
@@ -46,8 +45,12 @@
 
 
         </tbody>
+        <tbody v-if="loading">
+          <BulletListLoader></BulletListLoader>
+        </tbody>
       </table>
-      <div class="no-tags-block" v-else><svg width="299" height="190" viewBox="0 0 299 190" fill="none"
+
+      <div class="no-tags-block" v-if="!loading && accounts.length === 0"><svg width="299" height="190" viewBox="0 0 299 190" fill="none"
                                              xmlns="http://www.w3.org/2000/svg">
         <g clip-path="url(#clip0_845_4495)">
           <path
@@ -97,8 +100,8 @@
         </defs>
       </svg>
         <h2>You don’t have any accounts onboarded yet</h2><span>Onboard your first account to get started..</span>
-        <a href="#" @click.prevent="$goTo('get-started')" class="add-tag-button modal-toggle">Onboard Account</a></div>
-      </PuSkeleton>
+        <a href="#" @click.prevent="$goTo('get-started')" class="add-tag-button modal-toggle">Onboard Account</a>
+      </div>
     </div>
 
     <a-modal v-model:visible="onboardingModal" title="Onboard a new account." @ok="onboardAccount" :confirmLoading="onboardLoading">
@@ -109,7 +112,9 @@
 
 <script>
 import {userStore} from "../store/userStore";
-
+import {
+  BulletListLoader,
+} from 'vue-content-loader'
 export default {
   data() {
     return {
@@ -250,9 +255,11 @@ export default {
     },
   },
   mounted() {
+    this.loading = true
     this.pollProfileReady()
   },
   components: {
+    BulletListLoader,
   }
 }
 </script>

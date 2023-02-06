@@ -26,24 +26,26 @@
           <div class="frame-connect">
             <div class="info-title">{{ $t('dashboard.number_of_accounts') }}</div>
             <div class="info-number">
-              <PuSkeleton :loading="loading">{{accounts.length}}</PuSkeleton>
+              <div v-if="!loading">{{accounts.length}}</div>
             </div>
           </div>
           <div class="frame-connect">
             <div class="info-title">{{ $t('dashboard.resources_count') }}</div>
             <div class="info-number">
-              <PuSkeleton :loading="loading">{{analytics.totalResources}}</PuSkeleton>
+              <div v-if="!loading">{{analytics.totalResources}}</div>
             </div>
           </div>
           <div class="frame-connect">
             <div class="info-title">{{ $t('dashboard.tags_count') }}</div>
             <div class="info-number">
-              <PuSkeleton :loading="loading">{{analytics.totalTags}}</PuSkeleton>
+              <div v-if="!loading">{{analytics.totalTags}}</div>
             </div>
           </div>
           <div class="frame-connect">
             <div class="info-title">{{ $t('dashboard.tags_standard_percent') }}</div>
-            <div class="info-number"><PuSkeleton :loading="loading">N/A</PuSkeleton></div>
+            <div class="info-number">
+              <div v-if="!loading">N/A</div>
+            </div>
           </div>
         </div>
       </div>
@@ -53,6 +55,9 @@
 
 <script>
 import {userStore} from "../store/userStore";
+import {
+  BulletListLoader,
+} from 'vue-content-loader'
 
 export default {
   data() {
@@ -119,6 +124,18 @@ export default {
   },
   mounted() {
     this.pollProfileReady()
+  },
+  components: {
+    BulletListLoader
   }
 }
 </script>
+
+<style lang="css">
+  .left-dashboard {
+    width: 70% !important;
+  }
+  .right-dashboard {
+    width: 28% !important;
+  }
+</style>

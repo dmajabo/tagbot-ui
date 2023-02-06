@@ -1,8 +1,7 @@
 <template>
   <div class="table-scroll created-resoures-block">
     <table class="table-dashboard">
-      <PuSkeleton :loading="loading" :count="10" height="50" tag="div">
-        <tbody>
+        <tbody v-if="!loading">
         <tr class="table-dashboard-t">
           <td colspan="3">Email of user</td>
           <td>Count of resources</td>
@@ -20,7 +19,9 @@
         </tr>
 
         </tbody>
-      </PuSkeleton>
+        <tbody v-else>
+          <BulletListLoader></BulletListLoader>
+        </tbody>
     </table>
 
     <div class="no-tags-block" v-if="!loading && data.resourcesByUser.length === 0">
@@ -80,12 +81,19 @@
 </template>
 
 <script>
+import {
+  BulletListLoader,
+} from 'vue-content-loader'
+
 export default {
   props: ['data', 'loading'],
   data() {
     return {
 
     }
+  },
+  components: {
+    BulletListLoader
   }
 }
 </script>
