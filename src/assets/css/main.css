@@ -362,7 +362,7 @@ input {
 .checkbox-dropdown:after {
     content:'';
     position: absolute;
-    background: url(../img/icon/dropdown-icon.svg) center center;
+    background: url(/img/icon/dropdown-icon.svg) center center;
     background-repeat: no-repeat;
     background-size: cover;
     width: 8px;
@@ -412,7 +412,7 @@ input {
 .sort-dropdown:after {
     content:'';
     position: absolute;
-    background: url(../img/icon/open-ico.svg) center center;
+    background: url(/img/icon/open-ico.svg) center center;
     background-repeat: no-repeat;
     background-size: contain;
     width: 8px;
@@ -561,11 +561,10 @@ input {
     align-items: center;
     flex-direction: column;
     margin-top: 50px;
-    display: none;
 }
 
 .loading {
-    background: url(../img/loading.svg) center center;
+    background: url(/img/loading.svg) center center;
     background-repeat: no-repeat;
     background-size: cover;
     width: 526px;

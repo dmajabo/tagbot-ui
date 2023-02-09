@@ -197,11 +197,6 @@
 import {userStore} from "../store/userStore"
 import _ from 'lodash'
 
-import {CheckIcon, ChevronUpDownIcon} from '@heroicons/vue/20/solid'
-import {Combobox, ComboboxButton, ComboboxInput, ComboboxLabel, ComboboxOption, ComboboxOptions,} from '@headlessui/vue'
-import {
-  BulletListLoader,
-} from 'vue-content-loader'
 import ResourcesModal from "../components/dashboard/ResourcesModal.vue";
 
 export default {
@@ -285,14 +280,6 @@ export default {
   },
   components: {
     ResourcesModal,
-    BulletListLoader,
-    CheckIcon, ChevronUpDownIcon,
-    Combobox,
-    ComboboxButton,
-    ComboboxInput,
-    ComboboxLabel,
-    ComboboxOption,
-    ComboboxOptions,
   }
 }
 </script>

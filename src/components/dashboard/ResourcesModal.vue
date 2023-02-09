@@ -39,11 +39,6 @@
 </template>
 
 <script>
-import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import { CheckIcon } from '@heroicons/vue/24/outline'
-import {
-  BulletListLoader,
-} from 'vue-content-loader'
 
 export default {
   data() {
@@ -88,9 +83,6 @@ export default {
   created() {
   },
   components: {
-    BulletListLoader,
-    CheckIcon,
-    Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot
   }
 }
 </script>

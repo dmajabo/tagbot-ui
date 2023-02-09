@@ -4,8 +4,8 @@
 
 body {
     width: 100%;
-    /* max-width: 1920px; */
-    margin: 0 auto;
+    max-width: 1855px;
+    margin: 0 auto !important;
     font-family: 'Montserrat', sans-serif;
 }
 
@@ -171,7 +171,7 @@ input {
     background: url(/img/main-bg.svg) center center ;
     background-repeat: no-repeat;
     background-size: cover;
-    height: 1080px;
+    height: 895px;
 }
 
 .title {
@@ -1163,7 +1163,7 @@ input {
 }
 
 .right-step {
-    background: url(../img/step-bg.svg) center center;
+    background: url(/img/step-bg.svg) center center;
     background-repeat: no-repeat;
     width: 53%;
     height: 1016px;
@@ -1309,7 +1309,7 @@ input {
 .step-submit::after {
     content: ' ';
     position: absolute;
-    background: url(../img/step-icon.svg) center center;
+    background: url(/img/step-icon.svg) center center;
     background-repeat: no-repeat;
     width: 16px;
     height: 16px;
@@ -1421,7 +1421,7 @@ input {
     }
 
     .step-section {
-        background: url(../img/step-bg.svg) center center;
+        background: url(/img/step-bg.svg) center center;
         background-repeat: no-repeat;
         background-size: cover;
         padding-top: 50px;

@@ -82,9 +82,6 @@
 </template>
 
 <script>
-import {
-  BulletListLoader,
-} from 'vue-content-loader'
 export default {
   props: ['data', 'loading'],
   data() {
@@ -93,7 +90,6 @@ export default {
     }
   },
   components: {
-    BulletListLoader
   }
 }
 </script>

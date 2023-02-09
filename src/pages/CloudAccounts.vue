@@ -111,10 +111,8 @@
 </template>
 
 <script>
-import {userStore} from "../store/userStore";
-import {
-  BulletListLoader,
-} from 'vue-content-loader'
+import {userStore} from "../store/userStore"
+
 export default {
   data() {
     return {
@@ -259,7 +257,6 @@ export default {
     this.pollProfileReady()
   },
   components: {
-    BulletListLoader,
   }
 }
 </script>
