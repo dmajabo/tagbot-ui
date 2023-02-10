@@ -21,7 +21,12 @@
     "account_id": "Account ID",
     "status": "Status",
     "add_account": "Add account",
-    "cloud_accounts": "Cloud accounts"
+    "cloud_accounts": "Cloud accounts",
+    "no_accounts": "You do not have any accounts onboarded yet.",
+    "start_onboarding": "Get started by onboarding a new account.",
+    "get_started": "Get Started",
+    "apply": "Apply",
+    "download_all": "Download all"
   },
   "dashboard": {
     "number_of_accounts": "# of Accounts",

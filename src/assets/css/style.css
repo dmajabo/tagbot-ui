@@ -1873,3 +1873,29 @@ input {
         padding-right: 37px;
     }
 }
+
+.m-2, [m~="\32 "] {
+    margin: 0.5rem;
+}
+
+.ml-0 {
+    margin-left: 0;
+}
+
+.mr-0 {
+    margin-right: 0;
+}
+
+.el-button--primary {
+    background-color: #4876EB !important;
+}
+
+.el-table .cell {
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    word-break: break-all;
+    line-height: 23px;
+    padding: 0 12px;
+}
