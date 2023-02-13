@@ -35,7 +35,7 @@
         <div class="main-right">
           <div class="content-right">
             <router-view v-slot="{ Component, route}">
-              <Transition>
+              <Transition mode="out-in" name="fade">
                 <component :is="Component" :key="route.path" />
               </transition>
             </router-view>
@@ -104,15 +104,6 @@ export default {
 </script>
 
 <style lang="css">
-.username {
-  display: block;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 20px!important;
-  color: #4f4f4f!important;
-  padding-right: 8px!important;
-}
 
 .hover-menu-new {
   display: none;

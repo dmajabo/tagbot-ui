@@ -18,7 +18,7 @@
       <div class="dropdown-blocks">
 
         <div class="flex-dropdown">
-          <el-select v-model="selectedUser" size="large" filterable clearable placeholder="Users" class="m-2 ml-0">
+          <el-select v-model="selectedUser" :disabled="users.length === 0" size="large" filterable clearable placeholder="Users" class="m-2 ml-0">
             <el-option
                 v-for="item in users"
                 :key="item.email"
@@ -27,7 +27,7 @@
             />
           </el-select>
 
-          <el-select v-model="selectedAccount" size="large" filterable clearable placeholder="Accounts" class="m-2">
+          <el-select v-model="selectedAccount" :disabled="accounts.length === 0" size="large" filterable clearable placeholder="Accounts" class="m-2">
             <el-option
                 v-for="item in accounts"
                 :key="item.accountNumber"
@@ -45,27 +45,31 @@
         </div>
       </div>
 
-      <el-skeleton :rows="5" v-if="loading" />
+      <el-skeleton :rows="5" v-if="loading" animated />
       <div v-else class="main-info">
-
-        <div class="flex items-center justify-center space-x-2">
-          <div class="w-4 h-4 rounded-full animate-pulse dark:bg-violet-400"></div>
-          <div class="w-4 h-4 rounded-full animate-pulse dark:bg-violet-400"></div>
-          <div class="w-4 h-4 rounded-full animate-pulse dark:bg-violet-400"></div>
-        </div>
-
-        <div v-if="!loading && resources.length > 0" class="info-block" v-for="item in resources">
+        <div v-if="!loading && Object.keys(resources).length > 0" class="info-block" v-for="item in Object.keys(resources)">
             <div class="content-info-block">
-              <div class="info-email">{{ item.created_by }}</div>
+              <div class="info-email">{{ item }}</div>
               <div class="info-services">
 
-                <div @click.prevent="openModal(resource)" class="service-block modal-toggle tooltip bottom" :tooltip-text="resource.type.replaceAll('::', ' ')" v-for="resource in item.resources.slice(0, 3)">
-                  <img :src="'/AWS_Icon_Svg/' + resource.image_url" alt="" class="service-img">
-                  <span>{{ resource.count }}</span>
-                </div>
+                <el-tooltip
+                    v-for="resource in resources[item]['resources'].slice(0, 3)"
+                    class="box-item"
+                    effect="light"
+                    :content="resource.type.replaceAll('::', ' ')"
+                    placement="bottom"
+                    :show-arrow="false"
+                >
+                  <div @click.prevent="openModal(resource)"
+                       class="service-block modal-toggle tooltip bottom"
+                  >
+                    <img :src="'/AWS_Icon_Svg/' + resource.image_url" alt="" class="service-img">
+                    <span>{{ resource.count }}</span>
+                  </div>
+                </el-tooltip>
 
               </div>
-              <a href="#" class="add-more" v-if="item.resources.length > 3">and {{ item.resources.length - 3 }} more...</a>
+              <a href="#" class="add-more" v-if="resources[item]['resources'].length > 3">and {{ resources[item]['resources'].length - 3 }} {{$t('common.more')}}</a>
             </div>
 
           <div class="button-info-block">
@@ -94,20 +98,22 @@
       </div>
 
 
-      <div class="pagination-block" >
-        <a href="#" class="prev-button">
-          <img src="/img/icon/prev-button.svg" alt="">
-          <span class="pagination-button">Previous</span>
-        </a>
-        <a href="#" class="pagination-number">1 2 3 4 5 6</a>
-        <a href="#" class="next-button">
-          <span class="pagination-button">Next</span>
-          <img src="/img/icon/next-button.svg" alt="">
-        </a>
+      <div class="t-pagination-block" v-if="!loading && pagination.total !== 0 && pagination.total !== undefined">
+        <el-pagination
+            v-model:current-page="pagination.current_page"
+            :page-size="pagination.per_page"
+            :default-page-size="pagination.per_page"
+            :small="true"
+            :background="true"
+            layout="total, prev, pager, next"
+            :prev-text="$t('common.previous')"
+            :next-text="$t('common.next')"
+            :total="pagination.total"
+            @current-change="handlePageChange()"
+        />
       </div>
 
     </div>
-
     <ResourcesModal></ResourcesModal>
   </div>
 </template>
@@ -122,6 +128,11 @@ import ResourcesModal from "../components/dashboard/ResourcesModal.vue";
 export default {
   data() {
     return {
+      pagination: {
+        current_page: 1,
+        per_page: 4,
+        total: 0
+      },
       userQuery: "",
       accountQuery: "",
       selectedUser: null,
@@ -138,6 +149,9 @@ export default {
   computed: {
   },
   methods: {
+    handlePageChange(){
+      this.loadResources({})
+    },
     openModal(resource) {
       // console.log("Opening...")
       this.$mitt.emit('open-resource-modal', { user: resource.created_by, tenant: resource.tenant_id, type: resource.type})
@@ -158,7 +172,7 @@ export default {
           self.user = userData.getData()
           self.loadUsers()
           self.accounts = userData.getAccounts()
-          self.loadResources({})
+          self.loadResources({page: 1})
         }
       }, 3000)
     },
@@ -174,9 +188,14 @@ export default {
     loadResources(payload) {
       var self = this
       self.loading = true
+      payload['page'] = this.pagination.current_page
+      payload['per_page'] = this.pagination.per_page
       this.$api.post('tenants/' + this.user.tenantId + '/analytics/resources-per-user', payload).then((response) => {
         // console.log(response)
-        self.resources = response.data
+        self.pagination.total = parseInt(response.data.total)
+        let res = response.data
+        delete res['total']
+        self.resources = res
         self.loading = false
       }).catch((error) => {
         this.$toast.error(error.message)
@@ -193,9 +212,11 @@ export default {
 }
 </script>
 
-<style lang="css">
-.data-headlessui-state {
-  padding-right: 20px;
-}
+<style scoped>
+  .el-skeleton {
+    padding-left: 0;
+    padding-right: 0;
+  }
 </style>
+
 

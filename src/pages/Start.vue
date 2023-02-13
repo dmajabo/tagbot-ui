@@ -21,28 +21,28 @@
             <div class="title-ls">{{ $t('onboard.title') }}</div>
             <div class="steps-block">
               <div :class="getStepContentClass(1)">
-                <div><input type="checkbox" readonly="" class="step-checkbox"></div>
+                <div><input type="checkbox" readonly v-model="stepOneChecked" class="step-checkbox"></div>
                 <div>
                   <div class="number-step">{{ $t('onboard.step_1') }}</div>
                   <div class="ask-step">{{ $t('onboard.choose_cloud') }}</div>
                 </div>
               </div>
               <div :class="getStepContentClass(2)">
-                <div><input type="checkbox" readonly="" class="step-checkbox"></div>
+                <div><input type="checkbox" readonly v-model="stepTwoChecked" class="step-checkbox"></div>
                 <div>
                   <div class="number-step">{{ $t('onboard.step_2') }}</div>
                   <div class="ask-step">{{ $t('onboard.onboard_cloud') }}</div>
                 </div>
               </div>
               <div :class="getStepContentClass(3)">
-                <div><input type="checkbox" readonly="" class="step-checkbox"></div>
+                <div><input type="checkbox" readonly v-model="stepThreeChecked" class="step-checkbox"></div>
                 <div>
                   <div class="number-step">{{ $t('onboard.step_3') }}</div>
                   <div class="ask-step">{{ $t('onboard.choose_tags') }}</div>
                 </div>
               </div>
               <div :class="getStepContentClass(4)">
-                <div><input type="checkbox" class="step-checkbox"></div>
+                <div><input type="checkbox" v-model="stepFourChecked" class="step-checkbox"></div>
                 <div>
                   <div class="number-step">{{ $t('onboard.step_4') }}</div>
                   <div class="ask-step">{{ $t('onboard.connect_chat') }}</div>
@@ -56,7 +56,7 @@
             <form action="#">
               <div class="step-1" :style="getStepStyle(1)">
                 <div class="step-content active mobile-step">
-                  <div><input readonly="" type="checkbox" class="step-checkbox"></div>
+                  <div><input type="checkbox" class="step-checkbox"></div>
                   <div>
                     <div class="number-step">{{ $t('onboard.step_1') }}</div>
                     <div class="ask-step">{{ $t('onboard.choose_cloud') }}</div>
@@ -113,7 +113,7 @@
                     </div>
                     <div><span class="span-error">{{ accountNumberPromptText }}</span></div>
                   </div>
-                  <span class="onboard-button" @click.prevent="onboardAccount()" :style="getAccountLoginButtonStyle()">{{ $t('onboard.login') }}</span>
+                  <el-button class="onboard-button" @click.prevent="onboardAccount()" :loading="loading" type="primary">{{ $t('onboard.login') }}</el-button>
                   <p class="text-form">{{ $t('onboard.no_access') }} <span class="bold">{{ $t("onboard.aws_account") }}?</span></p>
                   <p class="text-form">{{ $t("onboard.try") }} <span class="bold">TagBot</span> {{ $t('onboard.any_account') }}.</p>
                   <div class="flex-sbs"><a href="#!">{{ $t('onboard.step_guide') }} </a><a href="#!">{{ $t('onboard.template_explain') }}</a>
@@ -282,6 +282,11 @@ export default {
       stop_polling: 0,
       has_conflict: false,
       tags: [],
+      loading: false,
+      stepOneChecked: false,
+      stepTwoChecked: false,
+      stepThreeChecked: false,
+      stepFourChecked: false,
     }
   },
   computed: {
@@ -304,6 +309,10 @@ export default {
         return
       }
       this.major_step = 2
+      var self = this
+      this.$nextTick(function() {
+        self.stepOneChecked = true
+      })
       return true
     },
     generateUUIDv4() {
@@ -318,6 +327,7 @@ export default {
         const cfTemplateUrl = import.meta.env.VITE_CF_TEMPLATE
         const awsCloudFormationUrl = 'https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/quickcreate?stackName=' + stackName + '&templateURL=' + cfTemplateUrl
         window.open(awsCloudFormationUrl)
+        this.loading = true
         this.createAccount()
       } else {
         this.$toast.error(this.$t('onboard.account_invalid'))
@@ -331,6 +341,7 @@ export default {
       }
     },
     goToStepChat() {
+      this.stepThreeChecked = true
       this.major_step = 4
     },
     createAccount() {
@@ -358,10 +369,12 @@ export default {
         console.log(error)
       })
     },
-    stopPolling() {
+    stopPolling(success = true) {
       this.stop_polling = this.stop_polling + 1
       clearInterval(this.polling)
-      if(this.stop_polling === 1) {
+      this.loading = false
+      if(this.stop_polling === 1 && success === true) {
+        this.stepTwoChecked = true
         this.triggerCollection()
       }
     },
@@ -376,7 +389,7 @@ export default {
           self.stopPolling()
           return false
         }
-        this.$api.get('tenants/' + userData.tenantId + '/accounts/' + this.account_id + '/verifyOnboard').then((response) => {
+        this.$api.get('tenants/' + userData.tenantId + '/accounts/' + this.account_id + '/verify-onboard').then((response) => {
           success = success + 1
           if(success === 1) {
             self.$toast.success("Account onboarded!")
@@ -384,7 +397,9 @@ export default {
           self.stopPolling()
           self.major_step = 31
         }).catch((error) => {
+          self.stopPolling(false)
           console.log("Verification unsuccessful.")
+          self.$toast.error("You are not authorized to onboard this account. Please try another account.")
         })
       }, 3000)
     },

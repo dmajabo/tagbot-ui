@@ -1,5 +1,5 @@
 <template>
-  <div class="no-tags-block" style="width: 100%; margin: 0 auto;" >
+  <div class="no-data-block">
     <svg width="299" height="190" viewBox="0 0 299 190" fill="none"
          xmlns="http://www.w3.org/2000/svg">
       <g clip-path="url(#clip0_845_4495)">
@@ -49,8 +49,8 @@
         </clipPath>
       </defs>
     </svg>
-    <h2 v-if="title">{{ title }}</h2>
-    <span v-if="detail">{{ detail }}</span>
+    <h2 v-if="title">{{ title }}</h2><br />
+    <span v-if="detail">{{ detail }}</span><br /><br />
     <a v-if="button_link && button_text" href="#" @click.prevent="$goTo(button_link)" class="add-tag-button modal-toggle">{{ button_link }}</a>
   </div>
 
@@ -66,3 +66,12 @@ export default {
   }
 }
 </script>
+
+<style>
+.no-data-block {
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  padding: 10%;
+}
+</style>

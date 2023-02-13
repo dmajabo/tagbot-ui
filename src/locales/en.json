@@ -24,15 +24,27 @@
     "cloud_accounts": "Cloud accounts",
     "no_accounts": "You do not have any accounts onboarded yet.",
     "start_onboarding": "Get started by onboarding a new account.",
+    "no_tags": "You do not have any tags set yet.",
+    "create_tags": "Get started by creating a new tag standard.",
+    "add_tag": "Add Tag",
     "get_started": "Get Started",
     "apply": "Apply",
-    "download_all": "Download all"
+    "download_all": "Download all",
+    "no_data": "No Data.",
+    "email": "Email",
+    "coverage_of_resources": "% Coverage",
+    "count_of_resources": "# of Resources",
+    "more": "more...",
+    "previous": "Previous",
+    "next": "Next",
+    "cancel": "Cancel",
+    "onboard": "Onboard"
   },
   "dashboard": {
     "number_of_accounts": "# of Accounts",
     "resources_count": "# of Resources",
     "tags_count": "# of Tags",
-    "tags_standard_percent": "Tags by the standard in %"
+    "tags_standard_percent": "% Tag Standard"
   },
   "nav": {
     "aws_accounts": "AWS Accounts",

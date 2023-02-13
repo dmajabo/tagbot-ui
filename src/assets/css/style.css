@@ -90,13 +90,13 @@ input {
 }
 
 .username {
-    display: block;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 20px;
-    color: #4F4F4F;
-    padding-right: 8px;
+    display: block !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 16px !important;
+    line-height: 20px !important;
+    color: #4F4F4F !important;
+    padding-left: 8px !important;
 }
 
 .user-img {
@@ -299,9 +299,11 @@ input {
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid #4876EB;
+    border: 1px solid #4876EB !important;
     padding: 12px;
     margin-top: 8px;
+    height: 48px !important;
+    border-radius: 0 !important;
 }
 
 .signin-block {
@@ -662,17 +664,20 @@ input {
 }
 
 .onboard-button {
-    font-style: normal;
-    font-weight: 700;
-    font-size: 16px;
-    line-height: 20px;
+    font-style: normal !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+    line-height: 20px !important;
     color: #FFFFFF;
-    display: block;
-    background: #4876EB;
-    padding: 14px;
+    display: block !important;
+    width: 100%;
+    background: #4876EB !important;
+    padding: 14px !important;
     text-align: center;
-    margin-top: 24px;
-    margin-bottom: 20px;
+    margin-top: 24px !important;
+    margin-bottom: 20px !important;
+    height: 48px !important;
+    border-radius: 0;
 }
 
 .radio-button {
@@ -1899,3 +1904,200 @@ input {
     line-height: 23px;
     padding: 0 12px;
 }
+
+.left-dashboard {
+    width: 70% !important;
+}
+.right-dashboard {
+    width: 28% !important;
+}
+.el-skeleton {
+    padding: 2%;
+}
+
+/* VUE Transitions */
+/* scalle in animation */
+.scale-in-enter,
+.scale-in-leave-to{
+    transform: scale(0.88);
+    opacity: 0;
+}
+
+.scale-in-enter-active,
+.scale-in-leave-active{
+    transition:  transform 0.3s, opacity 0.5s ;
+}
+
+/* fade horizontally */
+
+.fade-x-enter,
+.fade-x-leave-to {
+    opacity: 0;
+    transform: translateX(20px);
+}
+
+.fade-x-enter-active,
+.fade-x-leave-to {
+    transition: opacity 0.3s, transform 0.5s;
+}
+
+/* fade up */
+.fade-y-enter,
+.fade-y-leave-to {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.fade-y-enter-active,
+.fade-y-leave-active {
+    transition: opacity 0.3s, transform 0.5s;
+}
+
+/* fade animation */
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.3s;
+}
+
+.fade-enter,
+.fade-leave-to {
+    opacity: 0;
+}
+
+/* roll in animation */
+.roll-in-left-enter,
+.roll-in-left-leave-to{
+    transform: translateX(-500px) rotate(-200deg);
+    opacity: 0;
+}
+
+.roll-in-left-enter-active,
+.roll-in-left-leave-active{
+    transition:  transform 0.3s, opacity 0.5s ;
+}
+
+
+/* tag manager */
+
+.form-tag-manager div {
+    display: flex;
+    position: relative;
+    width: fit-content;
+    margin-bottom: 24px;
+    align-items: center;
+    align-content: center;
+}
+.error-span {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    color: red;
+}
+
+.form-tag-manager div input{
+    width: 450px;
+
+    padding-right: 25px;
+}
+.form-tag-manager div input:focus {
+    border-bottom: 2px solid #4876EB;
+}
+
+
+
+.form-tag-manager div button, .new-tag-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #4876EB;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
+    display: flex;
+    align-content: center;
+    align-items: center;
+}
+
+.new-tag-button {
+    margin-bottom: 20px;
+
+}
+
+.form-tag-manager button {
+    cursor: pointer;
+    border-radius: 6px;
+    border: none;
+}
+
+
+.form-tag-manager > button img {
+    margin-right: 11px;
+}
+
+
+.clear-text {
+    position: absolute;
+    top: 18px;
+    right: 70px;
+    color: #4f4f4f!important;
+}
+
+.form-connections {
+    margin-top: 1em;
+}
+
+.token-input-connection {
+    max-width: 450px;
+    width: 100%;
+    height: 58px;
+    background: #F7F7F8;
+    margin-right: 24px;
+    border: none;
+    padding: 1em;
+}
+
+
+.card-body-connections .connect-button {
+    max-width: 205px;
+    width: 100%;
+    height: 38px;
+    border: 1px solid #4876EB;
+    border-radius: 6px;
+    background: initial;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
+    color: #4876EB;
+    cursor: pointer;
+
+}
+
+.connections-content {
+    margin-left: 1.3em;
+}
+
+.text-content-connection {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 29px;
+    color: #4F4F4F;
+    margin-bottom: 30px;
+    margin-top: 1em;
+}
+
+.el-tag--plain {
+    border: 1px solid #4876EB !important;
+    border-radius: 20px !important;
+}
+
+.el-tag--plain .el-tag__content {
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 12px !important;
+    line-height: 20px !important;
+    color: #4f4f4f !important;
+    padding: 4px 16px !important;
+}
+

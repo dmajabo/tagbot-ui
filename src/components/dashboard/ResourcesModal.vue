@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="open" :title="type">
+  <el-dialog v-model="open" :title="type.replaceAll('::', ' ') + ' [' + user + ']'">
     <el-skeleton :rows="5" v-if="loading" />
     <el-table border stripe flexible v-else :data="resources">
       <el-table-column property="account_id" label="Account ID" width="150" />
@@ -12,12 +12,14 @@
 
 <script>
 
+import {userStore} from "../../store/userStore";
+
 export default {
   data() {
     return {
       loading: true,
       open: false,
-      type: null,
+      type: '',
       tenant: null,
       user: null,
       resources: []
@@ -41,7 +43,7 @@ export default {
   mounted() {
     var self = this
     this.$mitt.on('open-resource-modal', (evt) => {
-      self.tenant = evt.tenant
+      self.tenant = userStore().getData().tenantId
       self.type = evt.type
       self.user = evt.user
       self.resources = []

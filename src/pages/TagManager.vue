@@ -1,8 +1,9 @@
 <template>
-  <div class="content" style="margin: 0px;">
-    <div class="flex-title"><h1 class="title-dashboard">Tag manager</h1></div>
-
-    <div>
+  <div>
+    <div class="title-block">
+      <div class="flex-title"><h1 class="title-dashboard">Tag Manager</h1></div>
+    </div>
+    <div class="main-dashboard">
       <p class="text-content-connection">Please, define keys values</p>
       <form class="form-tag-manager">
         <div><input type="search" class="token-input-connection" placeholder="Enter key">
@@ -22,9 +23,7 @@
 <script>
 export default {
   data() {
-    return {
-
-    }
+    return {}
   }
 }
 </script>

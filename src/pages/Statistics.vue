@@ -14,9 +14,9 @@
           <div v-for="item in nav" :class="item.name + isActive(item)" @click.prevent="goto(item.route)">{{ $t('nav.' + item.name) }}</div>
         </div>
         <div>
-          <router-view v-slot="{ Component, route}">
-            <Transition name="fade-x">
-              <component :is="Component" :key="route.path" :data="analytics" :loading="loading" />
+          <router-view v-slot="{ Component }">
+            <transition name="fade">
+              <component :is="Component" />
             </transition>
           </router-view>
         </div>
@@ -26,25 +26,29 @@
           <div class="frame-connect">
             <div class="info-title">{{ $t('dashboard.number_of_accounts') }}</div>
             <div class="info-number">
-              <div v-if="!loading">{{accounts.length}}</div>
+              <el-skeleton :rows="1" v-if="loading" animated />
+              <div v-else>{{accounts.length}}</div>
             </div>
           </div>
           <div class="frame-connect">
             <div class="info-title">{{ $t('dashboard.resources_count') }}</div>
             <div class="info-number">
-              <div v-if="!loading">{{analytics.totalResources}}</div>
+              <el-skeleton :rows="1" v-if="loading" animated />
+              <div v-else>{{ analytics.total_resources }}</div>
             </div>
           </div>
           <div class="frame-connect">
             <div class="info-title">{{ $t('dashboard.tags_count') }}</div>
             <div class="info-number">
-              <div v-if="!loading">{{analytics.totalTags}}</div>
+              <el-skeleton :rows="1" v-if="loading" animated />
+              <div v-else>{{ analytics.total_tags }}</div>
             </div>
           </div>
           <div class="frame-connect">
             <div class="info-title">{{ $t('dashboard.tags_standard_percent') }}</div>
             <div class="info-number">
-              <div v-if="!loading">N/A</div>
+              <el-skeleton :rows="1" v-if="loading" animated />
+              <div v-else>N/A</div>
             </div>
           </div>
         </div>
@@ -68,11 +72,8 @@ export default {
         {name: 'coverage', 'route': 'coverage'},
       ],
       analytics: {
-        resourcesByUser: [],
-        tags: [],
-        tagsByUser: [],
-        totalResources: 0,
-        totalTags: 0
+        total_resources: 0,
+        total_tags: 0
       },
       accounts: {}
     }
@@ -88,7 +89,7 @@ export default {
       }
       const userData = userStore().getData()
       this.$api.post('tenants/' + userData.tenantId + '/analytics/statistics').then((response) => {
-        self.analytics = response.data
+        self.analytics = response.data[0]
         self.loading = false
       }).catch((error) => {
         console.log(error)
@@ -119,19 +120,10 @@ export default {
       }, 3000)
     },
   },
-  mounted() {
+  created() {
     this.pollProfileReady()
   },
   components: {
   }
 }
 </script>
-
-<style lang="css">
-  .left-dashboard {
-    width: 70% !important;
-  }
-  .right-dashboard {
-    width: 28% !important;
-  }
-</style>
