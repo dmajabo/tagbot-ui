@@ -26,7 +26,6 @@
     "start_onboarding": "Get started by onboarding a new account.",
     "no_tags": "You do not have any tags set yet.",
     "create_tags": "Get started by creating a new tag standard.",
-    "add_tag": "Add Tag",
     "get_started": "Get Started",
     "apply": "Apply",
     "download_all": "Download all",
@@ -38,7 +37,16 @@
     "previous": "Previous",
     "next": "Next",
     "cancel": "Cancel",
-    "onboard": "Onboard"
+    "onboard": "Onboard",
+    "new_tag": "New Tag",
+    "add_tag": "Add Tag",
+    "please_define_tag": "Please, define keys values",
+    "enter_key": "Enter key",
+    "tag_key": "Tag Key",
+    "tag_cloud": "Cloud",
+    "tag_expected_values": "Expected Values",
+    "tag_service": "Applicable Service",
+    "tag_standard_created": "Tag standard registered."
   },
   "dashboard": {
     "number_of_accounts": "# of Accounts",

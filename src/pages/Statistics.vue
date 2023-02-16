@@ -1,5 +1,5 @@
 <template>
-  <div class="content" style="margin: 0px;">
+  <div class="content" style="margin: 0;">
     <div class="flex-title">
       <h1 class="title-dashboard">{{ $t('common.statistics') }}</h1>
       <div>
@@ -12,12 +12,14 @@
     <div class="flex-dashboard">
       <div class="left-dashboard">
         <div class="title-table-dashboard">
-          <div v-for="item in nav" :class="item.name + isActive(item)" @click.prevent="goto(item.route)">{{ $t('nav.' + item.name) }}</div>
+          <div v-for="item in nav" :class="item.name + isActive(item)" @click.prevent="goto(item.route)">
+            {{ $t('nav.' + item.name) }}
+          </div>
         </div>
         <div>
           <router-view v-slot="{ Component }">
             <transition name="fade">
-              <component :is="Component" />
+              <component :is="Component"/>
             </transition>
           </router-view>
         </div>
@@ -27,28 +29,28 @@
           <div class="frame-connect">
             <div class="info-title">{{ $t('dashboard.number_of_accounts') }}</div>
             <div class="info-number">
-              <el-skeleton :rows="1" v-if="loading" animated />
-              <div v-else>{{accounts.length}}</div>
+              <el-skeleton :rows="1" v-if="loading" animated/>
+              <div v-else>{{ accounts.length }}</div>
             </div>
           </div>
           <div class="frame-connect">
             <div class="info-title">{{ $t('dashboard.resources_count') }}</div>
             <div class="info-number">
-              <el-skeleton :rows="1" v-if="loading" animated />
+              <el-skeleton :rows="1" v-if="loading" animated/>
               <div v-else>{{ analytics.total_resources }}</div>
             </div>
           </div>
           <div class="frame-connect">
             <div class="info-title">{{ $t('dashboard.tags_count') }}</div>
             <div class="info-number">
-              <el-skeleton :rows="1" v-if="loading" animated />
+              <el-skeleton :rows="1" v-if="loading" animated/>
               <div v-else>{{ analytics.total_tags }}</div>
             </div>
           </div>
           <div class="frame-connect">
             <div class="info-title">{{ $t('dashboard.tags_standard_percent') }}</div>
             <div class="info-number">
-              <el-skeleton :rows="1" v-if="loading" animated />
+              <el-skeleton :rows="1" v-if="loading" animated/>
               <div v-else>N/A</div>
             </div>
           </div>
@@ -64,7 +66,6 @@ import {userStore} from "../store/userStore"
 export default {
   data() {
     return {
-      polling: null,
       loading: true,
       loaded: false,
       nav: [
@@ -86,9 +87,9 @@ export default {
     goto(route_name) {
       this.$router.push({name: route_name})
     },
-    loadStatistics() {
+    loadData() {
       var self = this
-      if(self.loaded === true) {
+      if (self.loaded === true) {
         return true
       }
       const userData = userStore().getData()
@@ -102,34 +103,24 @@ export default {
       })
     },
     isActive(item) {
-      if(this.$route.name === item.route) {
+      if (this.$route.name === item.route) {
         return "title-active active"
       }
       return ""
     },
-    stopPolling() {
-      clearInterval(this.polling)
-    },
-    pollProfileReady () {
-      const userData = userStore()
-      var self = this
-      this.polling = setInterval(() => {
-        if(userData.profile_loaded===true && userData.accounts_loaded===true){
-          self.stopPolling()
-          console.log("Profile ready.")
-          let u = userStore()
-          self.accounts = u.getAccounts()
-          this.loadStatistics()
-        }
-      }, 3000)
-    },
   },
   mounted() {
+    var self = this
+    this.$mitt.on('profile-loaded', () => {
+      self.loadData()
+    })
   },
   created() {
-    this.pollProfileReady()
+    var self = this
+    if (userStore().profile_loaded === true) {
+      self.loadData()
+    }
   },
-  components: {
-  }
+  components: {}
 }
 </script>

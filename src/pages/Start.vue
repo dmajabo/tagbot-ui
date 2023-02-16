@@ -66,29 +66,29 @@
                   <div class="step-radio-block">
                     <input v-model="cloud" value="aws" id="aws" type="radio" name="radio-group">
                     <label for="aws" class="step-label">
-                    <div class="step-label-img"><img
-                        src="/img/aws-logo.svg"
-                        class="aws" alt="">
-                    </div>
+                      <div class="step-label-img"><img
+                          src="/img/aws-logo.svg"
+                          class="aws" alt="">
+                      </div>
                     </label>
                   </div>
                   <div class="step-radio-block">
                     <input id="azure" type="radio" name="radio-group" v-model="cloud" value="azure">
                     <label for="azure" class="step-label">
-                    <div class="step-label-img"><img
-                        src="/img/azure-logo.svg"
-                        class="azure" alt="">
-                    </div>
-                  </label></div>
+                      <div class="step-label-img"><img
+                          src="/img/azure-logo.svg"
+                          class="azure" alt="">
+                      </div>
+                    </label></div>
                   <div class="step-radio-block">
                     <input id="gcloud" type="radio" name="radio-group" v-model="cloud" value="gcloud">
                     <label for="gcloud" class="step-label">
-                    <div class="step-label-img">
-                      <img
-                        src="/img/gcloud-logo.svg"
-                        class="gcloud" alt="">
-                    </div>
-                  </label>
+                      <div class="step-label-img">
+                        <img
+                            src="/img/gcloud-logo.svg"
+                            class="gcloud" alt="">
+                      </div>
+                    </label>
                   </div>
                 </div>
                 <div>
@@ -109,14 +109,21 @@
                   <div>
                     <div style="margin-top: 16px; margin-bottom: 16px; display: flex; align-items: center;"><span
                         style="flex: 1 1 0%; margin-top: 24px;">{{ $t('onboard.account_number') }}</span>
-                      <input type="text" class="input-form" name="aws-account-number" v-model="account_id" style="flex: 1 1 0%;">
+                      <input type="text" class="input-form" name="aws-account-number" v-model="account_id"
+                             style="flex: 1 1 0%;">
                     </div>
                     <div><span class="span-error">{{ accountNumberPromptText }}</span></div>
                   </div>
-                  <el-button class="onboard-button" @click.prevent="onboardAccount()" :loading="loading" type="primary">{{ $t('onboard.login') }}</el-button>
-                  <p class="text-form">{{ $t('onboard.no_access') }} <span class="bold">{{ $t("onboard.aws_account") }}?</span></p>
-                  <p class="text-form">{{ $t("onboard.try") }} <span class="bold">TagBot</span> {{ $t('onboard.any_account') }}.</p>
-                  <div class="flex-sbs"><a href="#!">{{ $t('onboard.step_guide') }} </a><a href="#!">{{ $t('onboard.template_explain') }}</a>
+                  <el-button class="onboard-button" @click.prevent="onboardAccount()" :loading="loading" type="primary">
+                    {{ $t('onboard.login') }}
+                  </el-button>
+                  <p class="text-form">{{ $t('onboard.no_access') }} <span class="bold">{{
+                      $t("onboard.aws_account")
+                    }}?</span></p>
+                  <p class="text-form">{{ $t("onboard.try") }} <span class="bold">TagBot</span>
+                    {{ $t('onboard.any_account') }}.</p>
+                  <div class="flex-sbs"><a href="#!">{{ $t('onboard.step_guide') }} </a><a
+                      href="#!">{{ $t('onboard.template_explain') }}</a>
                   </div>
                 </div>
                 <div></div>
@@ -155,9 +162,11 @@
                 <div class="flex-welcome"><span class="weclome-to">{{ $t('onboard.choose_tags') }}</span></div>
                 <form action="#">
                   <div class="have-standart">{{ $t('onboard.have_tag_standards') }}</div>
-                  <div class="flex-radio"><p><input type="radio" id="yes32" name="radio-group32" value="true" v-model="has_tag_standard"><label
+                  <div class="flex-radio"><p><input type="radio" id="yes32" name="radio-group32" value="true"
+                                                    v-model="has_tag_standard"><label
                       for="yes32">{{ $t('common.yes') }}</label></p>
-                    <p><input type="radio" id="no32" name="radio-group32" value="false" v-model="has_tag_standard"><label for="no32">{{ $t('common.no') }}</label></p></div>
+                    <p><input type="radio" id="no32" name="radio-group32" value="false"
+                              v-model="has_tag_standard"><label for="no32">{{ $t('common.no') }}</label></p></div>
                 </form>
                 <div class="key-block"><p class="text-form">{{ $t('onboard.we_provide_tags') }}</p>
                   <div class="flex-key"><a href="#!"><img
@@ -190,16 +199,20 @@
                 <div class="flex-welcome"><span class="weclome-to">{{ $t('onboard.choose_tags') }}</span></div>
                 <form action="#">
                   <div class="have-standart">{{ $t('onboard.have_tag_standards') }}</div>
-                  <div class="flex-radio"><p><input type="radio" id="yes33" name="radio-group33" value="true" v-model="has_tag_standard"><label
+                  <div class="flex-radio"><p><input type="radio" id="yes33" name="radio-group33" value="true"
+                                                    v-model="has_tag_standard"><label
                       for="yes33">{{ $t('common.yes') }}</label></p>
-                    <p><input type="radio" id="no33" name="radio-group33" value="false" v-model="has_tag_standard"><label for="no33">{{ $t('common.no') }}</label></p>
+                    <p><input type="radio" id="no33" name="radio-group33" value="false"
+                              v-model="has_tag_standard"><label for="no33">{{ $t('common.no') }}</label></p>
                   </div>
                 </form>
                 <div class="key-block">
                   <div class="flex-key-value">
                     <div class="block-pswrd">
                       <div class="placeholder-container"><input id="input-0" type="text" class="focus-input"
-                                                                placeholder=" " value=""><label>{{ $t('onboard.enter_key') }} </label><span
+                                                                placeholder=" " value=""><label>{{
+                          $t('onboard.enter_key')
+                        }} </label><span
                           class="show-password" style="cursor: pointer;"><img
                           src="/img/close.svg"
                           alt=""></span></div>
@@ -238,24 +251,24 @@
                 </label></div>
                 <div class="step-radio-block"><input type="radio" id="step4-3" name="radio-group">
                   <label for="step4-3" class="step4-label">
-                  <div class="step-label-img"><img
-                      src="/img/gitlab-step.svg" alt="">
-                  </div>
-                </label></div>
+                    <div class="step-label-img"><img
+                        src="/img/gitlab-step.svg" alt="">
+                    </div>
+                  </label></div>
                 <div class="step-radio-block">
                   <input type="radio" id="step4-4" name="radio-group">
                   <label for="step4-4" class="step4-label">
-                  <div class="step-label-img"><img
-                      src="/img/github-step.svg" alt="">
-                  </div>
-                </label></div>
+                    <div class="step-label-img"><img
+                        src="/img/github-step.svg" alt="">
+                    </div>
+                  </label></div>
                 <div class="step-radio-block">
                   <input type="radio" id="step4-5" name="radio-group">
                   <label for="step4-5" class="step4-label">
-                  <div class="step-label-img"><img
-                      src="/img/microsoft-step.svg"
-                      alt=""></div>
-                </label></div>
+                    <div class="step-label-img"><img
+                        src="/img/microsoft-step.svg"
+                        alt=""></div>
+                  </label></div>
               </div>
               <div>
                 <button class="step-submit" @click.prevent="goto('cloud-accounts')">{{ $t('onboard.finish') }}</button>
@@ -291,7 +304,7 @@ export default {
   },
   computed: {
     accountNumberPromptText() {
-      if(!this.awsAccountIsValid()) {
+      if (!this.awsAccountIsValid()) {
         return this.$t('onboard.account_invalid')
       }
       return ""
@@ -300,28 +313,28 @@ export default {
 
   methods: {
     submitStepOne() {
-      if(this.cloud === undefined) {
+      if (this.cloud === undefined) {
         this.$toast.error(this.$t('onboard.must_choose_cloud'))
         return
       }
-      if(this.cloud !== 'aws') {
+      if (this.cloud !== 'aws') {
         this.$toast.error(this.$t('onboard.aws_only'))
         return
       }
       this.major_step = 2
       var self = this
-      this.$nextTick(function() {
+      this.$nextTick(function () {
         self.stepOneChecked = true
       })
       return true
     },
     generateUUIDv4() {
-      return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+      return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
           (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
       )
     },
     onboardAccount() {
-      if(this.awsAccountIsValid()) {
+      if (this.awsAccountIsValid()) {
         let uuid = this.generateUUIDv4()
         const stackName = 'Tagbot-prod-' + uuid
         const cfTemplateUrl = import.meta.env.VITE_CF_TEMPLATE
@@ -334,7 +347,7 @@ export default {
       }
     },
     tagStep() {
-      if(this.has_tag_standard === "true") {
+      if (this.has_tag_standard === "true") {
         this.major_step = 33
       } else {
         this.major_step = 32
@@ -353,7 +366,7 @@ export default {
         self.pollVerify()
       }).catch((error) => {
         // console.log(error)
-        if(error.response.status === 409) {
+        if (error.response.status === 409) {
           self.has_conflict = true
           console.log("Conflict, but trying to verify.")
           self.pollVerify()
@@ -373,25 +386,25 @@ export default {
       this.stop_polling = this.stop_polling + 1
       clearInterval(this.polling)
       this.loading = false
-      if(this.stop_polling === 1 && success === true) {
+      if (this.stop_polling === 1 && success === true) {
         this.stepTwoChecked = true
         this.triggerCollection()
       }
     },
-    pollVerify () {
+    pollVerify() {
       const userData = userStore().getData()
       var self = this
       var success = 0
       var retries = 20
       this.polling = setInterval(() => {
         retries = retries - 1
-        if(retries === 0 || success === 1) {
+        if (retries === 0 || success === 1) {
           self.stopPolling()
           return false
         }
         this.$api.get('tenants/' + userData.tenantId + '/accounts/' + this.account_id + '/verify-onboard').then((response) => {
           success = success + 1
-          if(success === 1) {
+          if (success === 1) {
             self.$toast.success("Account onboarded!")
           }
           self.stopPolling()
@@ -405,36 +418,28 @@ export default {
     },
     getStepContentClass(step) {
       let major_step = this.major_step
-      if(major_step ===3 || major_step === 31 || major_step === 32 || major_step === 33) {
+      if (major_step === 3 || major_step === 31 || major_step === 32 || major_step === 33) {
         major_step = 3
       }
-      if(step === major_step) {
+      if (step === major_step) {
         return 'step-content active'
       }
       return 'step-content disabled'
     },
     getStepContentClassMulti(step) {
-      if(step === this.major_step) {
+      if (step === this.major_step) {
         return 'step-content active mobile-step'
       }
       return 'step-content disabled mobile-step'
     },
     getStepStyle(step) {
-      if(step === this.major_step) {
+      if (step === this.major_step) {
         return 'display: block; opacity: 1;'
       }
       return 'display: none; opacity: 1;'
     },
     awsAccountIsValid() {
       return this.account_id !== undefined && this.account_id !== '' && this.account_id.length === 12
-    },
-    getAccountLoginButtonStyle() {
-      let invalid = "cursor: not-allowed; background: rgb(190, 191, 186);"
-      let valid = "cursor: pointer; background: rgb(72, 118, 235);"
-      if(this.awsAccountIsValid()) {
-        return valid
-      }
-      return invalid
     },
     goto(route) {
       this.$goTo(route)
@@ -444,8 +449,8 @@ export default {
 </script>
 
 <style scoped lang="css">
-  .span-error {
-    color: red;
-    font-size: .8em;
-  }
+.span-error {
+  color: red;
+  font-size: .8em;
+}
 </style>

@@ -50,7 +50,6 @@ export default {
   data() {
     return {
       resources: [],
-      polling: null,
       loading: true,
       loaded: false,
     }
@@ -71,31 +70,23 @@ export default {
         self.loaded = true
       })
     },
-    stopPolling() {
-      clearInterval(this.polling)
-    },
-    pollProfileReady () {
-      const userData = userStore()
-      var self = this
-      this.polling = setInterval(() => {
-        if(userData.profile_loaded===true && userData.accounts_loaded===true){
-          self.stopPolling()
-          console.log("Profile ready.")
-          let u = userStore()
-          self.accounts = u.getAccounts()
-          this.loadData()
-        }
-      }, 3000)
-    },
   },
   mounted() {
     var self = this
-    this.pollProfileReady()
     this.$mitt.on('refresh-analytics', function () {
       if(self.$route.name === 'resources') {
         self.loadData()
       }
     })
+    this.$mitt.on('profile-loaded', () => {
+      self.loadData()
+    })
+  },
+  created() {
+    var self = this
+    if (userStore().profile_loaded === true) {
+      self.loadData()
+    }
   },
   components: {
     Empty

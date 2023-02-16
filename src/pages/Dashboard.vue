@@ -18,7 +18,8 @@
       <div class="dropdown-blocks">
 
         <div class="flex-dropdown">
-          <el-select v-model="selectedUser" :disabled="users.length === 0" size="large" filterable clearable placeholder="Users" class="m-2 ml-0">
+          <el-select v-model="selectedUser" :disabled="users.length === 0" size="large" filterable clearable
+                     placeholder="Users" class="m-2 ml-0">
             <el-option
                 v-for="item in users"
                 :key="item.email"
@@ -27,7 +28,8 @@
             />
           </el-select>
 
-          <el-select v-model="selectedAccount" :disabled="accounts.length === 0" size="large" filterable clearable placeholder="Accounts" class="m-2">
+          <el-select v-model="selectedAccount" :disabled="accounts.length === 0" size="large" filterable clearable
+                     placeholder="Accounts" class="m-2">
             <el-option
                 v-for="item in accounts"
                 :key="item.accountNumber"
@@ -35,42 +37,46 @@
                 :value="item.accountNumber"
             />
           </el-select>
-          <el-button @click.prevent="queryResources()" size="large" type="primary" :loading="loading" class="m-2">{{ $t('common.apply') }}</el-button>
+          <el-button @click.prevent="queryResources()" size="large" type="primary" :loading="loading" class="m-2">
+            {{ $t('common.apply') }}
+          </el-button>
         </div>
         <div class='sort-dropdown-block'>
-          <select class="sort-dropdown" >
+          <select class="sort-dropdown">
             <option class="dropdown-all-acc">Sort: A - Z</option>
             <option class="dropdown-all-acc">Sort: Z - A</option>
           </select>
         </div>
       </div>
 
-      <el-skeleton :rows="5" v-if="loading" animated />
+      <el-skeleton :rows="5" v-if="loading" animated/>
       <div v-else class="main-info">
-        <div v-if="!loading && Object.keys(resources).length > 0" class="info-block" v-for="item in Object.keys(resources)">
-            <div class="content-info-block">
-              <div class="info-email">{{ item }}</div>
-              <div class="info-services">
+        <div v-if="!loading && Object.keys(resources).length > 0" class="info-block"
+             v-for="item in Object.keys(resources)">
+          <div class="content-info-block">
+            <div class="info-email">{{ item }}</div>
+            <div class="info-services">
 
-                <el-tooltip
-                    v-for="resource in resources[item]['resources'].slice(0, 3)"
-                    class="box-item"
-                    effect="light"
-                    :content="resource.type.replaceAll('::', ' ')"
-                    placement="bottom"
-                    :show-arrow="false"
+              <el-tooltip
+                  v-for="resource in resources[item]['resources'].slice(0, 3)"
+                  class="box-item"
+                  effect="light"
+                  :content="resource.type.replaceAll('::', ' ')"
+                  placement="bottom"
+                  :show-arrow="false"
+              >
+                <div @click.prevent="openModal(resource)"
+                     class="service-block modal-toggle tooltip bottom"
                 >
-                  <div @click.prevent="openModal(resource)"
-                       class="service-block modal-toggle tooltip bottom"
-                  >
-                    <img :src="'/AWS_Icon_Svg/' + resource.image_url" alt="" class="service-img">
-                    <span>{{ resource.count }}</span>
-                  </div>
-                </el-tooltip>
+                  <img :src="'/AWS_Icon_Svg/' + resource.image_url" alt="" class="service-img">
+                  <span>{{ resource.count }}</span>
+                </div>
+              </el-tooltip>
 
-              </div>
-              <a href="#" class="add-more" v-if="resources[item]['resources'].length > 3">and {{ resources[item]['resources'].length - 3 }} {{$t('common.more')}}</a>
             </div>
+            <a href="#" class="add-more" v-if="resources[item]['resources'].length > 3">and
+              {{ resources[item]['resources'].length - 3 }} {{ $t('common.more') }}</a>
+          </div>
 
           <div class="button-info-block">
             <a href="#" class="download-info">
@@ -79,7 +85,8 @@
 
             <a href="#" class="open-info">
               <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M11.6485 0.751479C11.1799 0.282849 10.4201 0.282849 9.95147 0.751478L6 4.70295L2.04853 0.751477C1.5799 0.282848 0.820101 0.282848 0.351473 0.751477C-0.117157 1.22011 -0.117157 1.9799 0.351472 2.44853L5.15147 7.24853C5.6201 7.71716 6.3799 7.71716 6.84853 7.24853L11.6485 2.44853C12.1172 1.97991 12.1172 1.22011 11.6485 0.751479Z"/>
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M11.6485 0.751479C11.1799 0.282849 10.4201 0.282849 9.95147 0.751478L6 4.70295L2.04853 0.751477C1.5799 0.282848 0.820101 0.282848 0.351473 0.751477C-0.117157 1.22011 -0.117157 1.9799 0.351472 2.44853L5.15147 7.24853C5.6201 7.71716 6.3799 7.71716 6.84853 7.24853L11.6485 2.44853C12.1172 1.97991 12.1172 1.22011 11.6485 0.751479Z"/>
               </svg>
             </a>
           </div>
@@ -121,16 +128,16 @@
 <script>
 import {userStore} from "../store/userStore"
 import Empty from "../components/common/Empty.vue";
-import _ from 'lodash'
 
 import ResourcesModal from "../components/dashboard/ResourcesModal.vue";
 
 export default {
   data() {
     return {
+      user: {},
       pagination: {
         current_page: 1,
-        per_page: 4,
+        per_page: 10,
         total: 0
       },
       userQuery: "",
@@ -141,43 +148,28 @@ export default {
       accounts: [],
       users: [],
       resources: [],
-      polling: null,
       loading: true,
       open: false,
     }
   },
-  computed: {
-  },
+  computed: {},
   methods: {
     refreshData() {
       this.loadResources({})
     },
-    handlePageChange(){
+    handlePageChange() {
       this.loadResources({})
     },
     openModal(resource) {
       // console.log("Opening...")
-      this.$mitt.emit('open-resource-modal', { user: resource.created_by, tenant: resource.tenant_id, type: resource.type})
+      this.$mitt.emit('open-resource-modal', {
+        user: resource.created_by,
+        tenant: resource.tenant_id,
+        type: resource.type
+      })
     },
     queryResources() {
-      this.loadResources({ accountNumber: this.selectedAccount, userName: this.selectedUser})
-    },
-    stopPolling() {
-      clearInterval(this.polling)
-    },
-    pollProfileReady () {
-      const userData = userStore()
-      var self = this
-      this.polling = setInterval(() => {
-        if(userData.profile_loaded===true && userData.accounts_loaded){
-          self.stopPolling()
-          console.log("Profile ready.")
-          self.user = userData.getData()
-          self.loadUsers()
-          self.accounts = userData.getAccounts()
-          self.loadResources({page: 1})
-        }
-      }, 3000)
+      this.loadResources({accountNumber: this.selectedAccount, userName: this.selectedUser})
     },
     loadUsers() {
       var self = this
@@ -186,6 +178,15 @@ export default {
         self.users = response.data
       }).catch((error) => {
         this.$toast.error(error.message)
+      })
+    },
+    loadAccounts() {
+      var self = this
+      this.$api.get('users/' + this.user.id + '/accounts').then((response) => {
+        self.$mitt.emit('accounts-loaded', {})
+        self.accounts = response.data
+      }).catch((error) => {
+        console.log(error)
       })
     },
     loadResources(payload) {
@@ -203,10 +204,25 @@ export default {
       }).catch((error) => {
         this.$toast.error(error.message)
       })
+    },
+    loadData() {
+      this.user = userStore().getData()
+      this.loadUsers()
+      this.loadAccounts()
+      this.loadResources({})
     }
   },
+  mounted() {
+    var self = this
+    this.$mitt.on('profile-loaded', () => {
+      self.loadData()
+    })
+  },
   created() {
-    this.pollProfileReady()
+    var self = this
+    if (userStore().profile_loaded === true) {
+      self.loadData()
+    }
   },
   components: {
     ResourcesModal,
@@ -216,10 +232,10 @@ export default {
 </script>
 
 <style scoped>
-  .el-skeleton {
-    padding-left: 0;
-    padding-right: 0;
-  }
+.el-skeleton {
+  padding-left: 0;
+  padding-right: 0;
+}
 </style>
 
 

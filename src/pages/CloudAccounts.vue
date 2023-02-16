@@ -80,7 +80,6 @@ export default {
     return {
       user: {},
       accounts: [],
-      polling: null,
       polling_onboarded: null,
       stop_polling_onboarded: 0,
       onboardingModal: false,
@@ -194,7 +193,7 @@ export default {
       }
       return {'type': 'warning', 'text': 'Pending'}
     },
-    loadAccounts() {
+    loadData() {
       console.log("Loading accounts...")
       var self = this
       self.loading = true
@@ -208,25 +207,20 @@ export default {
         this.$toast.error(error.message)
       })
     },
-    stopPolling() {
-      clearInterval(this.polling)
-    },
-    pollProfileReady () {
-      const userData = userStore()
-      var self = this
-      this.polling = setInterval(() => {
-        if(userData.profile_loaded===true){
-          self.stopPolling()
-          console.log("Profile ready.")
-          self.user = userData.getData()
-          self.loadAccounts()
-        }
-      }, 3000)
-    },
   },
   mounted() {
-    this.loading = true
-    this.pollProfileReady()
+    var self = this
+    this.$mitt.on('profile-loaded', () => {
+      self.user = userStore().getData()
+      self.loadData()
+    })
+  },
+  created() {
+    var self = this
+    if (userStore().profile_loaded === true) {
+      self.user = userStore().getData()
+      self.loadData()
+    }
   },
   components: {
     Empty,

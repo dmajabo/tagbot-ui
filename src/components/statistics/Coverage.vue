@@ -3,7 +3,7 @@
     <table class="table-dashboard">
 
           <tbody v-if="!loading">
-          <tr class="table-dashboard-t" v-if="tags_by_user.length === 0 && !loading">
+          <tr class="table-dashboard-t" v-if="tags_by_user.length !== 0 && !loading">
             <td colspan="3">{{ $t('common.email') }}</td>
             <td>{{ $t('common.coverage_of_resources')}}</td>
           </tr>
@@ -73,32 +73,24 @@ export default {
         self.loading = false
         self.loaded = true
       })
-    },
-    stopPolling() {
-      clearInterval(this.polling)
-    },
-    pollProfileReady () {
-      const userData = userStore()
-      var self = this
-      this.polling = setInterval(() => {
-        if(userData.profile_loaded===true && userData.accounts_loaded===true){
-          self.stopPolling()
-          console.log("Profile ready.")
-          let u = userStore()
-          self.accounts = u.getAccounts()
-          this.loadData()
-        }
-      }, 3000)
-    },
+    }
   },
   mounted() {
     var self = this
-    this.pollProfileReady()
     this.$mitt.on('refresh-analytics', function () {
       if(self.$route.name === 'coverage') {
         self.loadData()
       }
     })
+    this.$mitt.on('profile-loaded', () => {
+      self.loadData()
+    })
+  },
+  created() {
+    var self = this
+    if (userStore().profile_loaded === true) {
+      self.loadData()
+    }
   },
   components: {
     Empty
