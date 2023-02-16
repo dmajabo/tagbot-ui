@@ -92,7 +92,13 @@ export default {
     },
   },
   mounted() {
+    var self = this
     this.pollProfileReady()
+    this.$mitt.on('refresh-analytics', function () {
+      if(self.$route.name === 'coverage') {
+        self.loadData()
+      }
+    })
   },
   components: {
     Empty

@@ -7,7 +7,7 @@
           <img src="/img/icon/download-icon.svg" alt="">
           <span>{{ $t('common.download_all') }}</span>
         </a>
-        <a href="#" class="refresh-button">
+        <a href="#" class="refresh-button" @click.prevent="refreshData">
           <img src="/img/icon/refresh-icon.svg" alt="">
           <span>{{ $t('common.refresh') }}</span>
         </a>
@@ -149,6 +149,9 @@ export default {
   computed: {
   },
   methods: {
+    refreshData() {
+      this.loadResources({})
+    },
     handlePageChange(){
       this.loadResources({})
     },

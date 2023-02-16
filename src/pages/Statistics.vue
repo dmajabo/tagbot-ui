@@ -3,8 +3,9 @@
     <div class="flex-title">
       <h1 class="title-dashboard">{{ $t('common.statistics') }}</h1>
       <div>
-        <a href="#" class="refresh-text">
-        <img src="/img/refresh.svg" alt=""><span>{{ $t('common.refresh') }}</span>
+        <a href="#" @click.prevent="refreshData" class="refresh-text">
+          <img src="/img/refresh.svg" alt="">
+          <span>{{ $t('common.refresh') }}</span>
         </a>
       </div>
     </div>
@@ -79,6 +80,9 @@ export default {
     }
   },
   methods: {
+    refreshData() {
+      this.$mitt.emit('refresh-analytics')
+    },
     goto(route_name) {
       this.$router.push({name: route_name})
     },
@@ -119,6 +123,8 @@ export default {
         }
       }, 3000)
     },
+  },
+  mounted() {
   },
   created() {
     this.pollProfileReady()

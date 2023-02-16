@@ -102,7 +102,13 @@ export default {
     },
   },
   mounted() {
+    var self = this
     this.pollProfileReady()
+    this.$mitt.on('refresh-analytics', function () {
+      if(self.$route.name === 'top10' || self.$route.name === 'statistics') {
+        self.loadData()
+      }
+    })
   },
   components: {
     Empty
