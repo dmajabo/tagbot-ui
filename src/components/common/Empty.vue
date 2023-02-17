@@ -51,14 +51,15 @@
     </svg>
     <h2 v-if="title">{{ title }}</h2><br />
     <span v-if="detail">{{ detail }}</span><br /><br />
-    <a v-if="button_link && button_text" href="#" @click.prevent="$goTo(button_link)" class="add-tag-button modal-toggle">{{ button_link }}</a>
+    <a v-if="button_link && button_text" href="#" @click.prevent="$goTo(button_link)" class="add-tag-button">{{ button_link }}</a>
+    <a v-if="action && call_to_action" href="#" @click.prevent="call_to_action()" class="add-tag-button">{{ action }}</a>
   </div>
 
 </template>
 
 <script>
 export default {
-  props: ['title', 'detail', 'button_text', 'button_link'],
+  props: ['title', 'detail', 'button_text', 'button_link', 'call_to_action', 'action'],
   data() {
     return {
 

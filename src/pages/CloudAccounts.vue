@@ -48,7 +48,7 @@
       ></Empty>
     </div>
 
-    <el-dialog v-model="onboardingModal" title="Onboard an Account" width="30%" center>
+    <el-dialog v-model="onboardingModal" title="Onboard an Account" width="50%" center>
       <el-form :model="onboardingForm">
         <el-form-item label="Valid Account ID">
           <el-input v-model="onboardingForm.onboardAccountId" autocomplete="off" :disabled="onboardLoading" />
