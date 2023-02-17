@@ -212,14 +212,14 @@ export default {
     },
     editTag(item) {
       let data = this.tag_standards.find(x => x.id === item)
-      data = _.omit(data, ['created_at','deleted_at', 'deleted_by', 'last_updated_by', 'tenant_id', 'updated_at'])
+      data = _.omit(data, ['created_at','deleted_at', 'deleted_by', 'last_updated_by', 'tenant_id', 'updated_at', 'total'])
       data['tag_values'] = data['tag_values'].split(',')
       this.tag_form = data
       this.toggleTagModal()
     },
     deleteTag(item) {
       let data = this.tag_standards.find(x => x.id === item)
-      data = _.omit(data, ['created_at','deleted_at', 'deleted_by', 'last_updated_by', 'tenant_id', 'updated_at'])
+      data = _.omit(data, ['created_at','deleted_at', 'deleted_by', 'last_updated_by', 'tenant_id', 'updated_at', 'total'])
       data['tag_values'] = data['tag_values'].split(',')
       this.tag_form = data
       this.toggleDeleteTagModal()
