@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="open" :title="type.replaceAll('::', ' ') + ' [' + user + ']'">
+  <el-dialog v-model="open" :title="type.replaceAll('::', ' ') + ' [' + alias + ']'">
     <el-skeleton :rows="5" v-if="loading" />
     <el-table border stripe flexible v-else :data="resources">
       <el-table-column property="account_id" label="Account ID" width="150" />
@@ -22,6 +22,7 @@ export default {
       type: '',
       tenant: null,
       user: null,
+      alias: null,
       resources: []
     }
   },
@@ -46,6 +47,7 @@ export default {
       self.tenant = userStore().getData().tenantId
       self.type = evt.type
       self.user = evt.user
+      self.alias = evt.alias
       self.resources = []
       self.loading = true
       // console.log(self.tenant)

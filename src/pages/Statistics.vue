@@ -30,7 +30,7 @@
             <div class="info-title">{{ $t('dashboard.number_of_accounts') }}</div>
             <div class="info-number">
               <el-skeleton :rows="1" v-if="loading" animated/>
-              <div v-else>{{ accounts.length }}</div>
+              <div v-else>{{ analytics.total_accounts }}</div>
             </div>
           </div>
           <div class="frame-connect">
@@ -74,6 +74,7 @@ export default {
         {name: 'coverage', 'route': 'coverage'},
       ],
       analytics: {
+        total_accounts: 0,
         total_resources: 0,
         total_tags: 0
       },

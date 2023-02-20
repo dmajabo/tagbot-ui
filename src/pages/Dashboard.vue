@@ -23,7 +23,7 @@
             <el-option
                 v-for="item in users"
                 :key="item.email"
-                :label="item.email"
+                :label="getEmail(item.email)"
                 :value="item.email"
             />
           </el-select>
@@ -54,7 +54,7 @@
         <div v-if="!loading && Object.keys(resources).length > 0" class="info-block"
              v-for="item in Object.keys(resources)">
           <div class="content-info-block">
-            <div class="info-email">{{ item }}</div>
+            <div class="info-email">{{ getEmail(item) }}</div>
             <div class="info-services">
 
               <el-tooltip
@@ -128,7 +128,7 @@
 <script>
 import {userStore} from "../store/userStore"
 import Empty from "../components/common/Empty.vue";
-
+import _ from 'lodash'
 import ResourcesModal from "../components/dashboard/ResourcesModal.vue";
 
 export default {
@@ -161,9 +161,11 @@ export default {
       this.loadResources({})
     },
     openModal(resource) {
+      var self = this
       // console.log("Opening...")
       this.$mitt.emit('open-resource-modal', {
         user: resource.created_by,
+        alias: self.getEmail(resource.created_by),
         tenant: resource.tenant_id,
         type: resource.type
       })
@@ -179,6 +181,22 @@ export default {
       }).catch((error) => {
         this.$toast.error(error.message)
       })
+    },
+    getEmail(val) {
+      // Just for Demo
+      if(this.user.name === 'SSO User') {
+        return this.demoUserMap()[val]
+      }
+      return val
+    },
+    demoUserMap() {
+      return {
+        'mohamed.zayan2004@gmail.com': 'Liam',
+        'rifat.shahnewaz@gmail.com': 'James',
+        'sana.abdulmajeed@gmail.com': 'Sarah',
+        'viet.nguyen@tagbot.ai': 'Daniel',
+        'root': 'root',
+      }
     },
     loadAccounts() {
       var self = this

@@ -16,7 +16,7 @@
                   size="large"
                   round
               >
-                {{ item.created_by }}
+                {{ getEmail(item.created_by) }}
               </el-tag>
             </td>
             <td>
@@ -73,7 +73,23 @@ export default {
         self.loading = false
         self.loaded = true
       })
-    }
+    },
+    getEmail(val) {
+      // Just for Demo
+      if(userStore().getData().name === 'SSO User') {
+        return this.demoUserMap()[val]
+      }
+      return val
+    },
+    demoUserMap() {
+      return {
+        'mohamed.zayan2004@gmail.com': 'Liam',
+        'rifat.shahnewaz@gmail.com': 'James',
+        'sana.abdulmajeed@gmail.com': 'Sarah',
+        'viet.nguyen@tagbot.ai': 'Daniel',
+        'root': 'root',
+      }
+    },
   },
   mounted() {
     var self = this
