@@ -1,9 +1,5 @@
 <template>
-  <router-view v-slot="{ Component, route }">
-    <transition mode="out-in">
-      <component :is="Component" :key="route.path"/>
-    </transition>
-  </router-view>
+  <router-view></router-view>
 </template>
 
 <script>
@@ -16,25 +12,14 @@ export default {
   },
   methods: {
     loadProfile(ustore) {
-      console.log("Loading profile..")
       var self = this
       var u = ustore
       this.$api.get('profile').then((response) => {
-        // console.log(response.data)
         u.setUser(response.data)
-        self.loadAccounts(ustore)
         self.$mitt.emit('profile-loaded', {})
+        console.log('App ready.')
       }).catch((error) => {
-        // console.log(error)
-      })
-    },
-    loadAccounts(ustore) {
-      var u = ustore
-      console.log("Loading accounts now...")
-      this.$api.get('users/' + ustore.getData().id + '/accounts').then((response) => {
-        u.setAccounts(response.data)
-        self.$mitt.emit('accounts-loaded', {})
-      }).catch((error) => {
+        console.log(error)
       })
     },
     initialize() {
@@ -48,7 +33,6 @@ export default {
   computed: {},
   components: {},
   mounted() {
-    // console.log(this.$route)
     console.log("Mounted app..")
   },
   created() {

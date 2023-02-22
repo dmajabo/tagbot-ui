@@ -23,31 +23,31 @@ export const routes = [
         meta: {title: 'Dashboard', description: 'Dashboard', requiresAuth: true},
         children: [
             {
-                path: '/dashboard',
+                path: '',
                 name: 'dashboard',
                 component: Dashboard,
                 meta: {title: 'Dashboard', description: 'Dashboard', requiresAuth: true},
             },
             {
-                path: '/tag-manager',
+                path: 'tag-manager',
                 name: 'tag-manager',
                 component: TagManager,
                 meta: {title: 'Tag Manager', description: 'Tag Manager', requiresAuth: true},
             },
             {
-                path: '/cloud-accounts',
+                path: 'cloud-accounts',
                 name: 'cloud-accounts',
                 component: CloudAccounts,
                 meta: {title: 'Cloud Accounts', description: 'Cloud Accounts', requiresAuth: true},
             },
             {
-                path: '/settings',
+                path: 'settings',
                 name: 'settings',
                 component: Settings,
                 meta: {title: 'Settings', description: 'Settings', requiresAuth: true},
             },
             {
-                path: '/connections',
+                path: 'connections',
                 name: 'connections',
                 component: Connections,
                 meta: {title: 'Connections', description: 'Connections', requiresAuth: true},
@@ -64,13 +64,13 @@ export const routes = [
                         meta: {title: 'Top 10 Tags', description: 'Statistics', requiresAuth: true},
                     },
                     {
-                        path: '/statistics/resources',
+                        path: 'statistics/resources',
                         name: 'resources',
                         component: Resources,
                         meta: {title: 'Resources', description: 'Statistics', requiresAuth: true},
                     },
                     {
-                        path: '/statistics/coverage',
+                        path: 'statistics/coverage',
                         name: 'coverage',
                         component: Coverage,
                         meta: {title: 'Tag Coverage', description: 'Statistics', requiresAuth: true},

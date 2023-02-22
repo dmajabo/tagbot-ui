@@ -48,9 +48,9 @@
               </form>
               <div class="signin-block">
                 <p class="text-form">{{ $t("common.alt_signin") }}</p>
-                <a href="#" @click.prevent="loginWithGoogle()" class="signin-with"><img src="/img/google-icon.svg"
-                                                                                        class="google-icon" alt="">
-                  <span class="google-text">Google</span></a>
+                <el-button @click.prevent="loginWithGoogle()" class="signin-with" :loading="loading">
+                  <img src="/img/google-icon.svg" class="google-icon" alt="">
+                  <span class="google-text">Google</span></el-button>
               </div>
               <div class="have-acc">
                 <span>{{ $t("common.no_account") }}</span>
@@ -75,12 +75,14 @@ export default {
     return {
       email: '',
       password: '',
-      remember_me: ''
+      remember_me: '',
+      loading: false
     }
   },
   methods: {
     loginWithGoogle() {
       var self = this
+      self.loading = true
       googleTokenLogin().then((response) => {
         // console.log("Handle the response", response)
         self.verifyGoogleLogin(response)
@@ -95,14 +97,17 @@ export default {
         // console.log(response)
         authService.login(self.$pinia, response, this.remember_me)
         self.loadProfile(u)
+        self.loading = false
         self.$goTo('dashboard')
       }).catch(function (error) {
         // console.log(error)
+        self.loading = false
         self.$toast.error(error.response.data)
       })
     },
     login() {
       var self = this
+      self.loading = true
       this.$api.post('auth/token', {
         'email': this.email,
         password: this.password,
@@ -112,9 +117,11 @@ export default {
         authService.login(this.$pinia, response, this.remember_me)
         // toast.success("Login successful.")
         self.loadProfile()
+        self.loading = false
         self.$goTo('dashboard')
       }).catch(function (error) {
         // console.log(error)
+        self.loading = false
         self.$toast.error(error.response.data)
       })
     },

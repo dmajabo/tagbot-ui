@@ -1,22 +1,25 @@
 <template>
-  <div class="content" style="margin: 0px;">
+  <div class="content" style="margin: 0;">
     <div class="flex-title">
       <h1 class="title-dashboard">{{ $t('common.statistics') }}</h1>
       <div>
-        <a href="#" class="refresh-text">
-        <img src="/img/refresh.svg" alt=""><span>{{ $t('common.refresh') }}</span>
+        <a href="#" @click.prevent="refreshData" class="refresh-text">
+          <img src="/img/refresh.svg" alt="">
+          <span>{{ $t('common.refresh') }}</span>
         </a>
       </div>
     </div>
     <div class="flex-dashboard">
       <div class="left-dashboard">
         <div class="title-table-dashboard">
-          <div v-for="item in nav" :class="item.name + isActive(item)" @click.prevent="goto(item.route)">{{ $t('nav.' + item.name) }}</div>
+          <div v-for="item in nav" :class="item.name + isActive(item)" @click.prevent="goto(item.route)">
+            {{ $t('nav.' + item.name) }}
+          </div>
         </div>
         <div>
-          <router-view v-slot="{ Component, route}">
-            <Transition name="fade-x">
-              <component :is="Component" :key="route.path" :data="analytics" :loading="loading" />
+          <router-view v-slot="{ Component }">
+            <transition name="fade">
+              <component :is="Component"/>
             </transition>
           </router-view>
         </div>
@@ -26,25 +29,29 @@
           <div class="frame-connect">
             <div class="info-title">{{ $t('dashboard.number_of_accounts') }}</div>
             <div class="info-number">
-              <div v-if="!loading">{{accounts.length}}</div>
+              <el-skeleton :rows="1" v-if="loading" animated/>
+              <div v-else>{{ analytics.total_accounts }}</div>
             </div>
           </div>
           <div class="frame-connect">
             <div class="info-title">{{ $t('dashboard.resources_count') }}</div>
             <div class="info-number">
-              <div v-if="!loading">{{analytics.totalResources}}</div>
+              <el-skeleton :rows="1" v-if="loading" animated/>
+              <div v-else>{{ analytics.total_resources }}</div>
             </div>
           </div>
           <div class="frame-connect">
             <div class="info-title">{{ $t('dashboard.tags_count') }}</div>
             <div class="info-number">
-              <div v-if="!loading">{{analytics.totalTags}}</div>
+              <el-skeleton :rows="1" v-if="loading" animated/>
+              <div v-else>{{ analytics.total_tags }}</div>
             </div>
           </div>
           <div class="frame-connect">
             <div class="info-title">{{ $t('dashboard.tags_standard_percent') }}</div>
             <div class="info-number">
-              <div v-if="!loading">N/A</div>
+              <el-skeleton :rows="1" v-if="loading" animated/>
+              <div v-else>N/A</div>
             </div>
           </div>
         </div>
@@ -54,15 +61,11 @@
 </template>
 
 <script>
-import {userStore} from "../store/userStore";
-import {
-  BulletListLoader,
-} from 'vue-content-loader'
+import {userStore} from "../store/userStore"
 
 export default {
   data() {
     return {
-      polling: null,
       loading: true,
       loaded: false,
       nav: [
@@ -71,27 +74,28 @@ export default {
         {name: 'coverage', 'route': 'coverage'},
       ],
       analytics: {
-        resourcesByUser: [],
-        tags: [],
-        tagsByUser: [],
-        totalResources: 0,
-        totalTags: 0
+        total_accounts: 0,
+        total_resources: 0,
+        total_tags: 0
       },
       accounts: {}
     }
   },
   methods: {
+    refreshData() {
+      this.$mitt.emit('refresh-analytics')
+    },
     goto(route_name) {
       this.$router.push({name: route_name})
     },
-    loadStatistics() {
+    loadData() {
       var self = this
-      if(self.loaded === true) {
+      if (self.loaded === true) {
         return true
       }
       const userData = userStore().getData()
       this.$api.post('tenants/' + userData.tenantId + '/analytics/statistics').then((response) => {
-        self.analytics = response.data
+        self.analytics = response.data[0]
         self.loading = false
       }).catch((error) => {
         console.log(error)
@@ -100,42 +104,24 @@ export default {
       })
     },
     isActive(item) {
-      if(this.$route.name === item.route) {
+      if (this.$route.name === item.route) {
         return "title-active active"
       }
       return ""
     },
-    stopPolling() {
-      clearInterval(this.polling)
-    },
-    pollProfileReady () {
-      const userData = userStore()
-      var self = this
-      this.polling = setInterval(() => {
-        if(userData.profile_loaded===true && userData.accounts_loaded===true){
-          self.stopPolling()
-          console.log("Profile ready.")
-          let u = userStore()
-          self.accounts = u.getAccounts()
-          this.loadStatistics()
-        }
-      }, 3000)
-    },
   },
   mounted() {
-    this.pollProfileReady()
+    var self = this
+    this.$mitt.on('profile-loaded', () => {
+      self.loadData()
+    })
   },
-  components: {
-    BulletListLoader
-  }
+  created() {
+    var self = this
+    if (userStore().profile_loaded === true) {
+      self.loadData()
+    }
+  },
+  components: {}
 }
 </script>
-
-<style lang="css">
-  .left-dashboard {
-    width: 70% !important;
-  }
-  .right-dashboard {
-    width: 28% !important;
-  }
-</style>
