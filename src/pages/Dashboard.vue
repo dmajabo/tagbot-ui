@@ -191,10 +191,10 @@ export default {
     },
     demoUserMap() {
       return {
-        'mohamed.zayan2004@gmail.com': 'Liam',
-        'rifat.shahnewaz@gmail.com': 'James',
-        'sana.abdulmajeed@gmail.com': 'Sarah',
-        'viet.nguyen@tagbot.ai': 'Daniel',
+        'mohamed.zayan2004@gmail.com': 'liam@tagbot.ai',
+        'rifat.shahnewaz@gmail.com': 'james@tagbot.ai',
+        'sana.abdulmajeed@gmail.com': 'sarah@tagbot.ai',
+        'viet.nguyen@tagbot.ai': 'daniel@tagbot.ai',
         'root': 'root',
       }
     },

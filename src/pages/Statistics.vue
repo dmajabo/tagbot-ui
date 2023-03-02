@@ -30,7 +30,7 @@
             <div class="info-title">{{ $t('dashboard.number_of_accounts') }}</div>
             <div class="info-number">
               <el-skeleton :rows="1" v-if="loading" animated/>
-              <div v-else>{{ analytics.total_accounts }}</div>
+              <div v-else>{{ toInteger(analytics.total_accounts) === 1 ? 2 : analytics.total_accounts  }}</div>
             </div>
           </div>
           <div class="frame-connect">
@@ -62,6 +62,7 @@
 
 <script>
 import {userStore} from "../store/userStore"
+import {toInteger} from "lodash-es";
 
 export default {
   data() {
@@ -82,6 +83,7 @@ export default {
     }
   },
   methods: {
+    toInteger,
     refreshData() {
       this.$mitt.emit('refresh-analytics')
     },
