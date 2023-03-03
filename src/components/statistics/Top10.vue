@@ -29,7 +29,7 @@
                   size="large"
                   round
               >
-                {{ item.count }}%
+                {{ item.tag_usage_percentage }}%
               </el-tag>
             </td>
             <td>
