@@ -26,7 +26,7 @@
                   size="large"
                   round
               >
-                {{ item.standard_tags_percentage }}%
+                {{ item.compliance_percentage }}%
               </el-tag>
             </td>
           </tr>

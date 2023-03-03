@@ -230,11 +230,13 @@ export default {
       const userData = userStore().getData()
       this.$api.post('tenants/' + userData.tenantId + '/analytics/tag-standards/delete', {id: item, user_id: userData.id}).then((response) => {
         self.$toast.success(self.$t('common.delete_success'))
+        self.tag_form = self.tag_form_clean
         self.toggleDeleteTagModal()
         self.loadData({})
       }).catch((error) => {
         self.loading = false
         // this.$toast.error(error.response.data)
+        self.tag_form = self.tag_form_clean
         console.log(error)
         this.$toast.error("Error deleting tag standard. Please try again...")
       })
