@@ -58,7 +58,7 @@
             <div class="info-services">
 
               <el-tooltip
-                  v-for="resource in resources[item]['resources'].slice(0, 3)"
+                  v-for="resource in resources[item]['resources'].slice(0, 8)"
                   class="box-item"
                   effect="light"
                   :content="resource.type.replaceAll('::', ' ')"
@@ -74,8 +74,8 @@
               </el-tooltip>
 
             </div>
-            <a href="#" class="add-more" v-if="resources[item]['resources'].length > 3">and
-              {{ resources[item]['resources'].length - 3 }} {{ $t('common.more') }}</a>
+            <a href="#" class="add-more" v-if="resources[item]['resources'].length > 8">and
+              {{ resources[item]['resources'].length - 8 }} {{ $t('common.more') }}</a>
           </div>
 
           <div class="button-info-block">
