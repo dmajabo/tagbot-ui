@@ -182,7 +182,7 @@ export default {
       tag_form_clean: {
         id: null,
         tag_key: null,
-        tag_values: ""
+        tag_values: []
       },
       tag_form: {
         id: null,
