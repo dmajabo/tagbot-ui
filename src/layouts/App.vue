@@ -61,6 +61,7 @@ export default {
       nav: [
         {name: 'dashboard', 'route': 'dashboard'},
         {name: 'statistics', 'route': 'statistics'},
+        {name: 'user_view', 'route': 'user-view'},
 
         // {name: 'onboard_org', 'route': 'onboard-organization'},
       ],

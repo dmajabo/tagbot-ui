@@ -13,7 +13,9 @@ import TagManager from "./pages/TagManager.vue";
 import CloudAccounts from "./pages/CloudAccounts.vue";
 import Settings from "./pages/Settings.vue";
 import {Connect} from "vite";
-import Connections from "./pages/Connections.vue";
+import Connections from './pages/Connections.vue';
+import Users from './pages/Users.vue'
+import SignUp from './pages/SignUp.vue';
 
 export const routes = [
     {
@@ -76,7 +78,13 @@ export const routes = [
                         meta: {title: 'Tag Coverage', description: 'Statistics', requiresAuth: true},
                     }
                 ]
-            }
+            },
+            {
+              path: 'user-view',
+              name: 'user-view',
+              component: Users,
+              meta: {title: 'User view', description: 'User view', requiresAuth: true},
+          }
         ],
     },
     {
@@ -95,6 +103,12 @@ export const routes = [
                 name: 'login',
                 component: Login,
                 meta: {title: 'Login', description: 'Login', requiresAuth: false},
+            },
+            {
+              path: '/sign-up',
+              name: 'sign-up',
+              component: SignUp,
+              meta: {title: 'Sign-up', description: 'Sign-up', requiresAuth: false},
             },
         ],
     },

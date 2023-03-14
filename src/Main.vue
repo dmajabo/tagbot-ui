@@ -36,7 +36,10 @@ export default {
     console.log("Mounted app..")
   },
   created() {
-    if (!authService.isAuthenticated()) {
+    console.log(this.$route.path)
+    if (!authService.isAuthenticated() &&
+      this.$route.path !== '/login' &&
+      this.$route.path !== '/sign-up') {
       console.log('Not authenticated..')
       this.$goTo('login')
     } else {

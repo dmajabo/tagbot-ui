@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="title-block">
-      <div class="flex-title"><h1 class="title-dashboard">Dashboard</h1></div>
+      <div class="flex-title"><h1 class="title-dashboard">User view</h1></div>
       <div class="title-buttons">
         <SectionActionButton
           :text="$t('common.refresh')"
@@ -130,10 +130,10 @@
 </template>
 
 <script>
-import {userStore} from "../store/userStore"
-import Empty from "../components/common/Empty.vue";
+import { userStore } from '../store/userStore'
+import Empty from '../components/common/Empty.vue'
 import _ from 'lodash'
-import ResourcesModal from "../components/dashboard/ResourcesModal.vue";
+import ResourcesModal from '../components/dashboard/ResourcesModal.vue'
 import SectionActionButton from '../components/common/SectionActionButton.vue'
 
 import RefreshIcon from '../assets/images/refresh-icon.svg'
@@ -254,9 +254,9 @@ export default {
   components: {
     ResourcesModal,
     Empty,
+    SectionActionButton,
     RefreshIcon,
-    DownloadAllIcon,
-    SectionActionButton
+    DownloadAllIcon
   }
 }
 </script>

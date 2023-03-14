@@ -6,9 +6,12 @@
   },
   "common": {
     "password": "Password",
+    "confirm_password": "Confirm your password",
     "forgot": "Forgot password",
     "alt_signin": "Or sign in with:",
     "no_account": "Do not have an account?",
+    "already_have_account": "Already have an account?",
+    "sign_in": "Sign in",
     "signup": "Sign Up",
     "yes": "Yes",
     "no": "No",
@@ -78,7 +81,8 @@
     "logout": "Log out",
     "top10": "Top 10 Tags",
     "resources": "Created Resources",
-    "coverage": "Tag Coverage"
+    "coverage": "Tag Coverage",
+    "user_view": "User view"
   },
   "onboard": {
     "title": "Just a few simple steps and you can start saving!",

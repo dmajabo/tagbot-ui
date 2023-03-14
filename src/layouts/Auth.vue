@@ -14,11 +14,11 @@ export default {
     return {}
   },
   created() {
-    console.log("Login initiated..")
+    console.log("Login initiated..", this.$route.path)
     if (authService.isAuthenticated()) {
       console.log("You're already authenticated.")
       this.$goTo('dashboard')
-    } else {
+    } else if (this.$route.path !== '/sign-up' && this.$route.path !== '/login') {
       this.$goTo('login')
     }
   }
