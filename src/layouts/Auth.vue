@@ -19,7 +19,7 @@ export default {
       console.log("You're already authenticated.")
       this.$goTo('dashboard')
     } else if (this.$route.path !== '/sign-up' && this.$route.path !== '/login') {
-      this.$goTo('login')
+      // this.$goTo('login')
     }
   }
 }

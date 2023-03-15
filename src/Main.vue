@@ -41,7 +41,7 @@ export default {
       this.$route.path !== '/login' &&
       this.$route.path !== '/sign-up') {
       console.log('Not authenticated..')
-      this.$goTo('login')
+      // this.$goTo('login')
     } else {
       console.log("Authenticated..")
       this.initialize()

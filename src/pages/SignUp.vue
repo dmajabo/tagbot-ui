@@ -33,80 +33,98 @@
                 </a>
               </div>
               <p class="text-form">{{ $t('site.tagline') }}</p>
-              <form autocomplete="off" class="main-form">
+              <Form @submit="onSubimt" class="main-form" :validation-schema="schema">
                 <div class="block-two-inputs">
-                  <input
-                    type="text"
-                    class="input-form"
-                    name="name"
-                    placeholder="Your name"
-                    value=""
-                    autocomplete=""
-                  />
-                  <input
-                    type="text"
-                    class="input-form"
-                    name="company-name"
-                    placeholder="Company name"
-                    value=""
-                    autocomplete=""
-                  />
-                </div>
-                <input
-                  type="tel"
-                  class="input-form"
-                  name="tel"
-                  placeholder="Phone number"
-                  value=""
-                  autocomplete=""
-                />
-                <input
-                  type="email"
-                  class="input-form"
-                  name="email"
-                  placeholder="Your email"
-                  value=""
-                  autocomplete=""
-                />
-                <div class="block-pswrd">
-                  <div class="placeholder-container">
-                    <input
-                      type="password"
-                      name="password"
-                      class="focus-input"
-                      placeholder=""
-                      value=""
+                  <div class="field-with-error">
+                    <Field
+                      type="text"
+                      class="input-form"
+                      name="name"
+                      placeholder="Your name"
+                      v-model="name"
                       autocomplete=""
-                    /><label>{{ $t('common.password') }}</label
-                    ><a href="#" class="show-password"
-                      ><img src="/img/eye.svg" alt=""
-                    /></a>
+                    />
+                    <ErrorMessage class="error" name="name" />
+                  </div>
+                  <div class="field-with-error">
+                    <Field
+                      type="text"
+                      class="input-form"
+                      name="company-name"
+                      v-model="company_name"
+                      placeholder="Company name"
+                      autocomplete=""
+                    />
                   </div>
                 </div>
-                <div class="block-pswrd">
-                  <div class="placeholder-container">
-                    <input
-                      type="password"
-                      name="confirm-password"
-                      class="focus-input"
-                      placeholder=""
-                      value=""
-                      autocomplete=""
-                    /><label>{{ $t('common.confirm_password') }}</label
-                    ><a href="#" class="show-password"
-                      ><img src="/img/eye.svg" alt=""
-                    /></a>
+                <div class="field-with-error">
+                  <Field
+                    type="tel"
+                    class="input-form"
+                    name="phone"
+                    placeholder="Phone number"
+                    v-model="phone"
+                    autocomplete=""
+                  />
+                  <ErrorMessage class="error" name="phone" />
+                </div>
+                <div class="field-with-error">
+                  <Field
+                    type="email"
+                    class="input-form"
+                    name="email"
+                    placeholder="Your email"
+                    v-model="email"
+                    autocomplete=""
+                  />
+                  <ErrorMessage class="error" name="email" />
+                </div>
+                <div class="field-with-error">
+                  <div class="block-pswrd">
+                    <div class="placeholder-container">
+                      <Field
+                        :type="isPasswordVisible ? 'text' : 'password'"
+                        name="password"
+                        class="focus-input"
+                        placeholder=""
+                        v-model="password"
+                        autocomplete=""
+                      />
+                        <label>{{ $t('common.password') }}</label>
+                        <div tabindex="0" @keyup.enter="toggleVisibilityOfPassword" @click="toggleVisibilityOfPassword" :class="['show-password', isPasswordVisible && 'show-password_visible']">
+                          <img src="/img/eye.svg" alt="" />
+                        </div>
+                    </div>
                   </div>
+                  <ErrorMessage class="error" name="password" />
+                </div>
+                <div class="field-with-error">
+                  <div class="block-pswrd">
+                    <div class="placeholder-container">
+                      <Field
+                        :type="isConfirmPasswordVisible ? 'text' : 'password'"
+                        name="confirmPassword"
+                        class="focus-input"
+                        placeholder=""
+                        value=""
+                        v-model="confirmPassword"
+                        autocomplete=""
+                      />
+                        <label>{{ $t('common.confirm_password') }}</label>
+                        <div tabindex="0" @keyup.enter="toggleVisibilityOfConfirmPassword" @click="toggleVisibilityOfConfirmPassword" :class="['show-password', isConfirmPasswordVisible && 'show-password_visible']"
+                        >
+                          <img src="/img/eye.svg" alt="" />
+                      </div>
+                    </div>
+                  </div>
+                  <ErrorMessage class="error" name="confirmPassword" />
                 </div>
                 <div>
-                  <input
-                    type="submit"
-                    name="submit"
-                    class="form-submit modal-toggle"
-                    :value="$t('common.signup')"
-                  />
+                  <button name="submit" class="form-submit modal-toggle">
+                    {{ $t('common.signup') }}
+                  </button>
                 </div>
-              </form>
+              </Form>
               <div class="signin-block">
                 <p class="text-form">{{ $t('common.alt_signin') }}</p>
                 <el-button
@@ -121,7 +139,7 @@
               <div class="have-acc">
                 <span>{{ $t('common.already_have_account') }}</span>
                 <router-link class="blue" to="/login">
-                  {{ $t("common.sign_in") }}
+                  {{ $t('common.sign_in') }}
                 </router-link>
               </div>
             </div>
@@ -132,84 +150,141 @@
   </div>
 </template>
 
+<script setup>
+import * as yup from 'yup'
+
+const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+
+const schema = yup.object({
+  email: yup.string().required().email(),
+  name: yup.string().required(),
+  phone: yup.string().matches(phoneRegExp, 'phone number is not valid'),
+  password: yup.string().required().min(8),
+  confirmPassword: yup.string()
+     .oneOf([yup.ref('password'), null], 'passwords must match')
+})
+</script>
 <script>
+import { Form, Field, ErrorMessage } from 'vee-validate'
+
 export default {
-  data() {
+  components: {
+    Form,
+    Field,
+    ErrorMessage
+  },
+  data () {
     return {
       name: '',
       company_name: '',
       phone: '',
       email: '',
       password: '',
+      isPasswordVisible: false,
+      confirmPassword: '',
+      isConfirmPasswordVisible: false,
       loading: false
     }
   },
   methods: {
-    loginWithGoogle() {
+    loginWithGoogle () {
       var self = this
       self.loading = true
-      googleTokenLogin().then((response) => {
+      googleTokenLogin().then(response => {
         // console.log("Handle the response", response)
         self.verifyGoogleLogin(response)
       })
     },
-    verifyGoogleLogin(response) {
+    verifyGoogleLogin (response) {
       var self = this
       var u = userStore()
-      this.$api.post('login/google', {
-        token: response.access_token
-      }).then((response) => {
-        // console.log(response)
-        authService.login(self.$pinia, response, this.remember_me)
-        self.loadProfile(u)
-        self.loading = false
-        self.$goTo('dashboard')
-      }).catch(function (error) {
-        // console.log(error)
-        self.loading = false
-        self.$toast.error(error.response.data)
+      this.$api
+        .post('login/google', {
+          token: response.access_token
+        })
+        .then(response => {
+          // console.log(response)
+          authService.login(self.$pinia, response, this.remember_me)
+          self.loadProfile(u)
+          self.loading = false
+          self.$goTo('dashboard')
+        })
+        .catch(function (error) {
+          // console.log(error)
+          self.loading = false
+          self.$toast.error(error.response.data)
+        })
+    },
+    toggleVisibilityOfConfirmPassword() {
+      this.isConfirmPasswordVisible = !this.isConfirmPasswordVisible
+    },
+    toggleVisibilityOfPassword() {
+      this.isPasswordVisible = !this.isPasswordVisible
+    },
+    onSubimt () {
+      this.$api.post('register', {
+        'name': this.name,
+        // 'company_name': this.company_name,
+        // 'phone': this.phone,
+        'email': this.email,
+        'password': this.password
+      }).then(res => {
+        if (res.status === 200) {
+          this.$toast.success("Sign-up successful")
+          this.login()
+        }
+      }).catch(error => {
+        this.$toast.error(error?.message)
       })
     },
-    login() {
+    login () {
       var self = this
       self.loading = true
-      this.$api.post('auth/token', {
-        'email': this.email,
-        password: this.password,
-        remember_me: this.remember_me
-      }).then((response) => {
-        // console.log(response)
-        authService.login(this.$pinia, response, this.remember_me)
-        // toast.success("Login successful.")
-        self.loadProfile()
-        self.loading = false
-        self.$goTo('dashboard')
-      }).catch(function (error) {
-        // console.log(error)
-        self.loading = false
-        self.$toast.error(error.response.data)
-      })
+      this.$api
+        .post('auth/token', {
+          email: this.email,
+          password: this.password,
+          remember_me: this.remember_me
+        })
+        .then(response => {
+          // console.log(response)
+          authService.login(this.$pinia, response, this.remember_me)
+          // toast.success("Login successful.")
+          self.loadProfile()
+          self.loading = false
+          self.$goTo('dashboard')
+        })
+        .catch(function (error) {
+          // console.log(error)
+          self.loading = false
+          self.$toast.error(error.response.data)
+        })
     },
-    loadProfile(ustore) {
+    loadProfile (ustore) {
       var self = this
       var u = ustore
-      this.$api.get('profile').then((response) => {
-        u.setUser(response.data)
-        self.loadAccounts(u)
-        self.$mitt.emit('profile-loaded', {})
-      }).catch((error) => {
-        // console.log(error)
-        self.$toast.error(error.response.data)
-      })
+      this.$api
+        .get('profile')
+        .then(response => {
+          u.setUser(response.data)
+          self.loadAccounts(u)
+          self.$mitt.emit('profile-loaded', {})
+        })
+        .catch(error => {
+          // console.log(error)
+          self.$toast.error(error.response.data)
+        })
     },
-    loadAccounts(ustore) {
+    loadAccounts (ustore) {
       var u = ustore
-      console.log("Loading accounts now...")
-      this.$api.get('users/' + ustore.getData().id + '/accounts').then((response) => {
-        u.setAccounts(response.data)
-      }).catch((error) => {
-      })
-    },
+      console.log('Loading accounts now...')
+      this.$api
+        .get('users/' + ustore.getData().id + '/accounts')
+        .then(response => {
+          u.setAccounts(response.data)
+        })
+        .catch(error => {})
+    }
   }
 }
 </script>
@@ -225,4 +300,17 @@ export default {
     flex-direction: row;
   }
 }
+
+.field-with-error {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.error {
+  font-size: 14px;
+  color: lightcoral;
+  padding-top: 8px;
+}
+
 </style>
