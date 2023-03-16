@@ -166,6 +166,7 @@ const schema = yup.object({
 </script>
 <script>
 import { Form, Field, ErrorMessage } from 'vee-validate'
+import authService from "../services/auth"
 
 export default {
   components: {
@@ -224,14 +225,16 @@ export default {
     onSubimt () {
       this.$api.post('register', {
         'name': this.name,
-        // 'company_name': this.company_name,
-        // 'phone': this.phone,
+        'companyName': this.company_name,
+        'phone': this.phone,
         'email': this.email,
         'password': this.password
       }).then(res => {
         if (res.status === 200) {
-          this.$toast.success("Sign-up successful")
-          this.login()
+          this.$toast.success('Sign-up successful')
+          authService.login(this.$pinia, { data: { token: res.data } })
+          this.loadProfile()
+          this.$goTo('dashboard')
         }
       }).catch(error => {
         this.$toast.error(error?.message)
