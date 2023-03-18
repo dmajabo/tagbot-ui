@@ -150,6 +150,7 @@ input {
 }
 
 .content-right {
+    position: relative;
     padding: 40px 60px 0px 60px;
 }
 

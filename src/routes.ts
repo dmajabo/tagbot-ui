@@ -16,6 +16,9 @@ import {Connect} from "vite";
 import Connections from './pages/Connections.vue';
 import Users from './pages/Users.vue'
 import SignUp from './pages/SignUp.vue';
+import UserViewResourcesSidebar from './components/dashboard/UserViewResourcesSidebar.vue'
+import AllResourcesInSidebar from './components/dashboard/AllResourcesInSidebar.vue'
+import OneDetailedResourcesInSidebar from './components/dashboard/OneDetailedResourcesInSidebar.vue'
 
 export const routes = [
     {
@@ -81,9 +84,43 @@ export const routes = [
             },
             {
               path: 'user-view',
-              name: 'user-view',
               component: Users,
               meta: {title: 'User view', description: 'User view', requiresAuth: true},
+              children: [
+                {
+                  path: 'resources/:id',
+                  component: UserViewResourcesSidebar,
+                  meta: {
+                    title: 'User view resources',
+                    description: 'User view resources',
+                    requiresAuth: true,
+                    isSidebar: true
+                  },
+                  children: [
+                    {
+                      path: '',
+                      name: 'all-resources-of-user',
+                      component: AllResourcesInSidebar,
+                      meta: {
+                        title: 'All resources of user',
+                        requiresAuth: true,
+                        isSidebar: true
+                      }
+                    },
+                    {
+                      path: 'resource',
+                      name: 'one-resource-of-user',
+                      component: OneDetailedResourcesInSidebar,
+                      meta: {
+                        title: 'Resource of the user',
+                        requiresAuth: true,
+                        isSidebar: true,
+                        isBig: true
+                      }
+                    }
+                  ]
+                }
+              ]
           }
         ],
     },

@@ -114,5 +114,19 @@
     "new_tag": "New Tag",
     "enter_key": "Enter key",
     "finish": "Finish Onboarding"
+  },
+  "user_view": {
+    "resources": "resources",
+    "spent": "spent",
+    "spent_per_bucket": "per bucket",
+    "tag_standard": "tag standard",
+    "tag_compliancy": "tag compliancy",
+    "go_back_text": "Go back to resources",
+    "total_cost": "total cost",
+    "tag_key_tracked": "Tag keys tracked",
+    "tags_used": "Tags used",
+    "compliant": "Compliant",
+    "values_tracked": "Values tracked",
+    "values_used": "Values used"
   }
 }

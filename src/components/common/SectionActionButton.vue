@@ -29,8 +29,10 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 16px;
+  height: 38px;
+  padding: 0 16px 0 19px;
   transition: all 0.2s ease;
+  border-radius: 6px;
 }
 
 .section-action-button:hover {
@@ -38,10 +40,9 @@ export default {
 }
 
 .section-action-button_empty {
-  height: 33px;
-  border: 1px solid #4876EB;
-  color: #4876EB;
-  fill: #4876EB;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  fill: var(--primary-color);
 }
 
 .section-action-button_empty:hover {
@@ -49,24 +50,28 @@ export default {
 }
 
 .section-action-button_solid {
-  background-color: #4876EB;
+  background-color: var(--primary-color);
   color: #ffffff;
   fill: #fff;
 }
 
 .section-action-button_solid:hover {
   background-color: #DEE6FD;
-  fill: #4876EB;
-  color: #4876EB;
+  fill: var(--primary-color);
+  color: var(--primary-color);
 }
 
 .section-action-button span {
   display: block;
   font-style: normal;
-  padding-left: 4px;
-  font-size: 14px;
+  padding-left: 11px;
+  font-size: 16px;
   font-weight: 400;
   line-height: 17px;
   letter-spacing: 0em;
+}
+
+.section-action-button_solid span {
+  font-weight: 700;
 }
 </style>

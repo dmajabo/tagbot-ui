@@ -36,11 +36,11 @@
     </div>
     <main>
       <div class="main-right">
-        <div class="content-right">
+        <div :class="['content-right', this.$route.meta.isSidebar && 'fixed-height']">
           <router-view v-slot="{ Component, route}">
-            <Transition mode="out-in" name="fade">
+            <!-- <transition mode="out-in" name="fade"> -->
               <component :is="Component" :key="route.path"/>
-            </transition>
+            <!-- </transition> -->
           </router-view>
         </div>
       </div>
@@ -48,10 +48,16 @@
   </div>
 </template>
 
+<script setup>
+import { useLayoutStore } from '../store/layoutStore'
+
+const layoutStore = useLayoutStore()
+</script>
+
 <script>
 
-import authService from "../services/auth"
-import {userStore} from "../store/userStore";
+import authService from '../services/auth'
+import { userStore } from '../store/userStore'
 
 export default {
   data() {
@@ -98,6 +104,7 @@ export default {
     this.$mitt.on('profile-loaded', ()=> {
       self.user = userStore().getData()
     })
+    console.log(this.layoutStore)
   },
   created() {
     var self = this
@@ -155,6 +162,11 @@ export default {
   border-radius: 6px;
   width: 100%;
   z-index: 10;
+}
+
+.fixed-height {
+  max-height: 100vh;
+  overflow: hidden;
 }
 </style>
 
