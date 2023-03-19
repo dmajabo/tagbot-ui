@@ -54,8 +54,9 @@
               </div>
               <div class="have-acc">
                 <span>{{ $t("common.no_account") }}</span>
-                <a class="blue" href="/sign-up">{{ $t("common.signup") }}
-                </a>
+                <router-link class="blue" to="/sign-up">
+                  {{ $t("common.signup") }}
+                </router-link>
               </div>
             </div>
           </div>

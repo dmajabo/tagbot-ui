@@ -3,14 +3,18 @@
     <div class="title-block">
       <div class="flex-title"><h1 class="title-dashboard">Dashboard</h1></div>
       <div class="title-buttons">
-        <a href="#" class="refresh-button">
-          <img src="/img/icon/download-icon.svg" alt="">
-          <span>{{ $t('common.download_all') }}</span>
-        </a>
-        <a href="#" class="refresh-button" @click.prevent="refreshData">
-          <img src="/img/icon/refresh-icon.svg" alt="">
-          <span>{{ $t('common.refresh') }}</span>
-        </a>
+        <SectionActionButton
+          :text="$t('common.refresh')"
+          type="empty"
+          @click.prevent="refreshData">
+            <RefreshIcon />
+        </SectionActionButton>
+        <SectionActionButton
+          :text="$t('common.download_all')"
+          type="solid"
+          @click.prevent="refreshData">
+            <DownloadAllIcon />
+        </SectionActionButton>
       </div>
     </div>
     <div class="main-dashboard">
@@ -130,6 +134,10 @@ import {userStore} from "../store/userStore"
 import Empty from "../components/common/Empty.vue";
 import _ from 'lodash'
 import ResourcesModal from "../components/dashboard/ResourcesModal.vue";
+import SectionActionButton from '../components/common/SectionActionButton.vue'
+
+import RefreshIcon from '../assets/images/refresh-icon.svg'
+import DownloadAllIcon from '../assets/images/download-icon.svg'
 
 export default {
   data() {
@@ -176,6 +184,7 @@ export default {
     loadUsers() {
       var self = this
       self.loading = true
+      console.log('this.user.tenantId', this.user.tenantId)
       this.$api.get('tenants/' + this.user.tenantId + '/resource-users').then((response) => {
         self.users = response.data
       }).catch((error) => {
@@ -244,7 +253,10 @@ export default {
   },
   components: {
     ResourcesModal,
-    Empty
+    Empty,
+    RefreshIcon,
+    DownloadAllIcon,
+    SectionActionButton
   }
 }
 </script>
