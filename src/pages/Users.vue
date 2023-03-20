@@ -73,14 +73,22 @@
         </div>
       </div>
 
-      <el-skeleton :rows="5" v-if="loading" animated />
-      <div v-else class="main-info">
+      <div class="main-info">
         <div class="tile-wrapper">
-          <Tile v-for="(tile, idx) in fakeData" :key="idx" :data="tile" />
+          <el-skeleton v-if="loading" animated>
+            <template #template>
+              <el-skeleton-item variant="rect" style="width: 100%; height: 149px" />
+            </template>
+          </el-skeleton>
+          <Tile
+            v-for="(tile, idx) in usersViewSummary"
+            :key="idx"
+            :data="tile"
+          />
         </div>
 
         <Empty
-          v-if="accounts.length === 0 && !loading"
+          v-if="usersViewSummary.length === 0 && !loading"
           :title="$t('common.no_accounts')"
           :detail="$t('common.start_onboarding')"
           button_link="get-started"
@@ -124,8 +132,6 @@ import Tile from '../components/common/Tile.vue'
 import RefreshIcon from '../assets/images/refresh-icon.svg'
 import DownloadAllIcon from '../assets/images/download-icon.svg'
 
-import fakeData from '../assets/fakeData.json'
-
 export default {
   data () {
     return {
@@ -145,7 +151,8 @@ export default {
       resources: [],
       loading: true,
       open: false,
-      fakeData: fakeData
+      usersViewSummary: [],
+      totalSummaries: 0
     }
   },
   computed: {},
@@ -172,73 +179,27 @@ export default {
         userName: this.selectedUser
       })
     },
-    loadUsers () {
-      var self = this
-      self.loading = true
-      console.log('this.user.tenantId', this.user.tenantId)
-      this.$api
-        .get('tenants/' + this.user.tenantId + '/resource-users')
-        .then(response => {
-          self.users = response.data
-        })
-        .catch(error => {
-          this.$toast.error(error.message)
-        })
-    },
-    getEmail (val) {
-      // Just for Demo
-      if (this.user.name === 'SSO User') {
-        return this.demoUserMap()[val]
-      }
-      return val
-    },
-    demoUserMap () {
-      return {
-        'mohamed.zayan2004@gmail.com': 'liam@tagbot.ai',
-        'rifat.shahnewaz@gmail.com': 'james@tagbot.ai',
-        'sana.abdulmajeed@gmail.com': 'sarah@tagbot.ai',
-        'viet.nguyen@tagbot.ai': 'daniel@tagbot.ai',
-        root: 'root'
-      }
-    },
-    loadAccounts () {
-      var self = this
-      this.$api
-        .get('users/' + this.user.id + '/accounts')
-        .then(response => {
-          self.$mitt.emit('accounts-loaded', {})
-          self.accounts = response.data
-        })
-        .catch(error => {
-          console.log(error)
-        })
-    },
     loadResources (payload) {
-      var self = this
-      self.loading = true
       payload['page'] = this.pagination.current_page
       payload['per_page'] = this.pagination.per_page
+    },
+    loadUserViewSummary (payload) {
+      this.loading = true
+      const tenantId = import.meta.env.DEV
+        ? '3420b906-3ee8-4ed1-8738-ec0ca712d4bb'
+        : this.user.tenantId
       this.$api
-        .post(
-          'tenants/' + this.user.tenantId + '/analytics/resources-per-user',
-          payload
-        )
+        .post(`tenants/${tenantId}/analytics/user-view-summary`, payload)
         .then(response => {
-          self.pagination.total = parseInt(response.data.total)
-          let res = response.data
-          delete res['total']
-          self.resources = res
-          self.loading = false
-        })
-        .catch(error => {
-          this.$toast.error(error.message)
+          console.log(response)
+          this.usersViewSummary = response?.data?.users
+          this.totalSummaries = response?.data?.total
+          this.loading = false
         })
     },
     loadData () {
       this.user = userStore().getData()
-      this.loadUsers()
-      this.loadAccounts()
-      this.loadResources({})
+      this.loadUserViewSummary({})
     }
   },
   mounted () {
