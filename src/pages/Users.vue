@@ -75,67 +75,6 @@
 
       <el-skeleton :rows="5" v-if="loading" animated />
       <div v-else class="main-info">
-        <div
-          v-if="!loading && Object.keys(resources).length > 0"
-          class="info-block"
-          v-for="item in Object.keys(resources)"
-        >
-          <div class="content-info-block">
-            <div class="info-email">{{ getEmail(item) }}</div>
-            <div class="info-services">
-              <el-tooltip
-                v-for="resource in resources[item]['resources'].slice(0, 8)"
-                class="box-item"
-                effect="light"
-                :content="resource.type.replaceAll('::', ' ')"
-                placement="bottom"
-                :show-arrow="false"
-              >
-                <div
-                  @click.prevent="openModal(resource)"
-                  class="service-block modal-toggle tooltip bottom"
-                >
-                  <img
-                    :src="'/AWS_Icon_Svg/' + resource.image_url"
-                    alt=""
-                    class="service-img"
-                  />
-                  <span>{{ resource.count }}</span>
-                </div>
-              </el-tooltip>
-            </div>
-            <a
-              href="#"
-              class="add-more"
-              v-if="resources[item]['resources'].length > 8"
-              >and {{ resources[item]['resources'].length - 8 }}
-              {{ $t('common.more') }}</a
-            >
-          </div>
-
-          <div class="button-info-block">
-            <a href="#" class="download-info">
-              <img src="/img/icon/download-info.svg" alt="" />
-            </a>
-
-            <a href="#" class="open-info">
-              <svg
-                width="12"
-                height="8"
-                viewBox="0 0 12 8"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M11.6485 0.751479C11.1799 0.282849 10.4201 0.282849 9.95147 0.751478L6 4.70295L2.04853 0.751477C1.5799 0.282848 0.820101 0.282848 0.351473 0.751477C-0.117157 1.22011 -0.117157 1.9799 0.351472 2.44853L5.15147 7.24853C5.6201 7.71716 6.3799 7.71716 6.84853 7.24853L11.6485 2.44853C12.1172 1.97991 12.1172 1.22011 11.6485 0.751479Z"
-                />
-              </svg>
-            </a>
-          </div>
-        </div>
-
         <div class="tile-wrapper">
           <Tile v-for="(tile, idx) in fakeData" :key="idx" :data="tile" />
         </div>
