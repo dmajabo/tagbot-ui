@@ -1,7 +1,7 @@
 <template>
   <router-link :to="`/user-view/resources/${data.id}`" class="tile">
     <div class="main-bar">
-      <div v-if="data.name" class="name">{{ data.name }}</div>
+      <div v-if="data.created_by" class="name">{{ data.created_by }}</div>
       <div v-else class="name name_with-icon">
         <ExclamationIcon class="exclamation-icon" />
         Unknown, <router-link to="/">connect your IAC</router-link>
@@ -12,16 +12,16 @@
     </div>
     <div class="resources">
       <ResourcesIcon class="resources-icon" />
-      {{ data.resources }} {{ $t('user_view.resources') }}
+      {{ data.count }} {{ $t('user_view.resources') }}
     </div>
     <div class="spent">
       <DollarIcon class="dollar-icon" />
-      ~{{ data.spent }}% {{ $t('user_view.spent') }}
+      ~{{ data.amount_spent }}% {{ $t('user_view.spent') }}
     </div>
     <div class="tag-percent">
       <StarIcon class="star-icon" />
-      <span :class="['bold', getColorByPercent(data.tagPercent)]">
-        {{ data.tagPercent }}%
+      <span :class="['bold', getColorByPercent(data.compliance_percentage)]">
+        {{ data.compliance_percentage }}%
       </span>
       {{ $t('user_view.tag_standard') }}
     </div>
@@ -71,6 +71,11 @@ export default {
   flex-direction: column;
   gap: 16px;
   padding: 16px;
+  transition: all 0.2s ease-in;
+}
+
+.tile:hover {
+  box-shadow: 0px 3px 14px #0000002e;
 }
 
 .main-bar {
@@ -85,6 +90,10 @@ export default {
   font-size: 16px;
   font-weight: 500;
   letter-spacing: 0;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .name_with-icon {
