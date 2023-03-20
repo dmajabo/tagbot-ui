@@ -38,9 +38,9 @@
       <div class="main-right">
         <div :class="['content-right', this.$route.meta.isSidebar && 'fixed-height']">
           <router-view v-slot="{ Component, route}">
-            <!-- <transition mode="out-in" name="fade"> -->
+            <transition mode="out-in" name="fade">
               <component :is="Component" :key="route.path"/>
-            <!-- </transition> -->
+            </transition>
           </router-view>
         </div>
       </div>
@@ -104,7 +104,6 @@ export default {
     this.$mitt.on('profile-loaded', ()=> {
       self.user = userStore().getData()
     })
-    console.log(this.layoutStore)
   },
   created() {
     var self = this

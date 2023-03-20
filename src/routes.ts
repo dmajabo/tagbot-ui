@@ -85,6 +85,7 @@ export const routes = [
             {
               path: 'user-view',
               component: Users,
+              name: 'user-view',
               meta: {title: 'User view', description: 'User view', requiresAuth: true},
               children: [
                 {
