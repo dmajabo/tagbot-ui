@@ -194,6 +194,9 @@ export default {
     getEmail(val) {
       // Just for Demo
       if(this.user.name === 'SSO User') {
+        if (!['mohamed.zayan2004@gmail.com', 'rifat.shahnewaz@gmail.com', 'sana.abdulmajeed@gmail.com', 'viet.nguyen@tagbot.ai'].includes(val)) {
+          return val
+        }
         return this.demoUserMap()[val]
       }
       return val
