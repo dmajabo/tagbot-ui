@@ -36,7 +36,7 @@
     </div>
     <main>
       <div class="main-right">
-        <div :class="['content-right', this.$route.meta.isSidebar && 'fixed-height']">
+        <div :class="['content-right', $route.meta.isSidebar && 'fixed-height']">
           <router-view v-slot="{ Component, route}">
             <transition mode="out-in" name="fade">
               <component :is="Component" :key="route.path"/>
