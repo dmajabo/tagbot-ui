@@ -13,7 +13,7 @@
     </div>
     <div class="spent">
       <DollarIcon class="dollar-icon" />
-      ~{{ data.amount_spent }}% {{ $t('user_view.spent') }}
+      ~{{ data.amount_spent }}$ {{ $t('user_view.spent') }}
     </div>
     <div class="tag-percent">
       <StarIcon class="star-icon" />
@@ -48,8 +48,8 @@ export default {
   },
   methods: {
     getColorByPercent(val: number) {
-      if (val < 50) return 'percent_the-lowest'
-      if (val < 85) return 'percent_average'
+      if (val < 25) return 'percent_the-lowest'
+      if (val < 80) return 'percent_average'
       return 'percent_the-highest'
     }
   }
