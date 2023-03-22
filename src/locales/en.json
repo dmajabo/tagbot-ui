@@ -127,6 +127,7 @@
     "tags_used": "Tags used",
     "compliant": "Compliant",
     "values_tracked": "Values tracked",
-    "values_used": "Values used"
+    "values_used": "Values used",
+    "resources_label": "Resources"
   }
 }

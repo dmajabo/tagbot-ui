@@ -11,6 +11,7 @@
   --orange: #F2994A;
   --green: #27AE60;
   --warning: #EB5757;
+  --box-shadow-color: rgba(73, 118, 235, 0.2);
 }
 
 /* MAIN STYLES */
@@ -1997,9 +1998,37 @@ input {
 
 .roll-in-left-enter-active,
 .roll-in-left-leave-active{
-    transition:  transform 0.3s, opacity 0.5s ;
+    transition:  transform 3s, opacity 2s ;
 }
 
+.slide-fade-enter-active,
+.slide-fade-enter-active .sidebar {
+  transition: all .5s ease-out;
+}
+
+.slide-fade-enter-active .overlay {
+  transition: opacity .5s ease-out;
+}
+
+.slide-fade-leave-active,
+.slide-fade-leave-active .sidebar {
+  transition: all .5s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-leave-active .overlay {
+  transition: all .5s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from .sidebar,
+.slide-fade-leave-to .sidebar {
+  transform: translateX(200px);
+  opacity: 0;
+}
+
+.slide-fade-enter-from .overlay,
+.slide-fade-leave-to .overlay {
+  opacity: 0;
+}
 
 /* tag manager */
 

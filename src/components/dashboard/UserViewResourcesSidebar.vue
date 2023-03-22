@@ -1,26 +1,27 @@
 <template>
   <div class="wrapper">
+    <div class="overlay"></div>
     <div :class="['sidebar', $route.meta.isBig && 'sidebar_big']">
-      <router-link to="/user-view" class="go-back-section">
+      <div v-if="isWide" class="go-back-section">
         <GoBackIcon class="go-back-icon" />
         {{ $t('user_view.go_back_text') }}
-      </router-link>
+      </div>
       <div class="main-details">
-        <div v-if="currentUser" class="details">
-          <div class="email">{{ currentUser.name }}</div>
+        <div v-if="user" class="details">
+          <div class="email">{{ user.created_by }}</div>
           <div class="details-row">
             <div class="resources">
               <ResourcesIcon class="resources-icon" />
-              {{ currentUser.resources }} {{ $t('user_view.resources') }}
+              {{ user.count }} {{ $t('user_view.resources') }}
             </div>
             <div class="spent">
               <DollarIcon class="dollar-icon" />
-              ~{{ currentUser.spent }}% {{ $t('user_view.spent') }}
+              ~{{ user.amount_spent }}% {{ $t('user_view.spent') }}
             </div>
             <div class="tag-percent">
               <StarIcon class="star-icon" />
-              <span :class="['bold', getColorByPercent(currentUser.tagPercent)]">
-                {{ currentUser.tagPercent }}%
+              <span :class="['bold', getColorByPercent(user.tagPercent)]">
+                {{ user.compliance_percentage }}%
               </span>
               {{ $t('user_view.tag_standard') }}
             </div>
@@ -29,13 +30,14 @@
         <SectionActionButton
           :text="$t('common.download_all')"
           type="solid"
-          @click.prevent="refreshData"
+          @click.prevent="$emit('refresh')"
         >
           <DownloadAllIcon />
         </SectionActionButton>
       </div>
       <div class="line"></div>
-      <router-view></router-view>
+      <div class="resources-label">{{ $t('user_view.resources_label') }}</div>
+      <slot></slot>
     </div>
   </div>
 </template>
@@ -48,8 +50,6 @@ import ResourcesIcon from '../../assets/images/resources.svg'
 import DollarIcon from '../../assets/images/dollar.svg'
 import StarIcon from '../../assets/images/star.svg'
 
-import fakeData from '../../assets/fakeData.json'
-
 export default {
   components: {
     GoBackIcon,
@@ -59,14 +59,14 @@ export default {
     DollarIcon,
     StarIcon,
   },
-  data() {
-    return {
-      fakeData
-    }
-  },
-  computed: {
-    currentUser() {
-      return fakeData.find(i => i.id === Number(this.$route.params.id))
+  props: {
+    user: {
+      type: Object,
+      required: true
+    },
+    isWide: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -79,11 +79,30 @@ export default {
 }
 </script>
 
+<style>
+.el-drawer {
+  min-width: 748px;
+}
+
+.el-overlay {
+  background-color: rgba(3, 37, 81, 0.4)!important;
+}
+</style>
+
 <style scoped>
 .wrapper {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 4;
+}
+
+.overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -102,6 +121,7 @@ export default {
   height: 100%;
   padding: 24px;
   overflow-y: auto;
+  z-index: 4;
 }
 
 .sidebar_big {
@@ -152,8 +172,18 @@ export default {
 }
 
 .line {
+  flex-shrink: 0;
   width: 100%;
   height: 1px;
   background-color: var(--dirty-white);
+}
+
+.resources-label {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 17px;
+  letter-spacing: 0em;
+  text-transform: uppercase;
+  color: var(--light-gray);
 }
 </style>

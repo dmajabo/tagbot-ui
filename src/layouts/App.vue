@@ -38,8 +38,8 @@
       <div class="main-right">
         <div :class="['content-right', $route.meta.isSidebar && 'fixed-height']">
           <router-view v-slot="{ Component, route}">
-            <transition mode="out-in" name="fade">
-              <component :is="Component" :key="route.path"/>
+            <transition mode="out-in" :name="$route?.meta?.transitionName ? $route.meta.transitionName : 'fade'">
+                <component :is="Component" :key="route.path"/>
             </transition>
           </router-view>
         </div>
