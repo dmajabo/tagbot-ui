@@ -1,35 +1,28 @@
 <template>
-  <router-link :to="`/user-view/resources/${data.id}/resource/1`" class="tile">
+  <div class="tile">
     <div class="main-bar">
-      <FirstIcon v-if="data.logo === 1"></FirstIcon>
-      <SecondIcon v-else-if="data.logo === 2"></SecondIcon>
-      <ThirdIcon v-else-if="data.logo === 3"></ThirdIcon>
-      <FourthIcon v-else></FourthIcon>
-      <div v-if="data.name" class="name">{{ data.name }}</div>
-      <div v-else class="name name_with-icon">
-        <ExclamationIcon class="exclamation-icon" />
-        Unknown, <router-link to="/">connect your IAC</router-link>
-      </div>
+      <img v-if="data.image_url" :src="`/AWS_Icon_Svg/${data.image_url}`" alt="" class="resource-logo" />
+      <div class="name">{{ data.resource_type }}</div>
       <div class="more">
         <MoreIcon />
       </div>
     </div>
     <div class="resources">
       <ResourcesIcon class="resources-icon" />
-      {{ data.resources }} {{ $t('user_view.resources') }}
+      {{ data.count }} {{ $t('user_view.resources') }}
     </div>
     <div class="spent">
       <DollarIcon class="dollar-icon" />
-      ~{{ data.spent }}% {{ $t('user_view.spent') }}
+      ~{{ data.amount_spent }}$ {{ $t('user_view.spent') }}
     </div>
     <div class="tag-percent">
       <StarIcon class="star-icon" />
       <span :class="['bold', getColorByPercent(data.tagPercent)]">
-        {{ data.tagPercent }}%
+        {{ data.compliance_percentage }}%
       </span>
       {{ $t('user_view.tag_standard') }}
     </div>
-  </router-link>
+  </div>
 </template>
 
 <script lang="ts">
@@ -37,11 +30,6 @@ import ResourcesIcon from '../../assets/images/resources.svg'
 import DollarIcon from '../../assets/images/dollar.svg'
 import StarIcon from '../../assets/images/star.svg'
 import DownloadIcon from '../../assets/images/download-icon.svg'
-import ExclamationIcon from '../../assets/images/exclamation.svg'
-import FirstIcon from '../../assets/images/1.svg'
-import SecondIcon from '../../assets/images/2.svg'
-import ThirdIcon from '../../assets/images/3.svg'
-import FourthIcon from '../../assets/images/4.svg'
 import MoreIcon from '../../assets/images/more.svg'
 
 export default {
@@ -56,17 +44,12 @@ export default {
     DollarIcon,
     StarIcon,
     DownloadIcon,
-    ExclamationIcon,
-    FirstIcon,
-    SecondIcon,
-    ThirdIcon,
-    FourthIcon,
     MoreIcon
   },
   methods: {
     getColorByPercent(val: number) {
-      if (val < 50) return 'percent_the-lowest'
-      if (val < 85) return 'percent_average'
+      if (val < 25) return 'percent_the-lowest'
+      if (val < 80) return 'percent_average'
       return 'percent_the-highest'
     }
   }
@@ -173,5 +156,10 @@ export default {
 .more:hover {
   cursor: pointer;
   opacity: 0.6;
+}
+
+.resource-logo {
+  width: 24px;
+  height: 24px;
 }
 </style>

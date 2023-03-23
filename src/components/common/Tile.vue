@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="`/user-view/resources/${data.id}`" class="tile">
+  <div class="tile">
     <div class="main-bar">
       <div v-if="data.created_by" class="name">{{ data.created_by }}</div>
       <div v-else class="name name_with-icon">
@@ -16,7 +16,7 @@
     </div>
     <div class="spent">
       <DollarIcon class="dollar-icon" />
-      ~{{ data.amount_spent }}% {{ $t('user_view.spent') }}
+      ~{{ data.amount_spent }}$ {{ $t('user_view.spent') }}
     </div>
     <div class="tag-percent">
       <StarIcon class="star-icon" />
@@ -25,7 +25,7 @@
       </span>
       {{ $t('user_view.tag_standard') }}
     </div>
-  </router-link>
+  </div>
 </template>
 
 <script lang="ts">
@@ -51,8 +51,8 @@ export default {
   },
   methods: {
     getColorByPercent(val: number) {
-      if (val < 50) return 'percent_the-lowest'
-      if (val < 85) return 'percent_average'
+      if (val < 25) return 'percent_the-lowest'
+      if (val < 80) return 'percent_average'
       return 'percent_the-highest'
     }
   }
@@ -75,7 +75,8 @@ export default {
 }
 
 .tile:hover {
-  box-shadow: 0px 3px 14px #0000002e;
+  cursor: pointer;
+  box-shadow: 0px 3px 14px var(--box-shadow-color);
 }
 
 .main-bar {
