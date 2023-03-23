@@ -5,6 +5,7 @@
 </template>
 
 <script lang="ts">
+import { userStore } from '../../store/userStore'
 import ResourceCard from '../common/ResourceCard.vue'
 
 export default {
@@ -22,6 +23,7 @@ export default {
     }
   },
   mounted() {
+    this.user = userStore().getData()
     this.loadData()
   },
   methods: {
