@@ -1,8 +1,8 @@
 <template>
   <div class="wrapper">
     <div class="overlay"></div>
-    <div :class="['sidebar', $route.meta.isBig && 'sidebar_big']">
-      <div v-if="isWide" class="go-back-section">
+    <div class="sidebar">
+      <div class="go-back-section" @click="$emit('close-sidebar')">
         <GoBackIcon class="go-back-icon" />
         {{ $t('user_view.go_back_text') }}
       </div>
@@ -20,7 +20,7 @@
             </div>
             <div class="tag-percent">
               <StarIcon class="star-icon" />
-              <span :class="['bold', getColorByPercent(user.tagPercent)]">
+              <span :class="['bold', getColorByPercent(user.compliance_percentage)]">
                 {{ user.compliance_percentage }}%
               </span>
               {{ $t('user_view.tag_standard') }}
@@ -63,10 +63,6 @@ export default {
     user: {
       type: Object,
       required: true
-    },
-    isWide: {
-      type: Boolean,
-      default: false
     }
   },
   methods: {
@@ -78,16 +74,6 @@ export default {
   }
 }
 </script>
-
-<style>
-.el-drawer {
-  min-width: 748px;
-}
-
-.el-overlay {
-  background-color: rgba(3, 37, 81, 0.4)!important;
-}
-</style>
 
 <style scoped>
 .wrapper {
@@ -117,15 +103,11 @@ export default {
   display: flex;
   flex-direction: column;
   row-gap: 24px;
-  width: 748px;
+  width: 100%;
   height: 100%;
   padding: 24px;
   overflow-y: auto;
   z-index: 4;
-}
-
-.sidebar_big {
-  width: max(850px, 100%);
 }
 
 .go-back-section {
@@ -140,6 +122,10 @@ export default {
   letter-spacing: 0em;
   text-align: left;
   color: var(--light-gray);
+}
+
+.go-back-section:hover {
+  cursor: pointer;
 }
 
 .go-back-icon {

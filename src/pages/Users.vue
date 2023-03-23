@@ -131,10 +131,15 @@
     <el-drawer
       v-model="drawer"
       direction="rtl"
+      :class="sidebarIsWide ? 'wide-sidebar' : ''"
       :before-close="handleClose">
-      <UserViewResourcesSidebar :user="currentUser" :isWide="isWideSidebar">
+      <UserViewResourcesSidebar
+        :user="currentUser"
+        @close-sidebar="handleClose">
         <transition name="slide-fade" appear>
-          <component :is="contentOfSidebar" :pickedUser="currentUser" />
+          <component
+            :is="currentContent"
+            :pickedUser="currentUser" />
         </transition>
       </UserViewResourcesSidebar>
     </el-drawer>
@@ -142,19 +147,19 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { ElDrawer } from 'element-plus'
 import { userStore } from '../store/userStore'
 import Empty from '../components/common/Empty.vue'
-import _ from 'lodash'
+import { SidebarContentComponents } from '@/types'
+import { storeToRefs } from 'pinia'
 import ResourcesModal from '../components/dashboard/ResourcesModal.vue'
 import SectionActionButton from '../components/common/SectionActionButton.vue'
 import Tile from '../components/common/Tile.vue'
+import { useLayoutStore } from '../store/layoutStore'
 
 import RefreshIcon from '../assets/images/refresh-icon.svg'
 import DownloadAllIcon from '../assets/images/download-icon.svg'
-import AllResourcesInSidebar from '../components/dashboard/AllResourcesInSidebar.vue'
-import OneDetailedResourcesInSidebar from '../components/dashboard/OneDetailedResourcesInSidebar.vue'
 import UserViewResourcesSidebar from '../components/dashboard/UserViewResourcesSidebar.vue'
 
 export default {
@@ -178,10 +183,19 @@ export default {
       open: false,
       usersViewSummary: [],
       totalSummaries: 0,
-      contentOfSidebar: AllResourcesInSidebar,
       currentUser: null,
       drawer: false,
-      isWideSidebar: false
+    }
+  },
+  setup() {
+    const layoutStore = useLayoutStore()
+    const { sidebarIsWide, currentContent } = storeToRefs(layoutStore)
+    return {
+      sidebarIsWide,
+      currentContent,
+      setSmallSidebar: layoutStore.setSmallSidebar,
+      setWideSidebar: layoutStore.setWideSidebar,
+      setContentOfSidebar: layoutStore.setContentOfSidebar
     }
   },
   computed: {},
@@ -191,26 +205,6 @@ export default {
     },
     handlePageChange () {
       this.loadResources({})
-    },
-    openModal (resource) {
-      var self = this
-      // console.log("Opening...")
-      this.$mitt.emit('open-resource-modal', {
-        user: resource.created_by,
-        alias: self.getEmail(resource.created_by),
-        tenant: resource.tenant_id,
-        type: resource.type
-      })
-    },
-    queryResources () {
-      this.loadResources({
-        accountNumber: this.selectedAccount,
-        userName: this.selectedUser
-      })
-    },
-    loadResources (payload) {
-      payload['page'] = this.pagination.current_page
-      payload['per_page'] = this.pagination.per_page
     },
     loadUserViewSummary (payload) {
       this.loading = true
@@ -231,12 +225,12 @@ export default {
     },
     openUserResources (data) {
       this.currentUser = data
-      this.contentOfSidebar = AllResourcesInSidebar
       this.drawer = true
     },
     handleClose () {
       this.drawer = false
-      this.currentUser = null
+      this.setSmallSidebar()
+      this.setContentOfSidebar(SidebarContentComponents.AllResourcesInSidebar)
     },
   },
   mounted () {
@@ -259,12 +253,24 @@ export default {
     DownloadAllIcon,
     Tile,
     UserViewResourcesSidebar,
-    AllResourcesInSidebar,
-    OneDetailedResourcesInSidebar,
     ElDrawer
   }
 }
 </script>
+
+<style>
+.el-drawer {
+  min-width: 748px;
+}
+
+.wide-sidebar.el-drawer {
+  min-width: min(1200px, 100%);
+}
+
+.el-overlay {
+  background-color: rgba(3, 37, 81, 0.4)!important;
+}
+</style>
 
 <style scoped>
 .el-skeleton {

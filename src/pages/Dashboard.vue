@@ -184,7 +184,6 @@ export default {
     loadUsers() {
       var self = this
       self.loading = true
-      console.log('this.user.tenantId', this.user.tenantId)
       this.$api.get('tenants/' + this.user.tenantId + '/resource-users').then((response) => {
         self.users = response.data
       }).catch((error) => {

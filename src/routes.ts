@@ -87,41 +87,6 @@ export const routes = [
               component: Users,
               name: 'user-view',
               meta: {title: 'User view', description: 'User view', requiresAuth: true},
-              children: [
-                {
-                  path: 'resources/:id',
-                  component: UserViewResourcesSidebar,
-                  meta: {
-                    title: 'User view resources',
-                    description: 'User view resources',
-                    requiresAuth: true,
-                    isSidebar: true
-                  },
-                  children: [
-                    {
-                      path: '',
-                      name: 'all-resources-of-user',
-                      component: AllResourcesInSidebar,
-                      meta: {
-                        title: 'All resources of user',
-                        requiresAuth: true,
-                        isSidebar: true
-                      }
-                    },
-                    {
-                      path: 'resource',
-                      name: 'one-resource-of-user',
-                      component: OneDetailedResourcesInSidebar,
-                      meta: {
-                        title: 'Resource of the user',
-                        requiresAuth: true,
-                        isSidebar: true,
-                        isBig: true
-                      }
-                    }
-                  ]
-                }
-              ]
           }
         ],
     },

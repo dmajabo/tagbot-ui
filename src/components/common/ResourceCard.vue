@@ -1,5 +1,5 @@
 <template>
-  <div class="tile">
+  <div class="tile" @click="selectResource">
     <div class="main-bar">
       <img v-if="data.image_url" :src="`/AWS_Icon_Svg/${data.image_url}`" alt="" class="resource-logo" />
       <div class="name">{{ data.resource_type }}</div>
@@ -13,29 +13,32 @@
     </div>
     <div class="spent">
       <DollarIcon class="dollar-icon" />
-      ~{{ data.amount_spent }}$ {{ $t('user_view.spent') }}
+      ~{{ data.amount_spent }}$ {{ $t('user_view.spent_per_bucket') }}
     </div>
     <div class="tag-percent">
       <StarIcon class="star-icon" />
-      <span :class="['bold', getColorByPercent(data.tagPercent)]">
+      <span :class="['bold', getColorByPercent(data.compliance_percentage)]">
         {{ data.compliance_percentage }}%
       </span>
-      {{ $t('user_view.tag_standard') }}
+      {{ $t('user_view.tag_compliancy') }}
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import ResourcesIcon from '../../assets/images/resources.svg'
-import DollarIcon from '../../assets/images/dollar.svg'
-import StarIcon from '../../assets/images/star.svg'
-import DownloadIcon from '../../assets/images/download-icon.svg'
-import MoreIcon from '../../assets/images/more.svg'
+import type { PropType } from 'vue'
+import { Resource, SidebarContentComponents } from '@/types'
+import { useLayoutStore } from '@/store/layoutStore'
+import ResourcesIcon from '@/assets/images/resources.svg'
+import DollarIcon from '@/assets/images/dollar.svg'
+import StarIcon from '@/assets/images/star.svg'
+import DownloadIcon from '@/assets/images/download-icon.svg'
+import MoreIcon from '@/assets/images/more.svg'
 
 export default {
   props: {
     data: {
-      type: Object,
+      type: Object as PropType<Resource>,
       required: true
     }
   },
@@ -46,11 +49,21 @@ export default {
     DownloadIcon,
     MoreIcon
   },
+  setup() {
+    return {
+      layoutStore: useLayoutStore()
+    }
+  },
   methods: {
     getColorByPercent(val: number) {
       if (val < 25) return 'percent_the-lowest'
       if (val < 80) return 'percent_average'
       return 'percent_the-highest'
+    },
+    selectResource() {
+      this.layoutStore.setResource(this.data)
+      this.layoutStore.setWideSidebar()
+      this.layoutStore.setContentOfSidebar(SidebarContentComponents.OneDetailedResourcesInSidebar)
     }
   }
 }
