@@ -1,11 +1,7 @@
 <template>
   <div class="tile">
     <div class="main-bar">
-      <div v-if="data.created_by" class="name">{{ data.created_by }}</div>
-      <div v-else class="name name_with-icon">
-        <ExclamationIcon class="exclamation-icon" />
-        Unknown, <router-link to="/">connect your IAC</router-link>
-      </div>
+      <div class="name">{{ data.created_by }}</div>
       <div class="download-link">
         <DownloadIcon />
       </div>
@@ -33,7 +29,6 @@ import ResourcesIcon from '../../assets/images/resources.svg'
 import DollarIcon from '../../assets/images/dollar.svg'
 import StarIcon from '../../assets/images/star.svg'
 import DownloadIcon from '../../assets/images/download-icon.svg'
-import ExclamationIcon from '../../assets/images/exclamation.svg'
 
 export default {
   props: {
@@ -47,7 +42,6 @@ export default {
     DollarIcon,
     StarIcon,
     DownloadIcon,
-    ExclamationIcon
   },
   methods: {
     getColorByPercent(val: number) {

@@ -18,7 +18,10 @@
         "name": "typescript-plugin-css-modules"
       }
     ],
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": [
     "src/**/*.ts",
