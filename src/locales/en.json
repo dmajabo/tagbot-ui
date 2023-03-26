@@ -128,6 +128,8 @@
     "compliant": "Compliant",
     "values_tracked": "Values tracked",
     "values_used": "Values used",
-    "resources_label": "Resources"
+    "resources_label": "Resources",
+    "sort_by_cost_asc": "Highest cost",
+    "sort_by_cost_desc": "Lowest cost"
   }
 }

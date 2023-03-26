@@ -1,7 +1,12 @@
 <template>
   <div class="tile" @click="selectResource">
     <div class="main-bar">
-      <img v-if="data.image_url" :src="`/AWS_Icon_Svg/${data.image_url}`" alt="" class="resource-logo" />
+      <img
+        v-if="data.image_url"
+        :src="`/AWS_Icon_Svg/${data.image_url}`"
+        alt=""
+        class="resource-logo"
+      />
       <div class="name">{{ data.resource_type }}</div>
       <div class="more">
         <MoreIcon />
@@ -26,20 +31,30 @@
 </template>
 
 <script lang="ts">
-import type { PropType } from 'vue'
+import { PropType } from 'vue'
 import { Resource, SidebarContentComponents } from '@/types'
 import { useLayoutStore } from '@/store/layoutStore'
+import { userStore } from '@/store/userStore'
 import ResourcesIcon from '@/assets/images/resources.svg'
 import DollarIcon from '@/assets/images/dollar.svg'
 import StarIcon from '@/assets/images/star.svg'
 import DownloadIcon from '@/assets/images/download-icon.svg'
 import MoreIcon from '@/assets/images/more.svg'
 
+// @ts-ignore
 export default {
   props: {
     data: {
       type: Object as PropType<Resource>,
       required: true
+    },
+    detailedData: {
+      type: Object,
+      required: true
+    },
+    dataOfUser: {
+      type: Object,
+      default: () => ({})
     }
   },
   components: {
@@ -49,21 +64,42 @@ export default {
     DownloadIcon,
     MoreIcon
   },
-  setup() {
+  setup () {
     return {
       layoutStore: useLayoutStore()
     }
   },
+  mounted () {
+    this.user = userStore().getData()
+  },
   methods: {
-    getColorByPercent(val: number) {
+    getColorByPercent (val: number) {
       if (val < 25) return 'percent_the-lowest'
       if (val < 80) return 'percent_average'
       return 'percent_the-highest'
     },
-    selectResource() {
-      this.layoutStore.setResource(this.data)
-      this.layoutStore.setWideSidebar()
-      this.layoutStore.setContentOfSidebar(SidebarContentComponents.OneDetailedResourcesInSidebar)
+    selectResource () {
+      const tenantId = import.meta.env.DEV
+        ? '3420b906-3ee8-4ed1-8738-ec0ca712d4bb'
+        : this.user.tenantId
+      this.$api
+        .post(`tenants/${tenantId}/analytics/resource_by_user_view_summary`, {
+          userName: this.dataOfUser.created_by,
+          resourceType: this.data.resource_type
+        })
+        .then(res => {
+          const names = res.data.resource_details.map(i => Object.keys(i))
+          let data = res.data.resource_details.map(i => Object.values(i))
+          data = data.map(i => i[0])
+          data.forEach((i, index) => {
+            i.name = names[index][0]
+          })
+          this.layoutStore.setResource(data)
+          this.layoutStore.setWideSidebar()
+          this.layoutStore.setContentOfSidebar(
+            SidebarContentComponents.OneDetailedResourcesInSidebar
+          )
+        })
     }
   }
 }

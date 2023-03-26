@@ -10,3 +10,8 @@ export enum SidebarContentComponents {
   AllResourcesInSidebar,
   OneDetailedResourcesInSidebar,
 }
+
+export enum SortByCost {
+  ASC,
+  DESC,
+}
