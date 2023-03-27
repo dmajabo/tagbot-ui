@@ -184,10 +184,7 @@ export default {
       usersViewSummary: [],
       totalSummaries: 0,
       currentUser: null,
-      drawer: false,
-      tenantId: import.meta.env.DEV
-        ? '3420b906-3ee8-4ed1-8738-ec0ca712d4bb'
-        : this.user.tenantId
+      drawer: false
     }
   },
   setup () {
@@ -202,7 +199,13 @@ export default {
       setLoading: layoutStore.setLoading
     }
   },
-  computed: {},
+  computed: {
+    tenantId () {
+      return import.meta.env.DEV
+        ? '3420b906-3ee8-4ed1-8738-ec0ca712d4bb'
+        : this.user.tenantId
+    }
+  },
   methods: {
     refreshData () {
       this.loadUserViewSummary({})
