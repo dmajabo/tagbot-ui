@@ -17,27 +17,50 @@
       <div class="cost-sorting-block">
         <el-select v-model="sortByCost">
           <el-option
-          v-for="item in costsOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
+            v-for="item in costsOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
           />
         </el-select>
       </div>
     </div>
     <div class="wrapper-resources">
-      <ResourceCard
-        v-for="(item, idx) in filteredResources"
-        :key="idx"
-        :dataOfUser="pickedUser"
-        :data="item"
-      ></ResourceCard>
+      <template v-if="loading">
+        <el-skeleton animated v-for="n in 5" :key="n">
+          <template #template>
+            <el-skeleton-item
+              variant="rect"
+              style="width: 100%; height: 149px"
+            />
+          </template>
+        </el-skeleton>
+      </template>
+      <template v-else-if="layoutStore.loading">
+        <el-skeleton animated>
+          <template #template>
+            <el-skeleton-item
+              variant="rect"
+              style="width: 100%; height: 250px"
+            />
+          </template>
+        </el-skeleton>
+      </template>
+      <template v-else-if="!layoutStore.sidebarIsWide">
+        <ResourceCard
+          v-for="(item, idx) in filteredResources"
+          :key="idx"
+          :dataOfUser="pickedUser"
+          :data="item"
+        ></ResourceCard>
+      </template>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { userStore } from '@/store/userStore'
+import { useLayoutStore } from '@/store/layoutStore'
 import { Resource, SortByCost } from '@/types'
 import ResourceCard from '@/components/common/ResourceCard.vue'
 
@@ -66,6 +89,12 @@ export default {
           label: this.$t('user_view.sort_by_cost_desc')
         }
       ]
+    }
+  },
+  setup() {
+    const layoutStore = useLayoutStore()
+    return {
+      layoutStore
     }
   },
   mounted () {
@@ -116,7 +145,8 @@ export default {
     sortByPercentage: function (newVal: number[]) {
       this.filteredResources = this.resources.filter(
         (item: Resource) =>
-          item.compliance_percentage >= newVal[0] && item.compliance_percentage <= newVal[1]
+          item.compliance_percentage >= newVal[0] &&
+          item.compliance_percentage <= newVal[1]
       )
     }
   }

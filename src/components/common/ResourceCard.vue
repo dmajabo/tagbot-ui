@@ -82,23 +82,32 @@ export default {
       const tenantId = import.meta.env.DEV
         ? '3420b906-3ee8-4ed1-8738-ec0ca712d4bb'
         : this.user.tenantId
+      this.layoutStore.setLoading(true)
+      this.layoutStore.setParentResource(this.data)
       this.$api
         .post(`tenants/${tenantId}/analytics/resource_by_user_view_summary`, {
           userName: this.dataOfUser.created_by,
           resourceType: this.data.resource_type
         })
         .then(res => {
+          this.layoutStore.setLoading(false)
+          this.layoutStore.setWideSidebar()
           const names = res.data.resource_details.map(i => Object.keys(i))
           let data = res.data.resource_details.map(i => Object.values(i))
           data = data.map(i => i[0])
           data.forEach((i, index) => {
             i.name = names[index][0]
           })
-          this.layoutStore.setResource(data)
-          this.layoutStore.setWideSidebar()
-          this.layoutStore.setContentOfSidebar(
-            SidebarContentComponents.OneDetailedResourcesInSidebar
-          )
+          this.$nextTick(() => {
+            this.layoutStore.setResource(data)
+            this.layoutStore.setContentOfSidebar(
+              SidebarContentComponents.OneDetailedResourcesInSidebar
+            )
+          })
+        })
+        .catch(err => {
+          this.layoutStore.setLoading(false)
+          this.$toast.error(err.message)
         })
     }
   }

@@ -10,6 +10,8 @@ export const useLayoutStore = defineStore('layout', {
       sidebarIsWide: false,
       openedResource: null as Resource | null,
       currentContent: AllResourcesInSidebar,
+      loading: false,
+      parentResource: null,
     }
   },
   actions: {
@@ -31,6 +33,12 @@ export const useLayoutStore = defineStore('layout', {
         [SidebarContentComponents.OneDetailedResourcesInSidebar]: OneDetailedResourcesInSidebar,
       }
       this.currentContent = components[nameOfComponent]
+    },
+    setLoading(loading: boolean) {
+      this.loading = loading
+    },
+    setParentResource(data) {
+      this.parentResource = data
     }
   },
 })
