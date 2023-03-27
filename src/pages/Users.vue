@@ -16,7 +16,7 @@
           <SectionActionButton
             :text="$t('common.download_all')"
             type="solid"
-            @click.prevent="refreshData"
+            @click.prevent="downloadAll"
           >
             <DownloadAllIcon />
           </SectionActionButton>
@@ -132,14 +132,14 @@
       v-model="drawer"
       direction="rtl"
       :class="sidebarIsWide ? 'wide-sidebar' : ''"
-      :before-close="handleClose">
+      :before-close="handleClose"
+    >
       <UserViewResourcesSidebar
         :user="currentUser"
-        @close-sidebar="handleClose">
+        @close-sidebar="handleClose('back')"
+      >
         <transition name="slide-fade" appear>
-          <component
-            :is="currentContent"
-            :pickedUser="currentUser" />
+          <component :is="currentContent" :pickedUser="currentUser" />
         </transition>
       </UserViewResourcesSidebar>
     </el-drawer>
@@ -185,9 +185,12 @@ export default {
       totalSummaries: 0,
       currentUser: null,
       drawer: false,
+      tenantId: import.meta.env.DEV
+        ? '3420b906-3ee8-4ed1-8738-ec0ca712d4bb'
+        : this.user.tenantId
     }
   },
-  setup() {
+  setup () {
     const layoutStore = useLayoutStore()
     const { sidebarIsWide, currentContent } = storeToRefs(layoutStore)
     return {
@@ -195,7 +198,8 @@ export default {
       currentContent,
       setSmallSidebar: layoutStore.setSmallSidebar,
       setWideSidebar: layoutStore.setWideSidebar,
-      setContentOfSidebar: layoutStore.setContentOfSidebar
+      setContentOfSidebar: layoutStore.setContentOfSidebar,
+      setLoading: layoutStore.setLoading
     }
   },
   computed: {},
@@ -208,11 +212,8 @@ export default {
     },
     loadUserViewSummary (payload) {
       this.loading = true
-      const tenantId = import.meta.env.DEV
-        ? '3420b906-3ee8-4ed1-8738-ec0ca712d4bb'
-        : this.user.tenantId
       this.$api
-        .post(`tenants/${tenantId}/analytics/user-view-summary`, payload)
+        .post(`tenants/${this.tenantId}/analytics/user-view-summary`, payload)
         .then(response => {
           this.usersViewSummary = response?.data?.users
           this.totalSummaries = response?.data?.total
@@ -227,11 +228,34 @@ export default {
       this.currentUser = data
       this.drawer = true
     },
-    handleClose () {
-      this.drawer = false
-      this.setSmallSidebar()
-      this.setContentOfSidebar(SidebarContentComponents.AllResourcesInSidebar)
+    handleClose (val) {
+      this.setLoading(true)
+      this.$nextTick(() => {
+        if (val === 'back') {
+          if (!this.sidebarIsWide) {
+            this.drawer = false
+          }
+          this.setSmallSidebar()
+          this.setContentOfSidebar(
+            SidebarContentComponents.AllResourcesInSidebar
+          )
+        } else {
+          this.setSmallSidebar()
+          this.drawer = false
+          this.setContentOfSidebar(
+            SidebarContentComponents.AllResourcesInSidebar
+          )
+        }
+        this.setLoading(false)
+      })
     },
+    downloadAll () {
+      this.$api
+        .get(`tenants/${this.tenantId}/analytics/user-resource-summary`)
+        .then(res => {
+          console.log(res)
+        })
+    }
   },
   mounted () {
     var self = this
@@ -268,7 +292,7 @@ export default {
 }
 
 .el-overlay {
-  background-color: rgba(3, 37, 81, 0.4)!important;
+  background-color: rgba(3, 37, 81, 0.4) !important;
 }
 </style>
 

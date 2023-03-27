@@ -1,107 +1,143 @@
 <template>
-  <div v-for="(res, idx) in openedResource" :key="idx" class="wrapper-one-resource">
-    <div class="description-bar">
-      <div class="logo-block">
-        <FirstIcon class="logo-icon" />
-        {{ res.name }}
-      </div>
-      <div class="info">
-        <div class="resources">
-          <ResourcesIcon class="resources-icon" />
-          {{ res.items.length }} {{ $t('user_view.resources') }}
+  <div class="wrapper-one-resource">
+    <template v-if="loading">
+      <el-skeleton animated>
+        <template #template>
+          <el-skeleton-item variant="rect" style="width: 100%; height: 250px" />
+        </template>
+      </el-skeleton>
+    </template>
+    <template v-else>
+      <div class="description-bar">
+        <div class="logo-block">
+          <img
+            v-if="parentResource.image_url"
+            :src="`/AWS_Icon_Svg/${parentResource.image_url}`"
+            alt=""
+            class="logo-icon"
+          />
+          {{ parentResource.resource_type }}
         </div>
-        <div class="spent">
-          <DollarIcon class="dollar-icon" />
-          ~{{ res.cost }}$ {{ $t('user_view.spent_per_bucket') }}
-        </div>
-        <div class="tag-percent">
-          <CertificateIcon class="certificate-icon" />
-          <span :class="['bold', getColorByPercent(24)]">
-            {{ res.tag_compliancy }}%
-          </span>
-          {{ $t('user_view.tag_compliancy') }}
-        </div>
-        <div class="total-cost">{{ $t('user_view.total_cost') }} - {{ res.cost }}$</div>
-      </div>
-    </div>
-    <div class="content-res">
-      <div class="resource-tag">
-        <div class="header-bar">
-          <div class="name">{{ res.name }}</div>
-          <div class="extra-info">
-            <div class="spent">
-              <DollarIcon class="dollar-icon" />
-              ?? $
-            </div>
-            <div class="location">
-              <LocationIcon class="location-icon" />
-              {{ res.region }}
-            </div>
-            <div class="user">
-              <UserIcon class="user-icon" />
-              ???
-            </div>
+        <div class="info">
+          <div class="resources">
+            <ResourcesIcon class="resources-icon" />
+            {{ parentResource.count }} {{ $t('user_view.resources') }}
           </div>
-        </div>
-        <div class="header-bar">
-          <div class="type">EC2</div>
-        </div>
-        <div class="resource-line"></div>
-        <div class="resource-table">
-          <div class="resource-column">
-            <div class="resource-table-header">
-              {{ $t('user_view.tag_key_tracked') }}
-            </div>
-            <div v-for="(item, idx) in res.items" :key="idx">{{ item.name }}</div>
+          <div class="spent">
+            <DollarIcon class="dollar-icon" />
+            ~{{ parentResource.amount_spent }}$
+            {{ $t('user_view.spent_per_bucket') }}
           </div>
-          <div class="resource-column">
-            <div class="resource-table-header">
-              {{ $t('user_view.tags_used') }}
-            </div>
-            <div v-for="(item, idx) in res.items" :key="idx">{{ item.tag_key_used }}</div>
+          <div class="tag-percent">
+            <CertificateIcon class="certificate-icon" />
+            <span :class="['bold', getColorByPercent(parentResource.compliance_percentage)]">
+              {{ parentResource.compliance_percentage }}%
+            </span>
+            {{ $t('user_view.tag_compliancy') }}
           </div>
-          <div class="resource-column">
-            <div class="resource-table-header">
-              {{ $t('user_view.compliant') }}
-            </div>
-            <div v-for="(item, idx) in res.items"
-              :key="idx"
-              :class="item.tag_key_compliant === 'TRUE' ? 'yes' : ''">
-              {{ item.tag_key_compliant }}
-            </div>
-          </div>
-          <div class="resource-column">
-            <div class="resource-table-header">
-              {{ $t('user_view.values_tracked') }}
-            </div>
-            <div v-for="(item, idx) in res.items" :key="idx">{{ item.tag_values }}</div>
-          </div>
-          <div class="resource-column">
-            <div class="resource-table-header">
-              {{ $t('user_view.values_used') }}
-            </div>
-            <div v-for="(item, idx) in res.items" :key="idx">{{ item.tag_value_used }}</div>
-          </div>
-          <div class="resource-column">
-            <div class="resource-table-header">
-              {{ $t('user_view.compliant') }}
-            </div>
-            <div v-for="(item, idx) in res.items"
-              :key="idx"
-              :class="item.tag_key_compliant === 'TRUE' ? 'yes' : ''">
-              {{ item.tag_value_compliant }}
-            </div>
+          <div class="total-cost">
+            {{ $t('user_view.total_cost') }} - {{ parentResource.amount_spent }}$
           </div>
         </div>
       </div>
-    </div>
+      <div v-for="(res, idx) in openedResource" :key="idx" class="content-res">
+        <div class="resource-tag">
+          <div class="header-bar">
+            <div class="name">{{ res.name }}</div>
+            <div class="extra-info">
+              <div class="spent">
+                <DollarIcon class="dollar-icon" />
+                {{ res.cost }} $
+              </div>
+              <div class="location">
+                <LocationIcon class="location-icon" />
+                {{ res.region }}
+              </div>
+              <div class="user">
+                <CertificateIcon class="certificate-icon" />
+                {{ res.tag_compliance }}
+              </div>
+            </div>
+          </div>
+          <div class="header-bar">
+            <div class="type">
+              {{
+                openedResource[0]?.items[0]?.resource_type.match(/::(.*)::/)[1]
+              }}
+            </div>
+          </div>
+          <div class="resource-line"></div>
+          <div class="resource-table">
+            <div class="resource-column">
+              <div class="resource-table-header">
+                {{ $t('user_view.tag_key_tracked') }}
+              </div>
+              <div v-for="(item, idx) in res.items" :key="idx">
+                {{ item.tag_key }}
+              </div>
+            </div>
+            <div class="resource-column">
+              <div class="resource-table-header">
+                {{ $t('user_view.tags_used') }}
+              </div>
+              <div v-for="(item, idx) in res.items" :key="idx">
+                {{ item.tag_key_used }}
+              </div>
+            </div>
+            <div class="resource-column">
+              <div class="resource-table-header">
+                {{ $t('user_view.compliant') }}
+              </div>
+              <div
+                v-for="(item, idx) in res.items"
+                :key="idx"
+                :class="
+                  getYesNoWord(item.tag_key_compliant).toLocaleLowerCase()
+                "
+              >
+                {{ this.getYesNoWord(item.tag_key_compliant) }}
+              </div>
+            </div>
+            <div class="resource-column">
+              <div class="resource-table-header">
+                {{ $t('user_view.values_tracked') }}
+              </div>
+              <div v-for="(item, idx) in res.items" :key="idx">
+                {{ item.tag_values }}
+              </div>
+            </div>
+            <div class="resource-column">
+              <div class="resource-table-header">
+                {{ $t('user_view.values_used') }}
+              </div>
+              <div v-for="(item, idx) in res.items" :key="idx">
+                {{ item.tag_value_used }}
+              </div>
+            </div>
+            <div class="resource-column">
+              <div class="resource-table-header">
+                {{ $t('user_view.compliant') }}
+              </div>
+              <div
+                v-for="(item, idx) in res.items"
+                :key="idx"
+                :class="
+                  getYesNoWord(item.tag_value_compliant).toLocaleLowerCase()
+                "
+              >
+                {{ this.getYesNoWord(item.tag_value_compliant) }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
 <script lang="ts">
 import { useLayoutStore } from '@/store/layoutStore'
 
-import FirstIcon from '../../assets/images/1.svg'
 import ResourcesIcon from '../../assets/images/resources.svg'
 import DollarIcon from '../../assets/images/dollar.svg'
 import CertificateIcon from '../../assets/images/certificate.svg'
@@ -110,17 +146,18 @@ import UserIcon from '../../assets/images/user.svg'
 
 export default {
   components: {
-    FirstIcon,
     ResourcesIcon,
     DollarIcon,
     CertificateIcon,
     LocationIcon,
     UserIcon
   },
-  setup() {
+  setup () {
     const layoutStore = useLayoutStore()
     return {
-      openedResource: layoutStore.openedResource
+      openedResource: layoutStore.openedResource,
+      loading: layoutStore.loading,
+      parentResource: layoutStore.parentResource
     }
   },
   methods: {
@@ -128,6 +165,9 @@ export default {
       if (val < 50) return 'percent_the-lowest'
       if (val < 85) return 'percent_average'
       return 'percent_the-highest'
+    },
+    getYesNoWord (val: string) {
+      return val === 'TRUE' ? 'Yes' : val === 'FALSE' ? 'No' : val
     }
   }
 }
@@ -150,6 +190,11 @@ export default {
   display: flex;
   align-items: center;
   column-gap: 8px;
+}
+
+.logo-icon {
+  width: 24px;
+  height: 24px;
 }
 
 .info {
@@ -212,6 +257,7 @@ export default {
 }
 
 .name {
+  width: auto;
   font-size: 24px;
   font-weight: 400;
   line-height: 29px;
