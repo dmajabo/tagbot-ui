@@ -199,7 +199,13 @@ export default {
       setLoading: layoutStore.setLoading
     }
   },
-  computed: {},
+  computed: {
+    tenantId () {
+      return import.meta.env.DEV
+        ? '3420b906-3ee8-4ed1-8738-ec0ca712d4bb'
+        : this.user.tenantId
+    }
+  },
   methods: {
     refreshData () {
       this.loadUserViewSummary({})
@@ -208,9 +214,6 @@ export default {
       this.loadResources({})
     },
     loadUserViewSummary (payload) {
-      import.meta.env.DEV
-        ? '3420b906-3ee8-4ed1-8738-ec0ca712d4bb'
-        : this.user.tenantId
       this.loading = true
       this.$api
         .post(`tenants/${this.tenantId}/analytics/user-view-summary`, payload)
@@ -250,11 +253,11 @@ export default {
       })
     },
     downloadAll () {
-      // this.$api
-      //   .get(`tenants/${this.tenantId}/analytics/user-resource-summary`)
-      //   .then(res => {
-      //     console.log(res)
-      //   })
+      this.$api
+        .get(`tenants/${this.tenantId}/analytics/user-resource-summary`)
+        .then(res => {
+          console.log(res)
+        })
     }
   },
   mounted () {
