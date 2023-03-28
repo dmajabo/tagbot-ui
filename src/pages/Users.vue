@@ -161,7 +161,6 @@ import { useLayoutStore } from '../store/layoutStore'
 import RefreshIcon from '../assets/images/refresh-icon.svg'
 import DownloadAllIcon from '../assets/images/download-icon.svg'
 import UserViewResourcesSidebar from '../components/dashboard/UserViewResourcesSidebar.vue'
-import axios from 'axios'
 
 export default {
   data () {
