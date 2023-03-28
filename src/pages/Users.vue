@@ -161,6 +161,7 @@ import { useLayoutStore } from '../store/layoutStore'
 import RefreshIcon from '../assets/images/refresh-icon.svg'
 import DownloadAllIcon from '../assets/images/download-icon.svg'
 import UserViewResourcesSidebar from '../components/dashboard/UserViewResourcesSidebar.vue'
+import axios from 'axios'
 
 export default {
   data () {
@@ -254,10 +255,15 @@ export default {
     },
     downloadAll () {
       this.$api
-        .get(`tenants/${this.tenantId}/analytics/user-resource-summary`)
+        .post(`tenants/${this.tenantId}/analytics/user-resource-summary/download`, {})
         .then(res => {
-          console.log(res)
+          let blob = new Blob([res.data], { type: 'application/csv' })
+          let link = document.createElement('a')
+          link.href = window.URL.createObjectURL(blob)
+          link.download = 'user-resource-summary.csv'
+          link.click()
         })
+
     }
   },
   mounted () {
