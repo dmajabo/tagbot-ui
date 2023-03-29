@@ -7,7 +7,7 @@
         alt=""
         class="resource-logo"
       />
-      <div class="name">{{ data.resource_type }}</div>
+      <div class="name">{{ data.resource_type?.replace(/::/g, ' ') }}</div>
       <div class="more">
         <MoreIcon />
       </div>

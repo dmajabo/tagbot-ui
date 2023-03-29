@@ -9,7 +9,7 @@
       <div class="main-details">
         <div v-if="user" class="details">
           <div class="email">{{ user.created_by }}</div>
-          <div class="details-row">
+          <div v-if="!layoutStore.sidebarIsWide" class="details-row">
             <div class="resources">
               <ResourcesIcon class="resources-icon" />
               {{ user.count }} {{ $t('user_view.resources') }}
@@ -43,12 +43,14 @@
 </template>
 
 <script lang="ts">
-import GoBackIcon from '../../assets/images/go-back.svg'
-import SectionActionButton from '../common/SectionActionButton.vue'
-import DownloadAllIcon from '../../assets/images/download-icon.svg'
-import ResourcesIcon from '../../assets/images/resources.svg'
-import DollarIcon from '../../assets/images/dollar.svg'
-import StarIcon from '../../assets/images/star.svg'
+import { useLayoutStore } from '@/store/layoutStore'
+
+import GoBackIcon from '@/assets/images/go-back.svg'
+import SectionActionButton from '@/components/common/SectionActionButton.vue'
+import DownloadAllIcon from '@/assets/images/download-icon.svg'
+import ResourcesIcon from '@/assets/images/resources.svg'
+import DollarIcon from '@/assets/images/dollar.svg'
+import StarIcon from '@/assets/images/star.svg'
 
 export default {
   components: {
@@ -63,6 +65,12 @@ export default {
     user: {
       type: Object,
       required: true
+    }
+  },
+  setup() {
+    const layoutStore = useLayoutStore()
+    return {
+      layoutStore
     }
   },
   methods: {

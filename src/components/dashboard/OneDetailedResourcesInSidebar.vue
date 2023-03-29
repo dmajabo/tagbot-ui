@@ -16,7 +16,7 @@
             alt=""
             class="logo-icon"
           />
-          {{ parentResource.resource_type }}
+          {{ parentResource.resource_type?.replace(/::/g, ' ') }}
         </div>
         <div class="info">
           <div class="resources">
@@ -34,9 +34,6 @@
               {{ parentResource.compliance_percentage }}%
             </span>
             {{ $t('user_view.tag_compliancy') }}
-          </div>
-          <div class="total-cost">
-            {{ $t('user_view.total_cost') }} - {{ parentResource.amount_spent }}$
           </div>
         </div>
       </div>
@@ -311,7 +308,18 @@ export default {
 .resource-column {
   display: flex;
   flex-direction: column;
-  row-gap: 12px;
+  row-gap: 4px;
+}
+
+.resource-column > div {
+  display: flex;
+  align-items: center;
+  height: 24px;
+  vertical-align: middle;
+}
+
+.resource-column > div:nth-child(even) {
+  background-color: #f6f6f6;
 }
 
 .resource-text {
