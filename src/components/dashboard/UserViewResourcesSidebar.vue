@@ -20,7 +20,7 @@
             </div>
             <div class="tag-percent">
               <StarIcon class="star-icon" />
-              <span :class="['bold', getColorByPercent(user.compliance_percentage)]">
+              <span :class="['bold', getColourByPercent(user.compliance_percentage)]">
                 {{ user.compliance_percentage }}%
               </span>
               {{ $t('user_view.tag_standard') }}
@@ -44,6 +44,7 @@
 
 <script lang="ts">
 import { useLayoutStore } from '@/store/layoutStore'
+import useColoursByPercentage from '@/hooks/useColoursByPercentage'
 
 import GoBackIcon from '@/assets/images/go-back.svg'
 import SectionActionButton from '@/components/common/SectionActionButton.vue'
@@ -70,14 +71,8 @@ export default {
   setup() {
     const layoutStore = useLayoutStore()
     return {
-      layoutStore
-    }
-  },
-  methods: {
-    getColorByPercent(val: number) {
-      if (val < 50) return 'percent_the-lowest'
-      if (val < 85) return 'percent_average'
-      return 'percent_the-highest'
+      layoutStore,
+      getColourByPercent: useColoursByPercentage().getColourByPercent
     }
   }
 }

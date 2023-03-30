@@ -23,56 +23,30 @@
         </div>
       </div>
       <div class="main-dashboard">
-        <div class="dropdown-blocks">
+        <div class="filter-bar">
           <div class="flex-dropdown">
-            <el-select
-              v-model="selectedUser"
-              :disabled="users.length === 0"
-              size="large"
-              filterable
-              clearable
-              placeholder="Users"
-              class="m-2 ml-0"
-            >
-              <el-option
-                v-for="item in users"
-                :key="item.email"
-                :label="getEmail(item.email)"
-                :value="item.email"
-              />
-            </el-select>
-
-            <el-select
-              v-model="selectedAccount"
-              :disabled="accounts.length === 0"
-              size="large"
-              filterable
-              clearable
-              placeholder="Accounts"
-              class="m-2"
-            >
-              <el-option
-                v-for="item in accounts"
-                :key="item.accountNumber"
-                :label="item.accountNumber"
-                :value="item.accountNumber"
-              />
-            </el-select>
-            <el-button
-              @click.prevent="queryResources()"
-              size="large"
-              type="primary"
-              :loading="loading"
-              class="m-2"
-            >
-              {{ $t('common.apply') }}
-            </el-button>
+            <FilterSelect
+              v-if="usersViewSummary.length"
+              :placeholder="`All users (${usersViewSummary.length})`"
+              :initialOptions="usersNames"
+              :totalCount="usersViewSummary?.length"
+              :showingCount="filteredUsers.length"
+              v-model:selectedValues="usersNamesFiltered"
+              v-model:include="include"
+            />
           </div>
-          <div class="sort-dropdown-block">
-            <select class="sort-dropdown">
-              <option class="dropdown-all-acc">Sort: A - Z</option>
-              <option class="dropdown-all-acc">Sort: Z - A</option>
-            </select>
+          <div class="tag-compliance-block">
+            <el-slider v-model="sortByPercentage" range :max="100" />
+          </div>
+          <div class="cost-sorting-block">
+            <el-select v-model="sortByCost">
+              <el-option
+                v-for="item in costsOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
           </div>
         </div>
 
@@ -90,7 +64,7 @@
             </template>
             <template v-else>
               <Tile
-                v-for="(tile, idx) in usersViewSummary"
+                v-for="(tile, idx) in filteredUsers"
                 :key="idx"
                 :data="tile"
                 @click="openUserResources(tile)"
@@ -149,18 +123,20 @@
 
 <script lang="ts">
 import { ElDrawer } from 'element-plus'
-import { userStore } from '../store/userStore'
-import Empty from '../components/common/Empty.vue'
-import { SidebarContentComponents } from '@/types'
+import { userStore } from '@/store/userStore'
+import Empty from '@/components/common/Empty.vue'
+import { SidebarContentComponents, SortByCost } from '@/types'
 import { storeToRefs } from 'pinia'
-import ResourcesModal from '../components/dashboard/ResourcesModal.vue'
-import SectionActionButton from '../components/common/SectionActionButton.vue'
-import Tile from '../components/common/Tile.vue'
-import { useLayoutStore } from '../store/layoutStore'
+import ResourcesModal from '@/components/dashboard/ResourcesModal.vue'
+import SectionActionButton from '@/components/common/SectionActionButton.vue'
+import Tile from '@/components/common/Tile.vue'
+import { useLayoutStore } from '@/store/layoutStore'
+import partition from 'lodash/partition'
 
-import RefreshIcon from '../assets/images/refresh-icon.svg'
-import DownloadAllIcon from '../assets/images/download-icon.svg'
-import UserViewResourcesSidebar from '../components/dashboard/UserViewResourcesSidebar.vue'
+import RefreshIcon from '@/assets/images/refresh-icon.svg'
+import DownloadAllIcon from '@/assets/images/download-icon.svg'
+import UserViewResourcesSidebar from '@/components/dashboard/UserViewResourcesSidebar.vue'
+import FilterSelect from '@/components/common/FilterSelect.vue'
 
 export default {
   data () {
@@ -184,7 +160,22 @@ export default {
       usersViewSummary: [],
       totalSummaries: 0,
       currentUser: null,
-      drawer: false
+      drawer: false,
+      usersNamesFiltered: [],
+      include: 'includes',
+      filteredUsers: [],
+      sortByCost: SortByCost.ASC,
+      sortByPercentage: [0, 100] as number[],
+      costsOptions: [
+        {
+          value: SortByCost.ASC,
+          label: this.$t('user_view.sort_by_cost_asc')
+        },
+        {
+          value: SortByCost.DESC,
+          label: this.$t('user_view.sort_by_cost_desc')
+        }
+      ]
     }
   },
   setup () {
@@ -204,6 +195,9 @@ export default {
       return import.meta.env.DEV
         ? '3420b906-3ee8-4ed1-8738-ec0ca712d4bb'
         : this.user.tenantId
+    },
+    usersNames () {
+      return this.usersViewSummary.map(i => i.created_by)
     }
   },
   methods: {
@@ -219,6 +213,7 @@ export default {
         .post(`tenants/${this.tenantId}/analytics/user-view-summary`, payload)
         .then(response => {
           this.usersViewSummary = response?.data?.users
+          this.filteredUsers = this.usersViewSummary
           this.totalSummaries = response?.data?.total
           this.loading = false
         })
@@ -231,30 +226,30 @@ export default {
       this.currentUser = data
       this.drawer = true
     },
-    handleClose (val) {
+    async handleClose (val) {
       this.setLoading(true)
-      this.$nextTick(() => {
-        if (val === 'back') {
-          if (!this.sidebarIsWide) {
-            this.drawer = false
-          }
-          this.setSmallSidebar()
-          this.setContentOfSidebar(
-            SidebarContentComponents.AllResourcesInSidebar
-          )
-        } else {
-          this.setSmallSidebar()
+      await this.$nextTick()
+      if (val === 'back') {
+        this.setContentOfSidebar(SidebarContentComponents.AllResourcesInSidebar)
+        await this.$nextTick()
+        if (!this.sidebarIsWide) {
           this.drawer = false
-          this.setContentOfSidebar(
-            SidebarContentComponents.AllResourcesInSidebar
-          )
         }
-        this.setLoading(false)
-      })
+        await this.$nextTick()
+        this.setSmallSidebar()
+      } else {
+        this.setSmallSidebar()
+        this.drawer = false
+        this.setContentOfSidebar(SidebarContentComponents.AllResourcesInSidebar)
+      }
+      this.setLoading(false)
     },
     downloadAll () {
       this.$api
-        .post(`tenants/${this.tenantId}/analytics/user-resource-summary/download`, {})
+        .post(
+          `tenants/${this.tenantId}/analytics/user-resource-summary/download`,
+          {}
+        )
         .then(res => {
           let blob = new Blob([res.data], { type: 'application/csv' })
           let link = document.createElement('a')
@@ -262,7 +257,35 @@ export default {
           link.download = 'user-resource-summary.csv'
           link.click()
         })
-
+    },
+    // TODO: remove dublicate code. Use the mixin or vue3 hooks instead
+    updateFiltering () {
+      // this.usersFiltered =
+      let res = []
+      // sorting by cost
+      if (this.sortByCost === SortByCost.ASC) {
+        res = this.usersViewSummary.sort(
+          (a, b) => b.amount_spent - a.amount_spent
+        )
+      } else {
+        res = this.usersViewSummary.sort(
+          (a, b) => a.amount_spent - b.amount_spent
+        )
+      }
+      // filtering by tag compliance
+      res = res.filter(
+        (item: Resource) =>
+          item.compliance_percentage >= this.sortByPercentage[0] &&
+          item.compliance_percentage <= this.sortByPercentage[1]
+      )
+      res = partition(res, i => {
+        return this.usersNamesFiltered.includes(i.created_by)
+      })
+      if (this.include === 'includes') {
+        this.filteredUsers = res[0]
+      } else {
+        this.filteredUsers = res[1]
+      }
     }
   },
   mounted () {
@@ -277,6 +300,21 @@ export default {
       self.loadData()
     }
   },
+  // TODO: remake it by usign vue3 setup watch
+  watch: {
+    sortByCost () {
+      this.updateFiltering()
+    },
+    sortByPercentage () {
+      this.updateFiltering()
+    },
+    usersNamesFiltered () {
+      this.updateFiltering()
+    },
+    include () {
+      this.updateFiltering()
+    }
+  },
   components: {
     ResourcesModal,
     Empty,
@@ -285,7 +323,8 @@ export default {
     DownloadAllIcon,
     Tile,
     UserViewResourcesSidebar,
-    ElDrawer
+    ElDrawer,
+    FilterSelect
   }
 }
 </script>
@@ -317,5 +356,19 @@ export default {
   grid-template-rows: auto;
   margin-top: 20px;
   margin-bottom: 200px;
+}
+
+.filter-bar {
+  display: flex;
+  justify-content: flex-start;
+  column-gap: 24px;
+}
+
+.tag-compliance-block {
+  width: 194px;
+}
+
+.cost-sorting-block {
+  max-width: 138px;
 }
 </style>

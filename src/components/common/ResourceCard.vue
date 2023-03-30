@@ -22,7 +22,7 @@
     </div>
     <div class="tag-percent">
       <StarIcon class="star-icon" />
-      <span :class="['bold', getColorByPercent(data.compliance_percentage)]">
+      <span :class="['bold', getColourByPercent(data.compliance_percentage)]">
         {{ data.compliance_percentage }}%
       </span>
       {{ $t('user_view.tag_compliancy') }}
@@ -35,6 +35,7 @@ import { PropType } from 'vue'
 import { Resource, SidebarContentComponents } from '@/types'
 import { useLayoutStore } from '@/store/layoutStore'
 import { userStore } from '@/store/userStore'
+import useColoursByPercentage from '@/hooks/useColoursByPercentage'
 import ResourcesIcon from '@/assets/images/resources.svg'
 import DollarIcon from '@/assets/images/dollar.svg'
 import StarIcon from '@/assets/images/star.svg'
@@ -46,10 +47,6 @@ export default {
   props: {
     data: {
       type: Object as PropType<Resource>,
-      required: true
-    },
-    detailedData: {
-      type: Object,
       required: true
     },
     dataOfUser: {
@@ -66,18 +63,14 @@ export default {
   },
   setup () {
     return {
-      layoutStore: useLayoutStore()
+      layoutStore: useLayoutStore(),
+      getColourByPercent: useColoursByPercentage().getColourByPercent
     }
   },
   mounted () {
     this.user = userStore().getData()
   },
   methods: {
-    getColorByPercent (val: number) {
-      if (val < 25) return 'percent_the-lowest'
-      if (val < 80) return 'percent_average'
-      return 'percent_the-highest'
-    },
     selectResource () {
       const tenantId = import.meta.env.DEV
         ? '3420b906-3ee8-4ed1-8738-ec0ca712d4bb'

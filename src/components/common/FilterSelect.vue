@@ -17,12 +17,7 @@
           <span class="el-input__suffix">
             <span class="el-input__suffix-inner">
               <i :class="`el-icon el-select__caret el-select__icon ${active && 'is-reverse'}`">
-                <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    fill="currentColor"
-                    d="M831.872 340.864 512 652.672 192.128 340.864a30.592 30.592 0 0 0-42.752 0 29.12 29.12 0 0 0 0 41.6L489.664 714.24a32 32 0 0 0 44.672 0l340.288-331.712a29.12 29.12 0 0 0 0-41.728 30.592 30.592 0 0 0-42.752 0z"
-                  ></path>
-                </svg>
+                <CavetIcon />
               </i>
             </span>
           </span>
@@ -34,14 +29,18 @@
         :model-value="include"
         @change="$emit('update:include', $event)"
         class="type-of-including-group">
-        <el-radio label="includes" size="large">Includes</el-radio>
-        <el-radio label="excludes" size="large">Excludes</el-radio>
+        <el-radio label="includes" size="large">{{ $t('filter_select.include') }}</el-radio>
+        <el-radio label="excludes" size="large">{{ $t('filter_select.exclude') }}</el-radio>
       </el-radio-group>
       <div class="input-wrapper">
         <el-input v-model="input" :placeholder="inputPlaceholder" />
       </div>
       <div class="checkbox-group">
-        <el-checkbox v-if="showedOptions.length" v-model="selectAll" label="Select all" />
+        <el-checkbox
+          v-if="showedOptions.length"
+          :model-value="selectAll"
+          @change="selectHandler"
+          :label="$t('filter_select.select_all')" />
         <el-checkbox-group v-model="checkList">
           <el-checkbox
             class="one-line-text"
@@ -63,7 +62,12 @@
 import { ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 
+import CavetIcon from '@/assets/images/cavet.svg'
+
 export default {
+  components: {
+    CavetIcon
+  },
   props: {
     placeholder: String,
     inputPlaceholder: String,
@@ -71,7 +75,7 @@ export default {
     totalCount: Number,
     showingCount: Number,
     selectedValues: Array,
-    include: Boolean,
+    include: String,
   },
   emits: ['update:selectedValues', 'update:include'],
   setup() {
@@ -89,7 +93,7 @@ export default {
       input: '',
       selectAll: true,
       checkList: [...this.initialOptions],
-      options: this.initialOptions.map(i => ({ label: i, show: true }))
+      options: this.initialOptions.map(i => ({ label: i, show: true })),
     }
   },
   computed: {
@@ -119,6 +123,17 @@ export default {
   methods: {
     toggle () {
       this.active = !this.active
+    },
+    selectHandler(val) {
+      this.selectAll = val
+      if (this.selectAll) {
+        this.options.forEach(i => {
+          if (i.show && !this.checkList.includes(i.label)) {
+            this.checkList.push(i.label)
+          }
+        })
+      }
+      this.$emit('update:selectedValues', [...this.checkList])
     }
   }
 }
@@ -157,7 +172,7 @@ export default {
 .type-of-including-group {
   display: flex;
   flex-direction: column;
-  align-items: start;
+  align-items: flex-start;
 }
 
 .input-wrapper:hover {
@@ -177,7 +192,7 @@ export default {
   overflow: hidden;
 }
 
-.one-line-text /deep/ .el-checkbox__label {
+.one-line-text :deep() .el-checkbox__label {
   width: 100%;
   white-space: nowrap;
   overflow: hidden;

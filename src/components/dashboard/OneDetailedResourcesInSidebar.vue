@@ -30,7 +30,7 @@
           </div>
           <div class="tag-percent">
             <CertificateIcon class="certificate-icon" />
-            <span :class="['bold', getColorByPercent(parentResource.compliance_percentage)]">
+            <span :class="['bold', getColourByPercent(parentResource.compliance_percentage)]">
               {{ parentResource.compliance_percentage }}%
             </span>
             {{ $t('user_view.tag_compliancy') }}
@@ -134,12 +134,13 @@
 
 <script lang="ts">
 import { useLayoutStore } from '@/store/layoutStore'
+import useColoursByPercentage from '@/hooks/useColoursByPercentage'
 
-import ResourcesIcon from '../../assets/images/resources.svg'
-import DollarIcon from '../../assets/images/dollar.svg'
-import CertificateIcon from '../../assets/images/certificate.svg'
-import LocationIcon from '../../assets/images/location.svg'
-import UserIcon from '../../assets/images/user.svg'
+import ResourcesIcon from '@/assets/images/resources.svg'
+import DollarIcon from '@/assets/images/dollar.svg'
+import CertificateIcon from '@/assets/images/certificate.svg'
+import LocationIcon from '@/assets/images/location.svg'
+import UserIcon from '@/assets/images/user.svg'
 
 export default {
   components: {
@@ -154,15 +155,11 @@ export default {
     return {
       openedResource: layoutStore.openedResource,
       loading: layoutStore.loading,
-      parentResource: layoutStore.parentResource
+      parentResource: layoutStore.parentResource,
+      getColourByPercent: useColoursByPercentage().getColourByPercent
     }
   },
   methods: {
-    getColorByPercent (val: number) {
-      if (val < 50) return 'percent_the-lowest'
-      if (val < 85) return 'percent_average'
-      return 'percent_the-highest'
-    },
     getYesNoWord (val: string) {
       return val === 'TRUE' ? 'Yes' : val === 'FALSE' ? 'No' : val
     }

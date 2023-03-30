@@ -133,6 +133,7 @@ export default {
         userName: this.pickedUser.created_by
       })
     },
+    // TODO: remove dublicate code. Use the mixin or vue3 hooks instead
     updateFiltering() {
       let res = []
       // sorting by cost
@@ -161,6 +162,7 @@ export default {
       }
     }
   },
+  // TODO: remake it by usign vue3 setup watch
   watch: {
     pickedUser: function (newVal: Resource) {
       if (!newVal) {
