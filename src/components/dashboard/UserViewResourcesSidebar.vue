@@ -9,7 +9,7 @@
       <div class="main-details">
         <div v-if="user" class="details">
           <div class="email">{{ user.created_by }}</div>
-          <div class="details-row">
+          <div v-if="!layoutStore.sidebarIsWide" class="details-row">
             <div class="resources">
               <ResourcesIcon class="resources-icon" />
               {{ user.count }} {{ $t('user_view.resources') }}
@@ -20,7 +20,7 @@
             </div>
             <div class="tag-percent">
               <StarIcon class="star-icon" />
-              <span :class="['bold', getColorByPercent(user.compliance_percentage)]">
+              <span :class="['bold', getColourByPercent(user.compliance_percentage)]">
                 {{ user.compliance_percentage }}%
               </span>
               {{ $t('user_view.tag_standard') }}
@@ -43,12 +43,15 @@
 </template>
 
 <script lang="ts">
-import GoBackIcon from '../../assets/images/go-back.svg'
-import SectionActionButton from '../common/SectionActionButton.vue'
-import DownloadAllIcon from '../../assets/images/download-icon.svg'
-import ResourcesIcon from '../../assets/images/resources.svg'
-import DollarIcon from '../../assets/images/dollar.svg'
-import StarIcon from '../../assets/images/star.svg'
+import { useLayoutStore } from '@/store/layoutStore'
+import useColoursByPercentage from '@/hooks/useColoursByPercentage'
+
+import GoBackIcon from '@/assets/images/go-back.svg'
+import SectionActionButton from '@/components/common/SectionActionButton.vue'
+import DownloadAllIcon from '@/assets/images/download-icon.svg'
+import ResourcesIcon from '@/assets/images/resources.svg'
+import DollarIcon from '@/assets/images/dollar.svg'
+import StarIcon from '@/assets/images/star.svg'
 
 export default {
   components: {
@@ -65,11 +68,11 @@ export default {
       required: true
     }
   },
-  methods: {
-    getColorByPercent(val: number) {
-      if (val < 50) return 'percent_the-lowest'
-      if (val < 85) return 'percent_average'
-      return 'percent_the-highest'
+  setup() {
+    const layoutStore = useLayoutStore()
+    return {
+      layoutStore,
+      getColourByPercent: useColoursByPercentage().getColourByPercent
     }
   }
 }

@@ -25,10 +25,12 @@
 </template>
 
 <script lang="ts">
-import ResourcesIcon from '../../assets/images/resources.svg'
-import DollarIcon from '../../assets/images/dollar.svg'
-import StarIcon from '../../assets/images/star.svg'
-import DownloadIcon from '../../assets/images/download-icon.svg'
+import useColoursByPercentage from '@/hooks/useColoursByPercentage'
+
+import ResourcesIcon from '@/assets/images/resources.svg'
+import DollarIcon from '@/assets/images/dollar.svg'
+import StarIcon from '@/assets/images/star.svg'
+import DownloadIcon from '@/assets/images/download-icon.svg'
 
 export default {
   props: {

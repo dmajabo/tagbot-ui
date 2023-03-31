@@ -122,7 +122,6 @@
     "tag_standard": "tag standard",
     "tag_compliancy": "tag compliancy",
     "go_back_text": "Go back to resources",
-    "total_cost": "total cost",
     "tag_key_tracked": "Tag keys tracked",
     "tags_used": "Tags used",
     "compliant": "Compliant",
@@ -131,5 +130,10 @@
     "resources_label": "Resources",
     "sort_by_cost_asc": "Highest cost",
     "sort_by_cost_desc": "Lowest cost"
+  },
+  "filter_select": {
+    "include": "Includes",
+    "exclude": "Excludes",
+    "select_all": "Select all"
   }
 }

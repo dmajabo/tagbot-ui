@@ -1,16 +1,18 @@
 <template>
   <div class="wrapper-all-resources">
     <div class="filter-bar">
-      <!-- <div class="resource-filtering-block">
-        <el-select v-model="selectedResourceType">
-          <el-option
-            v-for="item in resourceTypes"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+      <div class="resource-filtering-block">
+        <FilterSelect
+          v-if="resourcesNames.length"
+          :placeholder="`All resources (${resources?.length})`"
+          input-placeholder="Search Resources"
+          :initialOptions="resourcesNames"
+          :totalCount="resources?.length"
+          :showingCount="filteredResources.length"
+          v-model:selectedValues="resourcesNamesFiltered"
+          v-model:include="include"
           />
-        </el-select>
-      </div> -->
+      </div>
       <div class="tag-compliance-block">
         <el-slider v-model="sortByPercentage" range :max="100" />
       </div>
@@ -59,14 +61,17 @@
 </template>
 
 <script lang="ts">
+import partition from 'lodash/partition'
 import { userStore } from '@/store/userStore'
 import { useLayoutStore } from '@/store/layoutStore'
 import { Resource, SortByCost } from '@/types'
 import ResourceCard from '@/components/common/ResourceCard.vue'
+import FilterSelect from '@/components/common/FilterSelect.vue'
 
 export default {
   components: {
-    ResourceCard
+    ResourceCard,
+    FilterSelect
   },
   props: {
     pickedUser: { type: Object, default: () => {} }
@@ -88,7 +93,9 @@ export default {
           value: SortByCost.DESC,
           label: this.$t('user_view.sort_by_cost_desc')
         }
-      ]
+      ],
+      resourcesNamesFiltered: [],
+      include: 'includes'
     }
   },
   setup() {
@@ -100,6 +107,12 @@ export default {
   mounted () {
     this.user = userStore().getData()
     this.loadData()
+  },
+  computed: {
+    resourcesNames() {
+      const resourcesWithoutDublicates = [...new Set(this.resources)]
+      return resourcesWithoutDublicates.map(i => i.resource_type?.replace(/::/g, ' '))
+    }
   },
   methods: {
     loadResources (payload: { userName: any }) {
@@ -119,8 +132,37 @@ export default {
       this.loadResources({
         userName: this.pickedUser.created_by
       })
+    },
+    // TODO: remove dublicate code. Use the mixin or vue3 hooks instead
+    updateFiltering() {
+      let res = []
+      // sorting by cost
+      if (this.sortByCost === SortByCost.ASC) {
+        res = this.resources.sort(
+          (a: Resource, b: Resource) => b.amount_spent - a.amount_spent
+        )
+      } else {
+        res = this.resources.sort(
+          (a: Resource, b: Resource) => a.amount_spent - b.amount_spent
+        )
+      }
+      // filtering by tag compliance
+      res = res.filter(
+        (item: Resource) =>
+          item.compliance_percentage >= this.sortByPercentage[0] &&
+          item.compliance_percentage <= this.sortByPercentage[1]
+      )
+      res = partition(res, (i) => {
+        return this.resourcesNamesFiltered.includes(i.resource_type.replace(/::/g, ' '))
+      })
+      if (this.include === 'includes') {
+        this.filteredResources = res[0]
+      } else {
+        this.filteredResources = res[1]
+      }
     }
   },
+  // TODO: remake it by usign vue3 setup watch
   watch: {
     pickedUser: function (newVal: Resource) {
       if (!newVal) {
@@ -131,23 +173,17 @@ export default {
         })
       }
     },
-    sortByCost: function (newVal: SortByCost) {
-      if (newVal === SortByCost.ASC) {
-        this.filteredResources = this.filteredResources.sort(
-          (a: Resource, b: Resource) => b.amount_spent - a.amount_spent
-        )
-      } else {
-        this.filteredResources = this.filteredResources.sort(
-          (a: Resource, b: Resource) => a.amount_spent - b.amount_spent
-        )
-      }
+    sortByCost() {
+      this.updateFiltering()
     },
-    sortByPercentage: function (newVal: number[]) {
-      this.filteredResources = this.resources.filter(
-        (item: Resource) =>
-          item.compliance_percentage >= newVal[0] &&
-          item.compliance_percentage <= newVal[1]
-      )
+    sortByPercentage() {
+      this.updateFiltering()
+    },
+    resourcesNamesFiltered() {
+      this.updateFiltering()
+    },
+    include() {
+      this.updateFiltering()
     }
   }
 }
@@ -168,6 +204,10 @@ export default {
 
 .resource-filtering-block {
   width: 320px;
+}
+
+.resource-filtering-block .el-select {
+  width: 100%;
 }
 
 .tag-compliance-block {
