@@ -6,10 +6,23 @@
           <h1 class="title-dashboard">User view</h1>
         </div>
         <div class="title-buttons">
+          <div v-if="refreshRequested" class="refreshing-state">
+            <div class="refreshing-text">
+              {{ $t('common.refresh_accounts') }}
+              {{ refreshingCount }}/{{ totalAccounts }}
+            </div>
+            <div class="refreshing-progressbar-wrapper">
+              <div class="refreshing-progressbar" :style="{
+                width: `${refreshingCount/(totalAccounts/100)}%`
+                }">
+              </div>
+            </div>
+          </div>
           <SectionActionButton
-            :text="$t('common.refresh')"
+            :text="textOfRefreshButton"
             type="empty"
-            @click.prevent="refreshData"
+            :class="nextRefresh ? 'disable-refresh' : ''"
+            @click.prevent="refreshHandler"
           >
             <RefreshIcon />
           </SectionActionButton>
@@ -23,7 +36,7 @@
         </div>
       </div>
       <div class="main-dashboard">
-        <div class="filter-bar">
+        <div class="filter-bar dropdown-blocks">
           <div class="flex-dropdown">
             <FilterSelect
               v-if="usersViewSummary.length"
@@ -132,6 +145,7 @@ import SectionActionButton from '@/components/common/SectionActionButton.vue'
 import Tile from '@/components/common/Tile.vue'
 import { useLayoutStore } from '@/store/layoutStore'
 import partition from 'lodash/partition'
+import { format } from 'date-fns'
 
 import RefreshIcon from '@/assets/images/refresh-icon.svg'
 import DownloadAllIcon from '@/assets/images/download-icon.svg'
@@ -175,7 +189,11 @@ export default {
           value: SortByCost.DESC,
           label: this.$t('user_view.sort_by_cost_desc')
         }
-      ]
+      ],
+      refreshRequested: false,
+      nextRefresh: null,
+      refreshingCount: 0,
+      totalAccounts: 0,
     }
   },
   setup () {
@@ -198,11 +216,24 @@ export default {
     },
     usersNames () {
       return this.usersViewSummary.map(i => i.created_by)
+    },
+    textOfRefreshButton() {
+      if (!this.refreshRequested) return ''
+      if (this.nextRefresh) {
+        return format(this.nextRefresh, "kk:mm") + 'h'
+      }
+      return this.$t('common.refresh')
     }
   },
   methods: {
     refreshData () {
-      this.loadUserViewSummary({})
+      this.$api.post(`tenants/${this.tenantId}/data-refresh`)
+        .then(res => {
+          this.nextRefresh = new Date(res.data?.next_refresh) - new Date()
+          this.refreshingCount = res.data?.refreshed
+          this.totalAccounts = res.data?.total_accounts
+          this.refreshRequested = true
+        })
     },
     handlePageChange () {
       this.loadResources({})
@@ -286,6 +317,10 @@ export default {
       } else {
         this.filteredUsers = res[1]
       }
+    },
+    refreshHandler() {
+      if (this.nextRefresh) return
+      this.refreshData()
     }
   },
   mounted () {
@@ -293,6 +328,7 @@ export default {
     this.$mitt.on('profile-loaded', () => {
       self.loadData()
     })
+    this.refreshData()
   },
   created () {
     var self = this
@@ -370,5 +406,47 @@ export default {
 
 .cost-sorting-block {
   max-width: 138px;
+}
+
+.disable-refresh {
+  border-color: var(--dirty-white);
+  fill: var(--dirty-white);
+  color: var(--dirty-white);
+}
+
+.disable-refresh:hover {
+  cursor: default;
+  background-color: #fff;
+}
+
+.refreshing-state {
+  width: 160px;
+  display: flex;
+  flex-direction: column;
+}
+
+.refreshing-text {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--light-gray);
+}
+
+.refreshing-progressbar-wrapper {
+  margin-top: 7px;
+  position: relative;
+  background: #F2F2F2;
+  width: 100%;
+  height: 9px;
+}
+
+.refreshing-progressbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: var(--purple);
 }
 </style>

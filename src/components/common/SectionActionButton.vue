@@ -1,12 +1,10 @@
 <template>
-  <a
-    href="#"
+  <div
     :class="`section-action-button section-action-button_${type}`"
-    @click.prevent="refreshData"
   >
     <slot></slot>
     <span>{{ text }}</span>
-  </a>
+</div>
 </template>
 
 <script>

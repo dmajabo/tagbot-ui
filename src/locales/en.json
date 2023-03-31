@@ -59,7 +59,8 @@
     "tag_standard_created": "Tag standard registered.",
     "tag_values_hint": "When values are provided, Tag Bot will check for these values to ensure tag standards.",
     "tag_has_values": "Set standard values",
-    "tag_values_input_help": "Start typing to add values."
+    "tag_values_input_help": "Start typing to add values.",
+    "refresh_accounts": "Refreshing users "
   },
   "dashboard": {
     "number_of_accounts": "# of Accounts",
