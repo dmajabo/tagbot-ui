@@ -4,8 +4,8 @@
       <div class="resource-filtering-block">
         <FilterSelect
           v-if="resourcesNames.length"
-          :placeholder="`All resources (${resources?.length})`"
-          input-placeholder="Search Resources"
+          :placeholder="`${$t('AllServicesSidebar.searching_placeholder')} (${resources?.length})`"
+          :input-placeholder="$t('AllServicesSidebar.searching_input_filtering_placeholder')"
           :initialOptions="resourcesNames"
           :totalCount="resources?.length"
           :showingCount="filteredResources.length"
