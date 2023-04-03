@@ -229,7 +229,9 @@ export default {
   },
   methods: {
     refreshData () {
-      this.$api.post(`tenants/${this.tenantId}/data-refresh`)
+      let udata = userStore().getData()
+      let tenantId = udata.tenantId
+      this.$api.post(`tenants/${tenantId}/data-refresh`)
         .then(res => {
           let now = new Date()
           this.nextRefresh = Date.parse(res.data?.next_refresh) - now
@@ -243,8 +245,10 @@ export default {
     },
     loadUserViewSummary (payload) {
       this.loading = true
+      let udata = userStore().getData()
+      let tenantId = udata.tenantId
       this.$api
-        .post(`tenants/${this.tenantId}/analytics/user-view-summary`, payload)
+        .post(`tenants/${tenantId}/analytics/user-view-summary`, payload)
         .then(response => {
           this.usersViewSummary = response?.data?.users
           this.filteredUsers = this.usersViewSummary
@@ -330,8 +334,8 @@ export default {
     var self = this
     this.$mitt.on('profile-loaded', () => {
       self.loadData()
+        this.refreshData()
     })
-    this.refreshData()
   },
   created () {
     var self = this
