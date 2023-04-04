@@ -153,9 +153,11 @@ import UserViewResourcesSidebar from '@/components/dashboard/UserViewResourcesSi
 import FilterSelect from '@/components/common/FilterSelect.vue'
 
 export default {
-  data () {
+  data(): any {
     return {
-      user: {},
+      user: {
+          tenantId: null
+      },
       pagination: {
         current_page: 1,
         per_page: 10,
@@ -209,15 +211,15 @@ export default {
     }
   },
   computed: {
-    tenantId () {
+    tenantId() : any {
       return import.meta.env.DEV
         ? '3420b906-3ee8-4ed1-8738-ec0ca712d4bb'
         : this.user.tenantId
     },
-    usersNames () {
+    usersNames () : any {
       return this.usersViewSummary.map(i => i.created_by)
     },
-    textOfRefreshButton() {
+    textOfRefreshButton() : any {
       if (!this.refreshRequested) return ''
       if (this.nextRefresh) {
         return format(this.nextRefresh, "kk:mm") + 'h'
@@ -227,9 +229,12 @@ export default {
   },
   methods: {
     refreshData () {
-      this.$api.post(`tenants/${this.tenantId}/data-refresh`)
+      let udata = userStore().getData()
+      let tenantId = udata.tenantId
+      this.$api.post(`tenants/${tenantId}/data-refresh`)
         .then(res => {
-          this.nextRefresh = new Date(res.data?.next_refresh) - new Date()
+          let now = new Date()
+          this.nextRefresh = Date.parse(res.data?.next_refresh) - now
           this.refreshingCount = res.data?.refreshed
           this.totalAccounts = res.data?.total_accounts
           this.refreshRequested = true
@@ -240,8 +245,10 @@ export default {
     },
     loadUserViewSummary (payload) {
       this.loading = true
+      let udata = userStore().getData()
+      let tenantId = udata.tenantId
       this.$api
-        .post(`tenants/${this.tenantId}/analytics/user-view-summary`, payload)
+        .post(`tenants/${tenantId}/analytics/user-view-summary`, payload)
         .then(response => {
           this.usersViewSummary = response?.data?.users
           this.filteredUsers = this.usersViewSummary
@@ -327,8 +334,8 @@ export default {
     var self = this
     this.$mitt.on('profile-loaded', () => {
       self.loadData()
+        this.refreshData()
     })
-    this.refreshData()
   },
   created () {
     var self = this
