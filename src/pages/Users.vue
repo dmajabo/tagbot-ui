@@ -126,7 +126,7 @@
         @close-sidebar="handleClose('back')"
       >
         <transition name="slide-fade" appear>
-          <component :is="currentContent" :pickedUser="currentUser" />
+          <component v-if="!layoutStore.loading" :is="currentContent" :pickedUser="currentUser" />
         </transition>
       </UserViewResourcesSidebar>
     </el-drawer>
@@ -204,10 +204,12 @@ export default {
     return {
       sidebarIsWide,
       currentContent,
+      layoutStore,
       setSmallSidebar: layoutStore.setSmallSidebar,
       setWideSidebar: layoutStore.setWideSidebar,
       setContentOfSidebar: layoutStore.setContentOfSidebar,
-      setLoading: layoutStore.setLoading
+      setLoading: layoutStore.setLoading,
+      setContentOfSidebarAsync: layoutStore.setContentOfSidebarAsync
     }
   },
   computed: {
@@ -229,9 +231,7 @@ export default {
   },
   methods: {
     refreshData () {
-      let udata = userStore().getData()
-      let tenantId = udata.tenantId
-      this.$api.post(`tenants/${tenantId}/data-refresh`)
+      this.$api.post(`tenants/${this.tenantId}/data-refresh`)
         .then(res => {
           let now = new Date()
           this.nextRefresh = Date.parse(res.data?.next_refresh) - now
@@ -245,10 +245,8 @@ export default {
     },
     loadUserViewSummary (payload) {
       this.loading = true
-      let udata = userStore().getData()
-      let tenantId = udata.tenantId
       this.$api
-        .post(`tenants/${tenantId}/analytics/user-view-summary`, payload)
+        .post(`tenants/${this.tenantId}/analytics/user-view-summary`, payload)
         .then(response => {
           this.usersViewSummary = response?.data?.users
           this.filteredUsers = this.usersViewSummary
@@ -268,7 +266,7 @@ export default {
       this.setLoading(true)
       await this.$nextTick()
       if (val === 'back') {
-        this.setContentOfSidebar(SidebarContentComponents.AllResourcesInSidebar)
+        await this.setContentOfSidebarAsync(SidebarContentComponents.AllResourcesInSidebar)
         await this.$nextTick()
         if (!this.sidebarIsWide) {
           this.drawer = false
