@@ -430,7 +430,7 @@ export default {
   flex-direction: row;
   width: 100%;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 13px;
   color: var(--light-gray);
 }
 
