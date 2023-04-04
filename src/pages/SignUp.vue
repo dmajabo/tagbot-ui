@@ -158,7 +158,6 @@ const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2
 const schema = yup.object({
   email: yup.string().required().email(),
   name: yup.string().required(),
-  phone: yup.string().matches(phoneRegExp, 'phone number is not valid'),
   password: yup.string().required().min(8),
   confirmPassword: yup.string()
      .oneOf([yup.ref('password'), null], 'passwords must match')

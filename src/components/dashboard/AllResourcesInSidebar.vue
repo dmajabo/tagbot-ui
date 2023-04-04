@@ -4,8 +4,8 @@
       <div class="resource-filtering-block">
         <FilterSelect
           v-if="resourcesNames.length"
-          :placeholder="`All resources (${resources?.length})`"
-          input-placeholder="Search Resources"
+          :placeholder="`${$t('AllServicesSidebar.searching_placeholder')} (${resources?.length})`"
+          :input-placeholder="$t('AllServicesSidebar.searching_input_filtering_placeholder')"
           :initialOptions="resourcesNames"
           :totalCount="resources?.length"
           :showingCount="filteredResources.length"
@@ -125,6 +125,7 @@ export default {
         .then((response: { data: { resources: Resource[] } }) => {
           this.resources = response?.data?.resources
           this.filteredResources = this.resources
+          this.resourcesNamesFiltered = this.resources.map(i => i.resource_type.replace(/::/g, ' '))
           this.loading = false
         })
     },
@@ -139,11 +140,11 @@ export default {
       // sorting by cost
       if (this.sortByCost === SortByCost.ASC) {
         res = this.resources.sort(
-          (a: Resource, b: Resource) => b.amount_spent - a.amount_spent
+          (a: Resource, b: Resource) => Number(b.amount_spent) - Number(a.amount_spent)
         )
       } else {
         res = this.resources.sort(
-          (a: Resource, b: Resource) => a.amount_spent - b.amount_spent
+          (a: Resource, b: Resource) => Number(a.amount_spent) - Number(b.amount_spent)
         )
       }
       // filtering by tag compliance
@@ -162,7 +163,6 @@ export default {
       }
     }
   },
-  // TODO: remake it by usign vue3 setup watch
   watch: {
     pickedUser: function (newVal: Resource) {
       if (!newVal) {

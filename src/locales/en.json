@@ -136,5 +136,9 @@
     "include": "Includes",
     "exclude": "Excludes",
     "select_all": "Select all"
+  },
+  "AllServicesSidebar": {
+    "searching_placeholder": "All services",
+    "searching_input_filtering_placeholder": "Search Services"
   }
 }
