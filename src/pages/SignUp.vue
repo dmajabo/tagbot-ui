@@ -203,7 +203,6 @@ export default {
           token: response.access_token
         })
         .then(response => {
-          // console.log(response)
           authService.login(self.$pinia, response, this.remember_me)
           self.loadProfile(u)
           self.loading = false
@@ -231,7 +230,7 @@ export default {
       }).then(res => {
         if (res.status === 200) {
           this.$toast.success('Sign-up successful')
-          authService.login(this.$pinia, { data: { token: res.data } })
+          authService.login(this.$pinia, { data: { token: res.data?.token } }, true)
           this.loadProfile()
           this.$goTo('dashboard')
         }
@@ -249,7 +248,6 @@ export default {
           remember_me: this.remember_me
         })
         .then(response => {
-          // console.log(response)
           authService.login(this.$pinia, response, this.remember_me)
           // toast.success("Login successful.")
           self.loadProfile()
