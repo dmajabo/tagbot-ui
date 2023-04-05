@@ -85,18 +85,22 @@ export default {
         .then(res => {
           this.layoutStore.setLoading(false)
           this.layoutStore.setWideSidebar()
-          const names = res.data.resource_details.map(i => Object.keys(i))
-          let data = res.data.resource_details.map(i => Object.values(i))
-          data = data.map(i => i[0])
-          data.forEach((i, index) => {
-            i.name = names[index][0]
-          })
-          this.$nextTick(() => {
-            this.layoutStore.setResource(data)
-            this.layoutStore.setContentOfSidebar(
-              SidebarContentComponents.OneDetailedResourcesInSidebar
-            )
-          })
+          if (res.data.resource_details) {
+            const names = res.data.resource_details.map(i => Object.keys(i))
+            let data = res.data.resource_details.map(i => Object.values(i))
+            data = data?.map(i => i[0])
+            data.forEach((i, index) => {
+              i.name = names[index][0]
+            })
+            this.$nextTick(() => {
+              this.layoutStore.setResource(data)
+              this.layoutStore.setContentOfSidebar(
+                SidebarContentComponents.OneDetailedResourcesInSidebar
+                )
+              })
+          } else {
+            this.$toast.error("Empty resource")
+          }
         })
         .catch(err => {
           this.layoutStore.setLoading(false)
