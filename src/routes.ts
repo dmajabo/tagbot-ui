@@ -15,10 +15,7 @@ import Settings from "./pages/Settings.vue";
 import {Connect} from "vite";
 import Connections from './pages/Connections.vue';
 import Users from './pages/Users.vue'
-import SignUp from './pages/SignUp.vue';
-import UserViewResourcesSidebar from './components/dashboard/UserViewResourcesSidebar.vue'
-import AllResourcesInSidebar from './components/dashboard/AllResourcesInSidebar.vue'
-import OneDetailedResourcesInSidebar from './components/dashboard/OneDetailedResourcesInSidebar.vue'
+import SignUp from './pages/SignUp.vue'
 
 export const routes = [
     {

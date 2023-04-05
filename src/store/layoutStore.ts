@@ -34,6 +34,18 @@ export const useLayoutStore = defineStore('layout', {
       }
       this.currentContent = components[nameOfComponent]
     },
+    setContentOfSidebarAsync(nameOfComponent: SidebarContentComponents) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          const components = {
+            [SidebarContentComponents.AllResourcesInSidebar]: AllResourcesInSidebar,
+            [SidebarContentComponents.OneDetailedResourcesInSidebar]: OneDetailedResourcesInSidebar,
+          }
+          this.currentContent = components[nameOfComponent]
+          resolve()
+        }, 600)
+      })
+    },
     setLoading(loading: boolean) {
       this.loading = loading
     },
